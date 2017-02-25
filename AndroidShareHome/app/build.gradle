@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "sharehome.com.sharehome"
+        applicationId "sharehome.com.myapplication"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
