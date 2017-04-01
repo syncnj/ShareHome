@@ -1,5 +1,6 @@
 package sharehome.com.androidsharehome2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -80,13 +81,23 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_profile) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_transactions) {
+            Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
+            startActivity(intent);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_groceries) {
+            Intent intent = new Intent(getApplicationContext(), GroceryListActivity.class);
+            startActivity(intent);
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_tasks) {
+            Intent intent = new Intent(getApplicationContext(), TasksActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nav_new) {
 
         } else if (id == R.id.nav_share) {
 
@@ -97,5 +108,15 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * Starts the ProfileActivity
+     *
+     * @param view The view of the button which called this method
+     */
+    public void launchProfileActivity(View view) {
+        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivity(intent);
     }
 }
