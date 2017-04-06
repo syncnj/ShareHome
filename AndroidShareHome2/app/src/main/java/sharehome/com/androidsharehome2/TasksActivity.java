@@ -24,10 +24,7 @@ import android.widget.Toast;
 
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    static String[] Roommates = {"Tom", "Richard","Cassie","Leo"};
-    boolean[] checkedItems = new boolean[Roommates.length];
-    AlertDialog ad;
-    Button openRoommateList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +34,6 @@ public class TasksActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Spinner spinner = (Spinner) findViewById(R.id.spinner_scheduling);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.spinnerItems_scheduling, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
