@@ -24,8 +24,6 @@ public class AddTaskActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
-//TODO:
-// having trouble associating the activity with add new task activity!!!
         openRoommateList = (Button)findViewById(R.id.openRoommateList);
         openRoommateList.setOnClickListener(new View.OnClickListener() {
             @Override

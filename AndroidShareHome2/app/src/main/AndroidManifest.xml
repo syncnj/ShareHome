@@ -36,7 +36,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddTaskNavDrawerActivity"
-            android:label="@string/title_activity_add_task_nav_drawer"
+            android:label="@string/title_activity_add_task_nav_drawer" />
         <activity android:name=".AddTaskActivity" />
         <activity
             android:name=".AddGroceryListActivity"
