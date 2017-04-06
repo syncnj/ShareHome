@@ -51,7 +51,9 @@ return returnNames;
         setContentView(R.layout.activity_add_task);
 
 
+
         submitTask = (Button) findViewById(R.id.submitTask);
+
         openRoommateList = (Button)findViewById(R.id.openRoommateList);
 
 
