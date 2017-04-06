@@ -33,6 +33,11 @@
         <activity
             android:name=".TasksActivity"
             android:label="@string/title_activity_tasks"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddTaskActivity" />
+        <activity
+            android:name=".AddGroceryListActivity"
+            android:label="@string/title_activity_add_grocery_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
