@@ -16,4 +16,5 @@
         <item>month</item>
         <item>year</item>
     </string-array>
+    <string name="title_activity_add_task_nav_drawer">AddTaskNavDrawerActivity</string>
 </resources>

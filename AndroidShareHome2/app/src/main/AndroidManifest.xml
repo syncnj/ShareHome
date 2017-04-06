@@ -33,6 +33,10 @@
         <activity
             android:name=".TasksActivity"
             android:label="@string/title_activity_tasks"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddTaskNavDrawerActivity"
+            android:label="@string/title_activity_add_task_nav_drawer"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
