@@ -61,7 +61,7 @@ public class TasksActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-      public void onScheduleBaseSelected(AdapterView<?> parent, View view,
+    public void onScheduleBaseSelected(AdapterView<?> parent, View view,
                                          int pos, long id){
           // An item was selected.
          Object returnBase = parent.getItemAtPosition(pos);
@@ -133,6 +133,15 @@ public class TasksActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    /**
+     * Starts the AddTaskActivity
+     *
+     * @param view The view of the button which called this method
+     */
+    public void launchAddTaskActivity(View view) {
+        Intent intent = new Intent(getApplicationContext(), AddTaskActivity.class);
+        startActivity(intent);
     }
 
 
