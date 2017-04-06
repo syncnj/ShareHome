@@ -16,5 +16,10 @@
         <item>month</item>
         <item>year</item>
     </string-array>
+    <string-array name="spinnerItems_groceryStatus">
+        <item>full</item>
+        <item>running low</item>
+        <item>restock needed</item>
+    </string-array>
     <string name="title_activity_add_grocery_list">AddGroceryListActivity</string>
 </resources>

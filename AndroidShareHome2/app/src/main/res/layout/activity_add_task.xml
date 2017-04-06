@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:id="@+id/edit_task_name"
+        android:id="@+id/input_task_name"
         android:ems="5"
         android:layout_below="@id/task_name_intro"
         />
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="schedule your task base on"
         android:id="@+id/text_task"
-        android:layout_below="@id/edit_task_name"/>
+        android:layout_below="@id/input_task_name"/>
     <Spinner
         android:id="@+id/spinner_scheduling"
         android:layout_width="192dp"
@@ -39,5 +39,17 @@
         android:layout_below="@+id/spinner_scheduling"
         android:layout_marginTop="22dp"
         android:text="open Roommate List" />
+
+    <Button
+        android:id="@+id/submitTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit Task"
+        android:layout_alignBaseline="@+id/openRoommateList"
+        android:layout_alignBottom="@+id/openRoommateList"
+        android:layout_toEndOf="@+id/spinner_scheduling"
+        android:layout_toRightOf="@+id/spinner_scheduling"
+        android:onClick="submitMessageHandler"/>
+
 
 </RelativeLayout>

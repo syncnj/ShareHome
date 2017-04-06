@@ -12,9 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class AddGroceryListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+Button oneTimePurchase;Button dailyPurchase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +25,9 @@ public class AddGroceryListActivity extends AppCompatActivity
         setContentView(R.layout.activity_add_grocery_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        oneTimePurchase = (Button) findViewById(R.id.oneTimeButton);
+        dailyPurchase = (Button) findViewById(R.id.dailyGroceryButton);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -97,5 +94,13 @@ public class AddGroceryListActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    public void oneTimePurchaseHandler (View view){
+        Toast.makeText(getApplicationContext(),"need to be added into grocery list with onetime property",Toast.LENGTH_SHORT).show();
+    }
+
+    public void dailyPurchaseHandler(View view){
+
+        Toast.makeText(getApplicationContext(),"need to be added into grocery list with daily purchase property",Toast.LENGTH_SHORT).show();
     }
 }
