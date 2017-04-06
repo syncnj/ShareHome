@@ -18,4 +18,5 @@
         <item>month</item>
         <item>year</item>
     </string-array>
+    <string name="title_activity_add_transaction">AddTransactionActivity</string>
 </resources>
