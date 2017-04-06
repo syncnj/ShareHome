@@ -9,4 +9,11 @@
     <string name="title_activity_transaction">Transactions</string>
     <string name="title_activity_grocery_list">Grocery List</string>
     <string name="title_activity_tasks">Tasks</string>
+
+    <string-array name="spinnerItems_scheduling">
+        <item>Day</item>
+        <item>Week</item>
+        <item>month</item>
+        <item>year</item>
+    </string-array>
 </resources>
