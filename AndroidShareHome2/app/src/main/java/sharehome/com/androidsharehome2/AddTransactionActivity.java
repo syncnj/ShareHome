@@ -1,8 +1,10 @@
 package sharehome.com.androidsharehome2;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,10 +14,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class AddTransactionActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    static String[] Roommates = {"Tom", "Richard", "Cassie", "Leo"};
+    boolean[] checkedItems = new boolean[Roommates.length];
+    AlertDialog adj;
+    Button openRoommateList;
+    EditText inputAmount;
 
+    public String findCheckedRoommates(String[] allRoommates, boolean[] checkedRoommates){
+        String returnNames = "";
+        for(int j =0; j<allRoommates.length;j++){
+            if(checkedRoommates[j]==true){
+                returnNames = returnNames + " " +allRoommates[j];
+            }
+        }
+        return returnNames;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,14 +42,48 @@ public class AddTransactionActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        openRoommateList = (Button)findViewById(R.id.openRoommateListinTrans);
+
+        inputAmount = (EditText)findViewById(R.id.amountCharge) ;
+
+        openRoommateList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                adj.show();
             }
         });
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("select your Room mate");
+
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getApplicationContext(),"Canceled roommate selection",Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //get user input on task name and time period
+
+                double inputAmountDouble =Double.parseDouble(inputAmount.getText().toString());
+                Toast.makeText(getApplicationContext(),findCheckedRoommates(Roommates,checkedItems)+ " should pay " + "$"+inputAmountDouble ,Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        builder.setMultiChoiceItems(Roommates, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
+
+                Toast.makeText(getApplicationContext(), Roommates[which], Toast.LENGTH_SHORT).show();
+            }
+        });
+        adj = builder.create();
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
