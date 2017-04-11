@@ -29,6 +29,6 @@ public class Group {
 	    this.objectId= objectId;
 	  }
 	public void setTeamMembersList (String teamMembersList){
-		this.teamMembersList = teamMembersList;
+		this.teamMembersList += teamMembersList +",";
 	}
 }
