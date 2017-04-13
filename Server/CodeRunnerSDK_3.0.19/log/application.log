@@ -1,0 +1,14 @@
+2017-04-13 02:47:34,144 [INFO] JDK from "JAVA_HOME" - C:\Program Files\Java\jdk1.8.0_121
+2017-04-13 02:47:34,177 [INFO] JRE from "JRE_HOME"  - C:\Program Files\Java\jre1.8.0_121
+2017-04-13 02:47:34,396 [INFO] CodeRunner(tm) Backendless Debugging Utility
+2017-04-13 02:47:34,397 [INFO] Copyright(C) 2017 Backendless Corp. All rights reserved. 
+2017-04-13 02:47:34,398 [INFO] Version: 3.0.19 Build date: 20160613-1132
+2017-04-13 02:47:34,407 [INFO] CodeRunner session is running for 2 hours and will be terminated on 04:47:34.402[UTC]
+2017-04-13 02:47:34,518 [INFO] Registering runner on: 'http://api.backendless.com' with version 'v1'
+2017-04-13 02:47:34,519 [INFO] Application ID:  '19E73C32-D357-313A-FF64-12612084E000'
+2017-04-13 02:47:34,521 [INFO] Secret key:      '74D397CD-BE82-B9E3-FF63-45EDE3668000'
+2017-04-13 02:47:36,240 [INFO] Runner successfully registered
+2017-04-13 02:47:36,253 [INFO] Parsing event model...
+2017-04-13 02:47:36,278 [ERROR] Cannot run program "jar" (in directory "..\classes"): CreateProcess error=2, The system cannot find the file specified
+2017-04-13 02:47:36,448 [INFO] Debugging Utility disconnected successfully
+2017-04-13 02:47:36,449 [INFO] Thank you for using Backendless
