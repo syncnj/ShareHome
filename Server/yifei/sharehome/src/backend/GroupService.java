@@ -7,14 +7,14 @@ import com.backendless.servercode.IBackendlessService;
 public class GroupService implements IBackendlessService{
 
 	public void createNewGroup(String groupName, String leaderId){
-		if(groupName == null || ownerId == null){
+		if(groupName == null || leaderId== null){
 			throw new IllegalArgumentException("Missing input message!!!");
 		}
 		Group group = new Group();
 		group.setGroupName(groupName);
 		group.setLeaderId(leaderId);
-		group.addTeamMember(leaderId);
-		Group savedGroup = Backendless.Persistence.save( group );
+		group.setTeamMembersList(leaderId +",");
+		 Backendless.Persistence.save( group );
 	}
 	
 	public boolean addMember(String newGroupMemberId,String groupId){
@@ -27,6 +27,7 @@ public class GroupService implements IBackendlessService{
 		}
 		else{
 			group.addTeamMember(newGroupMemberId);
+		Backendless.Persistence.save( group );
 			return true;
 		}
 	}
@@ -46,7 +47,7 @@ public class GroupService implements IBackendlessService{
 	
 	 
 	public boolean deleteMember(String groupId, String memberId) throws Exception{
-		if(groupId== null || memberId == null){
+		if(groupId== null || memberId == null || groupId.trim() == ""  || memberId.trim() == ""){
 			throw new IllegalArgumentException("Missing input message!!!");
 		}
 		 Group group = Backendless.Persistence.of(Group.class).findById(groupId);
@@ -65,7 +66,7 @@ public class GroupService implements IBackendlessService{
 						
 						
 						group.setTeamMembersList(memberList.substring(0, indexOfFirstChar));
-						
+						 Backendless.Persistence.save( group );
 						return  true;
 					}
 					else{
@@ -73,6 +74,7 @@ public class GroupService implements IBackendlessService{
 						String beforeDeletedMember = group.getTeamMembersList().substring(0, indexOfFirstChar);
 						String afterDeletedMember = group.getTeamMembersList().substring((indexOfFirstChar+memberId.length()+1), group.getTeamMembersList().length());
 						group.setTeamMembersList(beforeDeletedMember+afterDeletedMember);
+						 Backendless.Persistence.save( group );
 						return true;
 					}
 				}
