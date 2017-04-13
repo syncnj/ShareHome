@@ -1,14 +1,21 @@
 package backend;
 
-public class Posts {
+public class Post {
 	private String postName;
 	private String objectId;
 	private String ownerId;
 	private int pro;
 	private int con;
 	private String description;
+	private String userId;
+	private String groupId;
 	
-	
+	public String getGroupId(){
+		return this.groupId;
+	}
+	public String getUserId(){
+		return this.userId;
+	}
 	public String getPostName(){
 		return this.postName;
 	}
@@ -42,6 +49,14 @@ public class Posts {
 	public void addCon(int number){
 		this.con += number;
 	}
-
+	public void setUserId(String userId){
+		this.userId = userId;
+	}
+	public void setGroupId(String groupId){
+		this.groupId = groupId;
+	}
+	public void setDescription(String description){
+		this.description= description;
+	}
 }
 
