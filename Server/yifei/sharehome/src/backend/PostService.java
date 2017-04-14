@@ -7,9 +7,9 @@ import com.backendless.servercode.IBackendlessService;
 import java.util.Map;
 
 public class PostService implements IBackendlessService{
-	public void  createNewPost(String userId, String groupId,String postName,String description){
-		if(groupId == null || userId== null || postName== null|| description == null ||
-				groupId.trim() == "" || userId.trim() == ""|| postName.trim() ==""|| description.trim()==""){
+	public void  createNewPost(String userId, String groupId,String postTitle,String postContent){
+		if(groupId == null || userId== null || postTitle== null|| postContent == null ||
+				groupId.trim() == "" || userId.trim() == ""|| postTitle.trim() ==""|| postContent.trim()==""){
 			throw new IllegalArgumentException("Invalid input argument");
 		}
 
@@ -24,15 +24,30 @@ public class PostService implements IBackendlessService{
 		}
 
 
-		Group group = Backendless.Persistence.of(Group.class).findById(groupId);
+		Backendless.Persistence.of(Group.class).findById(groupId);
+		// Find so that if error then return
+
+		//Now check for duplicate:
+		whereClause = "groupId = '" + groupId.trim() + "' AND postTitle = '" + postTitle.trim() + "'";
+		//if (true)throw new RuntimeException(""+ whereClause);
+		dataQuery.setWhereClause( whereClause );
+		BackendlessCollection<Map> result = Backendless.Persistence.of( "Post" ).find( dataQuery);
+
+		if ( !result.getCurrentPage().isEmpty()){
+			throw new RuntimeException("Same Post already exist" + result.getCurrentPage());
+
+		}
+
 
 		//create a new post if group and user exist
 		Post post = new Post();
-		post.setPostName(postName);
+		post.setPostTitle(postTitle);
 		post.setUserId(userId);
-		post.setCon(0);
-		post.setPro(0);
-		post.setDescription(description);
+		post.setGroupId(groupId);
+		//post.setDownVote(0);
+		//post.setUpVote(0);
+		post.setContent(postContent);
+		Backendless.Persistence.save(post);
 	}
 	public void deletedPost(String postId, String userId){
 		if(postId == null || userId == null || postId.trim() == "" || userId.trim() == ""){

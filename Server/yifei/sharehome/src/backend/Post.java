@@ -1,14 +1,16 @@
 package backend;
 
 public class Post {
-	private String postName;
+	private String postTitle;
 	private String objectId;
 	private String ownerId;
-	private int pro;
-	private int con;
-	private String description;
+	private int upVote = 0;
+	private int downVote = 0;
+	private String content;
 	private String userId;
 	private String groupId;
+	private boolean anonymous;
+
 	
 	public String getGroupId(){
 		return this.groupId;
@@ -16,8 +18,8 @@ public class Post {
 	public String getUserId(){
 		return this.userId;
 	}
-	public String getPostName(){
-		return this.postName;
+	public String getPostTitle(){
+		return this.postTitle;
 	}
 	public String getObjectId(){
 		return this.objectId;
@@ -25,29 +27,29 @@ public class Post {
 	public String getOwnerId(){
 		return this.ownerId;
 	}
-	public int getPro(){
-		return this.pro;
+	public int getUpVote(){
+		return this.upVote;
 	}
 	public int gerCon(){
-		return this.con;
+		return this.downVote;
 	}
-	public String getDescription(){
-		return this.description;
+	public String getContent(){
+		return this.content;
 	}
-	public void setPostName(String newPostName){
-		this.postName = newPostName;
+	public void setPostTitle(String newPostName){
+		this.postTitle = newPostName;
 	}
-	public void setPro(int pro){
-		this.pro = pro;
+	public void setUpVote(int upVote){
+		this.upVote = upVote;
 	}
-	public void setCon(int con){
-		this.con = con;
+	public void setDownVote(int downVote){
+		this.downVote = downVote;
 	}
-	public void addPro(int number){
-		this. pro += number;
+	public void addUpVote(int number){
+		this.upVote += number;
 	}
-	public void addCon(int number){
-		this.con += number;
+	public void addDownVote(int number){
+		this.downVote += number;
 	}
 	public void setUserId(String userId){
 		this.userId = userId;
@@ -55,8 +57,11 @@ public class Post {
 	public void setGroupId(String groupId){
 		this.groupId = groupId;
 	}
-	public void setDescription(String description){
-		this.description = description;
+	public void setContent(String content){
+		this.content = content;
 	}
+
+	public boolean getAnonymous() {return this.anonymous;}
+	public void setAnonymous (boolean newAnonymous) { this.anonymous = newAnonymous;}
 }
 
