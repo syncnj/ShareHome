@@ -6,8 +6,13 @@ import com.backendless.servercode.IBackendlessService;
 
 import java.util.Map;
 
+
+// Wondering should we change our post service and return the objectId
+// also
+
+
 public class PostService implements IBackendlessService{
-	public void  createNewPost(String userId, String groupId,String postTitle,String postContent){
+	public String  createNewPost(String userId, String groupId,String postTitle,String postContent){
 		if(groupId == null || userId== null || postTitle== null|| postContent == null ||
 				groupId.trim() == "" || userId.trim() == ""|| postTitle.trim() ==""|| postContent.trim()==""){
 			throw new IllegalArgumentException("Invalid input argument");
@@ -48,6 +53,7 @@ public class PostService implements IBackendlessService{
 		//post.setUpVote(0);
 		post.setContent(postContent);
 		Backendless.Persistence.save(post);
+		return post.getObjectId();
 	}
 	public void deletedPost(String postId, String userId){
 		if(postId == null || userId == null || postId.trim() == "" || userId.trim() == ""){
