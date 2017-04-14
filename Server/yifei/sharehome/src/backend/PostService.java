@@ -34,7 +34,24 @@ public class PostService implements IBackendlessService{
 		post.setPro(0);
 		post.setDescription(description);
 	}
-	
+	public void deletedPost(String postId, String userId){
+		if(postId == null || userId == null || postId.trim() == "" || userId.trim() == ""){
+			throw new IllegalArgumentException("Invalid input argument");
+		}
+		BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+		String whereClause = "objectId = '" + userId.trim() + "'";
+		dataQuery.setWhereClause( whereClause );
+
+		BackendlessCollection<BackendlessUser> userResult = Backendless.Data.of( BackendlessUser.class).find(dataQuery);
+
+		if (userResult.getCurrentPage().isEmpty()){
+			throw new RuntimeException(" ID is invalid or could not be found in the database");
+		}
+		
+		Post post = Backendless.Persistence.of(Post.class).findById(postId);
+		
+		Backendless.Persistence.of(Post.class).remove(post);
+	}
 }
 
 

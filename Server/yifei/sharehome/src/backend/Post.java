@@ -35,13 +35,13 @@ public class Post {
 		return this.description;
 	}
 	public void setPostName(String newPostName){
-		this.postName= newPostName;
+		this.postName = newPostName;
 	}
 	public void setPro(int pro){
-		this.pro=pro;
+		this.pro = pro;
 	}
 	public void setCon(int con){
-		this.con=con;
+		this.con = con;
 	}
 	public void addPro(int number){
 		this. pro += number;
@@ -56,7 +56,7 @@ public class Post {
 		this.groupId = groupId;
 	}
 	public void setDescription(String description){
-		this.description= description;
+		this.description = description;
 	}
 }
 
