@@ -22,6 +22,13 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+
+import java.util.ArrayList;
+
+import static sharehome.com.androidsharehome2.R.menu.tasks;
+
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -30,6 +37,11 @@ public class TasksActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+        //local mocks for new user
+
+//BackendlessUser user = Backendless.UserService.CurrentUser();
+//        ArrayList<Task> tasks = new ArrayList<>();
+//        new Task("dishes", "Week", new ArrayList<User>().add(user));
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -76,7 +88,7 @@ public class TasksActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.tasks, menu);
+        getMenuInflater().inflate(tasks, menu);
         return true;
     }
 

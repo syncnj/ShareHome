@@ -1,10 +1,12 @@
 package sharehome.com.androidsharehome2;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +17,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.async.callback.BackendlessCallback;
+import com.backendless.exceptions.BackendlessFault;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import sharehome.com.androidsharehome2.backend.GroupService;
+import sharehome.com.androidsharehome2.com.mbaas.service.ShoppingItem;
+import sharehome.com.androidsharehome2.com.mbaas.service.ShoppingCartService;
+
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -24,6 +42,87 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        String appVersion = "v1";
+        Backendless.initApp( this, "19E73C32-D357-313A-FF64-12612084E000", "19F8B6BD-34A1-655C-FF3E-9BD31F1B0C00",appVersion);
+        BackendlessUser user = new BackendlessUser();
+
+        user.setPassword("Gerald");
+
+
+
+        Backendless.UserService.loginWithFacebook( MainActivity.this, new AsyncCallback<BackendlessUser>()
+        {
+            @Override
+            public void handleResponse( BackendlessUser loggedInUser )
+            {
+                // user logged in successfully
+            }
+
+            @Override
+            public void handleFault( BackendlessFault fault )
+            {
+                // failed to log in
+                System.out.println("Handling fault.");
+            }
+        });
+
+
+
+
+//backendless user registration sample code
+//        BackendlessUser user = new BackendlessUser();
+//        user.setEmail( "liuzihgong66@gmail.com" );
+//        user.setPassword( "Bullcardo666" );
+//        user.setProperty("name","Ricardo");
+
+//        user.setProperty("name", "Will");
+
+//        Backendless.UserService.update( user, new AsyncCallback<BackendlessUser>()
+//        {
+//            public void handleResponse( BackendlessUser user )
+//            {
+//               System.out.print("updated successfully");
+//            }
+//
+//            public void handleFault( BackendlessFault fault )
+//            {
+//                // user update failed, to get the error code call fault.getCode()
+//                System.out.print("updated failed" + fault.getCode());
+//            }
+//        });
+
+//
+//        Log.d("myTag", "This is my message");
+//
+//        GroupService group1 =  GroupService.getInstance();
+//        try{
+//            group1.createNewGroup("lucky1234",user.getObjectId());
+//        }
+//        catch (Exception ex){
+//            Log.d("myTag",ex + "");
+
+//        }
+
+
+
+
+
+        Backendless.UserService.register( user, new AsyncCallback<BackendlessUser>()
+        {
+            @Override
+            public void handleResponse( BackendlessUser backendlessUser )
+            {
+                Log.i( "Registration", backendlessUser.getEmail() + " successfully registered" );
+
+            }
+            public void handleFault( BackendlessFault fault )
+            {
+                // user update failed, to get the error code call fault.getCode()
+                System.out.print("register failed");
+            }
+        } );
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -86,6 +185,12 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_profile) {
             // Handle the camera action
+
+            try {
+                Backendless.UserService.logout();
+            } catch (Exception e) {
+                System.out.println("Hello" + e);
+            }
             Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_transactions) {

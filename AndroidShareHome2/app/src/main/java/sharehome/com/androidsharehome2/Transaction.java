@@ -5,4 +5,6 @@ package sharehome.com.androidsharehome2;
  */
 
 public class Transaction {
+    public Transaction(){
+    }
 }

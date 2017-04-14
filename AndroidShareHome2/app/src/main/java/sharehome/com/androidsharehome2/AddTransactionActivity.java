@@ -25,6 +25,7 @@ public class AddTransactionActivity extends AppCompatActivity
     AlertDialog adj;
     Button openRoommateList;
     EditText inputAmount;
+    EditText description;
 
     public String findCheckedRoommates(String[] allRoommates, boolean[] checkedRoommates){
         String returnNames = "";

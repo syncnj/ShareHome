@@ -5,4 +5,7 @@ package sharehome.com.androidsharehome2;
  */
 
 public class GroceryList {
+    public GroceryList(){
+
+    }
 }

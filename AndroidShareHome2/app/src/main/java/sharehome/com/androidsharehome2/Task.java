@@ -8,10 +8,11 @@ import java.util.ArrayList;
  */
 
 public class Task {
-    public String name;
-    public String timePeriod;
+    private String name;
+    private String timePeriod;
     private ArrayList<User> users;
     User recentlyCompleted;
+
 
     public Task(String name, String timePeriod, ArrayList<User> users){
         this.name = name;
@@ -26,5 +27,8 @@ public class Task {
     void changeTimePeriod(String newTimePeriod){
         timePeriod = newTimePeriod;
     }
-
+    public String getName(){return name;}
+    public String getTimePeriod(){return timePeriod;}
+    public ArrayList getUsers(){ return users;}
+    public User getRecentUser(){ return recentlyCompleted;}
 }
