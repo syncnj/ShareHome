@@ -48,7 +48,7 @@ public class GroupService implements IBackendlessService{
 	}
 	
 	public boolean addMember(String newGroupMemberId,String groupId){
-		newGroupMembe`rId = newGroupMemberId.trim();
+		newGroupMemberId = newGroupMemberId.trim();
 		if(newGroupMemberId == null || groupId == null || groupId.trim() == ""){
 			throw new IllegalArgumentException("Invalid input argument");
 		}
