@@ -24,28 +24,31 @@ public class GroupService implements IBackendlessService{
 		if (userResult.getCurrentPage().isEmpty() ){
 			throw new RuntimeException("Leader ID is invalid or could not be found in the database");
 		}
-
+		
+		
+		
 		// Now find if group name already exist:
-		whereClause = "groupName = '" + groupName.trim() + "'";
-		dataQuery.setWhereClause( whereClause );
-
-		BackendlessCollection<Map> result = Backendless.Persistence.of( "Group" ).find( dataQuery);
-
-		if ( !result.getCurrentPage().isEmpty()){
-			throw new RuntimeException("Group already exist in the table: " + result.getCurrentPage());
-
-		}
+//		whereClause = "groupName = '" + groupName.trim() + "'";
+//		dataQuery.setWhereClause( whereClause );
+//
+//		BackendlessCollection<Map> result = Backendless.Persistence.of( "Group" ).find( dataQuery);
+//
+//		if ( !result.getCurrentPage().isEmpty()){
+//			throw new RuntimeException("Group already exist in the table: " + result.getCurrentPage());
+//
+//		}
 
 
 		Group group = new Group();
 		group.setGroupName(groupName);
 		group.setLeaderId(leaderId);
 		group.setTeamMembersList(leaderId +",");
+		userResult.getCurrentPage().get(0).setProperty("groupId",group.getObjectId() );
 	 	Backendless.Persistence.save( group );
 	}
 	
 	public boolean addMember(String newGroupMemberId,String groupId){
-		newGroupMemberId = newGroupMemberId.trim();
+		newGroupMembe`rId = newGroupMemberId.trim();
 		if(newGroupMemberId == null || groupId == null || groupId.trim() == ""){
 			throw new IllegalArgumentException("Invalid input argument");
 		}

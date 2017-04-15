@@ -7,8 +7,11 @@ public class Group {
 	private String objectId; // group unique id
 	private String teamMembersList;
 	private String leaderId;
+	private String postIdList;
 	
-	
+	public String getPostIdList(){
+		return postIdList;
+	}
 	public String getLeaderId(){
 		return leaderId;
 	}
@@ -44,5 +47,11 @@ public class Group {
 	}
 	public void concatMembersLists(String teamMembersList){
 		this.teamMembersList += teamMembersList;
+	}
+	public void setPostIdList(String postIdList){
+		this.postIdList = postIdList;
+	}
+	public void addPost(String PostId){
+		this.postIdList += PostId + ",";
 	}
 }

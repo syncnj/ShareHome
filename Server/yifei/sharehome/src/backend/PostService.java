@@ -29,7 +29,7 @@ public class PostService implements IBackendlessService{
 		}
 
 
-		Backendless.Persistence.of(Group.class).findById(groupId);
+		Group group = Backendless.Persistence.of(Group.class).findById(groupId);
 		// Find so that if error then return
 
 		//Now check for duplicate:
@@ -43,7 +43,8 @@ public class PostService implements IBackendlessService{
 
 		}
 
-
+		
+		
 		//create a new post if group and user exist
 		Post post = new Post();
 		post.setPostTitle(postTitle);
@@ -53,6 +54,8 @@ public class PostService implements IBackendlessService{
 		//post.setUpVote(0);
 		post.setContent(postContent);
 		Backendless.Persistence.save(post);
+		group.addPost(post.getObjectId());
+		Backendless.Persistence.save(group);
 		return post.getObjectId();
 	}
 	public void deletedPost(String postId, String userId){
