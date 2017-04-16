@@ -208,5 +208,8 @@ public class GroupService implements IBackendlessService{
 		
 	}
 	
+	public Group getGroupById(String groupId){
+		return Backendless.Persistence.of(Group.class).findById(groupId);
+	}
 	
 }

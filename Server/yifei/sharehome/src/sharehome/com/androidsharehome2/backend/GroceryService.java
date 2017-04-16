@@ -84,7 +84,9 @@ public class GroceryService implements IBackendlessService{
 		}
 		
 	}
-	
+	public Grocery getGroceryById(String groceryId){
+		return Backendless.Persistence.of(Grocery.class).findById(groceryId);
+	}
 	
 	
 }

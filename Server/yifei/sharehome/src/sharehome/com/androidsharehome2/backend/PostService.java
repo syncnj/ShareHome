@@ -113,9 +113,12 @@ public class PostService implements IBackendlessService{
 			
 			return true;
 		}
+		
 
 
-
+	}
+	public Post getPostById(String postId){
+		return Backendless.Persistence.of(Post.class).findById(postId);
 	}
 }
 
