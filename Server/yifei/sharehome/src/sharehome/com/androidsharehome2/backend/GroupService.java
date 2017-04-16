@@ -47,6 +47,7 @@ public class GroupService implements IBackendlessService{
 		group.setLeaderId(leaderId);
 		group.setTeamMembersList(leaderId +",");
 		group.setPostIdList("");
+		group.setGroceryIdList("");
 		
 	 	Backendless.Persistence.save( group );
 	 	BackendlessUser user =Backendless.UserService.findById(leaderId);
@@ -183,9 +184,27 @@ public class GroupService implements IBackendlessService{
 		 
 		 BackendlessCollection<Post> postResult = Backendless.Data.of(Post.class).find(dataQuery);
 		 return postResult.getCurrentPage();
-		 
-		
-		
+	}
+	
+	
+	public List<Grocery> getAllGrocery(String groupId){
+		if( groupId == null){
+			throw new IllegalArgumentException("Missing input message!!!");
+		}
+		// Group group = Backendless.Persistence.of(Group.class).findById(groupId.trim());
+	 
+		QueryOptions queryOptions = new QueryOptions();
+		List<String> sortBy = new ArrayList<String>();
+		sortBy.add("status");
+		queryOptions.setSortBy(sortBy);
+	 
+		String whereClause = "groupId = '" + groupId.trim() + "'";
+		BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+		dataQuery.setWhereClause(whereClause);
+		dataQuery.setQueryOptions(queryOptions);
+	 
+		BackendlessCollection<Grocery> groceryResult = Backendless.Data.of(Grocery.class).find(dataQuery);
+		return groceryResult.getCurrentPage();
 		
 	}
 	

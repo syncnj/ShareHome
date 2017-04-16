@@ -30,6 +30,9 @@ public class Post {
 	public int getUpVote(){
 		return this.upVote;
 	}
+	public int getDownVote(){
+		return this.downVote;
+	}
 	public int gerCon(){
 		return this.downVote;
 	}
@@ -45,11 +48,11 @@ public class Post {
 	public void setDownVote(int downVote){
 		this.downVote = downVote;
 	}
-	public void addUpVote(int number){
-		this.upVote += number;
+	public void addUpVote(){
+		this.upVote ++;
 	}
-	public void addDownVote(int number){
-		this.downVote += number;
+	public void addDownVote(){
+		this.downVote ++;
 	}
 	public void setUserId(String userId){
 		this.userId = userId;

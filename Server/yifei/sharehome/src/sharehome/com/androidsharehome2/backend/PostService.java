@@ -59,7 +59,7 @@ public class PostService implements IBackendlessService{
 		Backendless.Persistence.save(group);
 		return post.getObjectId();
 	}
-	public boolean deletedPost(String postId, String userId) throws Exception{
+	public boolean deletePost(String postId, String userId) throws Exception{
 		if(postId == null || userId == null || postId.trim() == "" || userId.trim() == ""){
 			throw new IllegalArgumentException("Invalid input argument");
 		}
@@ -87,7 +87,7 @@ public class PostService implements IBackendlessService{
 
 		if (indexOfFirstChar + postId.length() + 1 == postList.length()) {
 			// member is last user in group
-			if ( postList.charAt(indexOfFirstChar - 1) != ',' ){
+			if ( indexOfFirstChar != 0 && postList.charAt(indexOfFirstChar - 1) != ',' ){
 				throw new Exception("Post can't be found");
 			}
 
