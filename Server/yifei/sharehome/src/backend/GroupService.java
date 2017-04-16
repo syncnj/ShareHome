@@ -3,8 +3,11 @@ package backend;
 
 import com.backendless.*;
 import com.backendless.persistence.BackendlessDataQuery;
+import com.backendless.persistence.QueryOptions;
 import com.backendless.servercode.IBackendlessService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class GroupService implements IBackendlessService{
@@ -161,5 +164,35 @@ public class GroupService implements IBackendlessService{
 		throw new Exception("Member can't be found");
 
 	}
+	
+	public List<Post> getAllPost(String groupId){
+		 if( groupId == null){
+				throw new IllegalArgumentException("Missing input message!!!");
+			}
+		// Group group = Backendless.Persistence.of(Group.class).findById(groupId.trim());
+		 
+//		 QueryOptions queryOptions = new QueryOptions();
+//		 List<String> sortBy = new ArrayList<String>();
+//		 sortBy.add("created DESC");
+//		 queryOptions.setSortBy(sortBy);
+//		 
+//		 String whereClause = "groupId = '" + groupId.trim() + "'";
+//		 BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+//		 dataQuery.setWhereClause(whereClause);
+//		 dataQuery.setQueryOptions(queryOptions);
+//		 
+//		 BackendlessCollection<Post> postResult = Backendless.Data.of(Post.class).find(dataQuery);
+//		 return postResult.getCurrentPage();
+		 
+		 BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+			String whereClause = "groupId = '" + groupId.trim() + "'";
+			dataQuery.setWhereClause( whereClause );
+
+			BackendlessCollection<Post> postResult = Backendless.Data.of( Post.class).find(dataQuery);
+			return postResult.getCurrentPage();
+		
+		
+	}
+	
 	
 }
