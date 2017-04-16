@@ -1,4 +1,4 @@
-package backend;
+package sharehome.com.androidsharehome2.backend;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;

@@ -1,4 +1,4 @@
-package backend;
+package sharehome.com.androidsharehome2.backend;
 
 import com.backendless.servercode.IBackendlessService;
 import com.sun.org.apache.xpath.internal.operations.String;

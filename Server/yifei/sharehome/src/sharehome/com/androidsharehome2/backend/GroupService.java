@@ -1,4 +1,4 @@
-package backend;
+package sharehome.com.androidsharehome2.backend;
 
 
 import com.backendless.*;
@@ -171,25 +171,20 @@ public class GroupService implements IBackendlessService{
 			}
 		// Group group = Backendless.Persistence.of(Group.class).findById(groupId.trim());
 		 
-//		 QueryOptions queryOptions = new QueryOptions();
-//		 List<String> sortBy = new ArrayList<String>();
-//		 sortBy.add("created DESC");
-//		 queryOptions.setSortBy(sortBy);
-//		 
-//		 String whereClause = "groupId = '" + groupId.trim() + "'";
-//		 BackendlessDataQuery dataQuery = new BackendlessDataQuery();
-//		 dataQuery.setWhereClause(whereClause);
-//		 dataQuery.setQueryOptions(queryOptions);
-//		 
-//		 BackendlessCollection<Post> postResult = Backendless.Data.of(Post.class).find(dataQuery);
-//		 return postResult.getCurrentPage();
+		 QueryOptions queryOptions = new QueryOptions();
+		 List<String> sortBy = new ArrayList<String>();
+		 sortBy.add("created DESC");
+		 queryOptions.setSortBy(sortBy);
 		 
+		 String whereClause = "groupId = '" + groupId.trim() + "'";
 		 BackendlessDataQuery dataQuery = new BackendlessDataQuery();
-			String whereClause = "groupId = '" + groupId.trim() + "'";
-			dataQuery.setWhereClause( whereClause );
-
-			BackendlessCollection<Post> postResult = Backendless.Data.of( Post.class).find(dataQuery);
-			return postResult.getCurrentPage();
+		 dataQuery.setWhereClause(whereClause);
+		 dataQuery.setQueryOptions(queryOptions);
+		 
+		 BackendlessCollection<Post> postResult = Backendless.Data.of(Post.class).find(dataQuery);
+		 return postResult.getCurrentPage();
+		 
+		
 		
 		
 	}

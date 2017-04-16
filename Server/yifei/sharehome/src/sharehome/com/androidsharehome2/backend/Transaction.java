@@ -1,4 +1,4 @@
-package backend;
+package sharehome.com.androidsharehome2.backend;
 
 import java.util.List;
 
