@@ -13,27 +13,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.facebook.login.LoginManager;
+
+import java.util.InputMismatchException;
+
+import sharehome.com.androidsharehome2.backend.GroupService;
 
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -110,5 +112,42 @@ public class ProfileActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onCreateGroup (View v){
+        EditText groupName = ((EditText)findViewById(R.id.group_name_input));
+        String newGroupName = groupName.getText().toString();
+        try {
+            createGroup(newGroupName, Backendless.UserService.CurrentUser().getObjectId());
+        } catch (Exception e) {
+            String m = "For whatever reason, group not created.";
+            Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
+        }
+        groupName.setText("");
+        String m = "Group " + newGroupName + " created!";
+        Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
+    }
+    public String createGroup(final String name, final String userId){
+
+        final GroupService group1 = GroupService.getInstance();
+
+        new Thread(new Runnable() {
+            public void run() {
+
+                // synchronous backendless API call here:
+
+                //String groupID;
+                try {
+                    //System.out.println(""  + "entered ");
+                    group1.createNewGroup( name, userId);//Backendless.UserService.CurrentUser().getObjectId());
+                }
+                catch (Exception ex){
+                    System.out.println("" + ex + "exception find here");
+                }
+
+            }
+        }).start();
+
+        return "";
     }
 }

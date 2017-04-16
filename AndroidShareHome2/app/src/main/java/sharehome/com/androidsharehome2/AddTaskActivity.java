@@ -31,15 +31,16 @@ public class AddTaskActivity extends Activity{
     EditText TaskNameInput;
     String TaskNameString;
 
-public String findCheckedRoommates(String[] allRoommates, boolean[] checkedRoommates){
-    String returnNames = "";
-        for(int j =0; j<allRoommates.length;j++){
-        if(checkedRoommates[j]==true){
-             returnNames = returnNames + " " +allRoommates[j];
-        }
+    public String findCheckedRoommates(String[] allRoommates, boolean[] checkedRoommates){
+        String returnNames = "";
+            for(int j =0; j<allRoommates.length;j++){
+                if(checkedRoommates[j]==true){
+                     returnNames = returnNames + " " +allRoommates[j];
+                }
+            }
+        return returnNames;
     }
-return returnNames;
-    }
+
     public void submitMessageHandler(View view){
 
         Toast.makeText(getApplicationContext(),"need to replace to actual submittion process \nSuccessful",Toast.LENGTH_SHORT).show();
@@ -50,18 +51,12 @@ return returnNames;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
-
-
         submitTask = (Button) findViewById(R.id.submitTask);
 
         openRoommateList = (Button)findViewById(R.id.openRoommateList);
 
-
         DailyBaseSpinner = (Spinner)findViewById(R.id.spinner_scheduling);
         TaskNameInput = (EditText)findViewById(R.id.input_task_name) ;
-
-
-
 
         openRoommateList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +66,6 @@ return returnNames;
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("select your Room mate");
-
 
        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
            @Override
@@ -85,7 +79,7 @@ return returnNames;
                 //get user input on task name and time period
                 TimePeriod= DailyBaseSpinner.getSelectedItem().toString();
                 TaskNameString = TaskNameInput.getText().toString();
-                Toast.makeText(getApplicationContext(),findCheckedRoommates(Roommates,checkedItems)+ " should work base on " + TimePeriod + "on doing "+TaskNameString,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),findCheckedRoommates(Roommates,checkedItems)+ " will  work base on " + TimePeriod + " doing "+TaskNameString,Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -98,9 +92,6 @@ return returnNames;
             }
         });
         ad = builder.create();
-
-
-
     }
 
 }

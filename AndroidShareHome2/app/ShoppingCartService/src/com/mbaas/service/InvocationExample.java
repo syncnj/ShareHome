@@ -1,7 +1,5 @@
 
-package sharehome.com.androidsharehome2.com.mbaas.service;
-
-import sharehome.com.androidsharehome2.com.mbaas.service.ShoppingCartService;
+package com.mbaas.service;
 
 public class InvocationExample
 {

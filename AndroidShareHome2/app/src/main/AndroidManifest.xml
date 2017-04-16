@@ -48,6 +48,19 @@
         <activity
             android:name=".AddTransactionActivity"
             android:label="@string/title_activity_add_transaction"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name=".AddPostActivity"
+            android:label="@string/title_activity_add_post"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddTaskActivityNAV"
+            android:label="@string/title_activity_add_task_nav"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

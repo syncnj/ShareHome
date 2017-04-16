@@ -1,11 +1,9 @@
 package sharehome.com.androidsharehome2;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,94 +14,65 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
+
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
-import com.backendless.async.callback.BackendlessCallback;
 import com.backendless.exceptions.BackendlessFault;
 
+import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import sharehome.com.androidsharehome2.backend.GroupService;
-import sharehome.com.androidsharehome2.com.mbaas.service.ShoppingItem;
-import sharehome.com.androidsharehome2.com.mbaas.service.ShoppingCartService;
-
+import sharehome.com.androidsharehome2.backend.Post;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    CallbackManager callbackManager;
+    LoginManager loginManager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //initialize Backendless server
         String appVersion = "v1";
         Backendless.initApp( this, "19E73C32-D357-313A-FF64-12612084E000", "19F8B6BD-34A1-655C-FF3E-9BD31F1B0C00",appVersion);
+        //create new user
         BackendlessUser user = new BackendlessUser();
 
         user.setPassword("Gerald");
 
 
-
-        Backendless.UserService.loginWithFacebook( MainActivity.this, new AsyncCallback<BackendlessUser>()
-        {
-            @Override
-            public void handleResponse( BackendlessUser loggedInUser )
-            {
-                // user logged in successfully
-            }
-
-            @Override
-            public void handleFault( BackendlessFault fault )
-            {
-                // failed to log in
-                System.out.println("Handling fault.");
-            }
-        });
+        callbackManager = CallbackManager.Factory.create();
+        loginManager = LoginManager.getInstance();
 
 
+// login with facebook
+        Backendless.UserService.loginWithFacebookSdk( MainActivity.this,
+                callbackManager,
+                new AsyncCallback<BackendlessUser>()
+                {
+                    @Override
+                    public void handleResponse( BackendlessUser loggedInUser )
+                    {
+                        // user logged in successfully
+                    }
 
-
-//backendless user registration sample code
-//        BackendlessUser user = new BackendlessUser();
-//        user.setEmail( "liuzihgong66@gmail.com" );
-//        user.setPassword( "Bullcardo666" );
-//        user.setProperty("name","Ricardo");
-
-//        user.setProperty("name", "Will");
-
-//        Backendless.UserService.update( user, new AsyncCallback<BackendlessUser>()
-//        {
-//            public void handleResponse( BackendlessUser user )
-//            {
-//               System.out.print("updated successfully");
-//            }
-//
-//            public void handleFault( BackendlessFault fault )
-//            {
-//                // user update failed, to get the error code call fault.getCode()
-//                System.out.print("updated failed" + fault.getCode());
-//            }
-//        });
-
-//
-//        Log.d("myTag", "This is my message");
-//
-//        GroupService group1 =  GroupService.getInstance();
-//        try{
-//            group1.createNewGroup("lucky1234",user.getObjectId());
-//        }
-//        catch (Exception ex){
-//            Log.d("myTag",ex + "");
-
-//        }
-
-
+                    @Override
+                    public void handleFault( BackendlessFault fault )
+                    {
+                        // failed to log in
+                    }
+                } );
 
 
 
@@ -123,6 +92,9 @@ public class MainActivity extends AppCompatActivity
         } );
 
 
+
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -130,8 +102,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action ", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -143,6 +115,46 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Create Display of everything!
+
+        System.out.println("Here we are.");
+
+        // ArrayList<Post> posts = server return;
+        List<Post> posts = new ArrayList<Post>();
+        GroupService g = null;
+        try {
+            g = GroupService.getInstance();
+        }
+        catch(Exception e){
+            System.out.println("It unsuccessfully found a group");
+        }
+        g.getAllPostAsync("73429308-0C76-21C9-FF0C-BB7CAEEF9100", new AsyncCallback<List<Post>>() {
+                @Override
+                public void handleResponse(List<Post> response) {
+                    Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                    System.out.println(response);
+                    ListView postListView = (ListView) findViewById(R.id.list);
+                    PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
+                    postListView.setAdapter(adapter);
+                    System.out.print("Successfully retrieved posts");
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+                    System.out.println("Failed to get all posts");
+                }
+            });
+
+
+    }
+
+
+    @Override
+    public void onActivityResult( int requestCode, int resultCode, Intent data )
+    {
+        super.onActivityResult( requestCode, resultCode, data );
+        callbackManager.onActivityResult( requestCode, resultCode, data );
     }
 
     @Override
@@ -185,12 +197,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_profile) {
             // Handle the camera action
-
-            try {
-                Backendless.UserService.logout();
-            } catch (Exception e) {
-                System.out.println("Hello" + e);
-            }
             Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_transactions) {
@@ -209,8 +215,14 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_logout) {
+            //Todo:MAKE THIS to Exit
+            try {
+                loginManager.logOut();
+                System.exit(0);
+            } catch (Exception e) {
+                System.out.println("Hello" + e);
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -226,5 +238,14 @@ public class MainActivity extends AppCompatActivity
     public void launchProfileActivity(View view) {
         Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
         startActivity(intent);
+    }
+    public void launchAddPostActivity(View view) {
+        Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
+        startActivity(intent);
+    }
+    public void LogoutFromFacebook(View v){
+
+        Snackbar.make(v, "Replace with your own action ", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 }

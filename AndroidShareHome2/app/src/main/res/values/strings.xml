@@ -27,4 +27,8 @@
 
     <string name="title_activity_add_transaction">AddTransactionActivity</string>
 
+    <string name="facebook_app_id">1890462441172221</string>
+    <string name="title_activity_add_post">AddPostActivity</string>
+    <string name="title_activity_add_task_nav">AddTaskActivityNAV</string>
+
 </resources>

@@ -17,7 +17,9 @@ import android.widget.Toast;
 
 public class AddGroceryListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-Button oneTimePurchase;Button dailyPurchase;
+
+    private Button oneTimePurchase;
+    private Button dailyPurchase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +27,9 @@ Button oneTimePurchase;Button dailyPurchase;
         setContentView(R.layout.activity_add_grocery_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         oneTimePurchase = (Button) findViewById(R.id.oneTimeButton);
         dailyPurchase = (Button) findViewById(R.id.dailyGroceryButton);
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

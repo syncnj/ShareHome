@@ -10,12 +10,13 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import java.util.*;
 
+import sharehome.com.androidsharehome2.backend.Post;
 
 public class GroupService
 {
     static final String BACKENDLESS_HOST = "https://api.backendless.com";
     static final String SERVICE_NAME = "GroupService";
-    static final String SERVICE_VERSION_NAME = "1.1.0";
+    static final String SERVICE_VERSION_NAME = "1.0.0";
     static final String APP_VERSION = "v1";
     static final String APP_ID = "19E73C32-D357-313A-FF64-12612084E000";
     static final String SECRET_KEY = "19F8B6BD-34A1-655C-FF3E-9BD31F1B0C00";
@@ -40,16 +41,16 @@ public class GroupService
 
 
     
-    public boolean addMember(java.lang.String newGroupMemberId, java.lang.String groupId)
+    public java.util.List<sharehome.com.androidsharehome2.backend.Post> getAllPost(java.lang.String groupId)
     {
-        Object[] args = new Object[]{newGroupMemberId, groupId};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addMember", args, boolean.class );
+        Object[] args = new Object[]{groupId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllPost", args, java.util.List.class );
     }
     
-    public void addMemberAsync(java.lang.String newGroupMemberId, java.lang.String groupId, AsyncCallback<Boolean> callback)
+    public void getAllPostAsync(java.lang.String groupId, AsyncCallback<java.util.List<sharehome.com.androidsharehome2.backend.Post>> callback)
     {
-        Object[] args = new Object[]{newGroupMemberId, groupId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addMember", args, Boolean.class, callback);
+        Object[] args = new Object[]{groupId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllPost", args, java.util.List.class, callback);
     }
     
     public void createNewGroup(java.lang.String groupName, java.lang.String leaderId)
@@ -62,6 +63,18 @@ public class GroupService
     {
         Object[] args = new Object[]{groupName, leaderId};
         Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewGroup", args, Object.class, callback);
+    }
+    
+    public boolean addMember(java.lang.String newGroupMemberId, java.lang.String groupId)
+    {
+        Object[] args = new Object[]{newGroupMemberId, groupId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addMember", args, boolean.class );
+    }
+    
+    public void addMemberAsync(java.lang.String newGroupMemberId, java.lang.String groupId, AsyncCallback<Boolean> callback)
+    {
+        Object[] args = new Object[]{newGroupMemberId, groupId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addMember", args, Boolean.class, callback);
     }
     
     public java.lang.String getMemberList(java.lang.String groupId)
