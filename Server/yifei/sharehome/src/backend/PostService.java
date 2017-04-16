@@ -54,11 +54,12 @@ public class PostService implements IBackendlessService{
 		//post.setUpVote(0);
 		post.setContent(postContent);
 		Backendless.Persistence.save(post);
+	
 		group.addPost(post.getObjectId());
 		Backendless.Persistence.save(group);
 		return post.getObjectId();
 	}
-	public void deletedPost(String postId, String userId){
+	public boolean deletedPost(String postId, String userId) throws Exception{
 		if(postId == null || userId == null || postId.trim() == "" || userId.trim() == ""){
 			throw new IllegalArgumentException("Invalid input argument");
 		}
@@ -74,7 +75,47 @@ public class PostService implements IBackendlessService{
 		
 		Post post = Backendless.Persistence.of(Post.class).findById(postId);
 		
-		Backendless.Persistence.of(Post.class).remove(post);
+		
+		
+		Group group = Backendless.Persistence.of(Group.class).findById(post.getGroupId());
+		String postList = group.getPostIdList();
+
+
+		int indexOfFirstChar = postList.indexOf(postId);
+
+
+
+		if (indexOfFirstChar + postId.length() + 1 == postList.length()) {
+			// member is last user in group
+			if ( postList.charAt(indexOfFirstChar - 1) != ',' ){
+				throw new Exception("Post can't be found");
+			}
+
+			group.setPostIdList(postList.substring(0, indexOfFirstChar));
+			Backendless.Persistence.save(group);
+			
+			Backendless.Persistence.of(Post.class).remove(post);
+			
+			return true;
+		} else {
+			// member is neither owner nor the last user
+
+			if ( postList.charAt(indexOfFirstChar - 1) != ',' || postList.charAt(postList.lastIndexOf(postId) + 1) != ','){
+				throw new Exception("Post can't be found");
+			}
+
+			String beforeDeletedPost = group.getPostIdList().substring(0, indexOfFirstChar);
+			String afterDeletedPost = group.getPostIdList().substring((indexOfFirstChar + postId.length() + 1), group.getPostIdList().length());
+			group.setTeamMembersList(beforeDeletedPost + afterDeletedPost);
+			Backendless.Persistence.save(group);
+
+			Backendless.Persistence.of(Post.class).remove(post);
+			
+			return true;
+		}
+
+
+
 	}
 }
 

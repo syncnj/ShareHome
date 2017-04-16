@@ -43,8 +43,12 @@ public class GroupService implements IBackendlessService{
 		group.setGroupName(groupName);
 		group.setLeaderId(leaderId);
 		group.setTeamMembersList(leaderId +",");
-		userResult.getCurrentPage().get(0).setProperty("groupId",group.getObjectId() );
+		group.setPostIdList("");
+		
 	 	Backendless.Persistence.save( group );
+	 	BackendlessUser user =Backendless.UserService.findById(leaderId);
+	 	user.setProperty("groupId", group.getObjectId());
+	 	Backendless.UserService.update(user);
 	}
 	
 	public boolean addMember(String newGroupMemberId,String groupId){
@@ -75,6 +79,11 @@ public class GroupService implements IBackendlessService{
 
 		group.addTeamMember(newGroupMemberId);
 		Backendless.Persistence.save( group );
+		
+		BackendlessUser user =Backendless.UserService.findById(newGroupMemberId);
+	 	user.setProperty("groupId", group.getObjectId());
+	 	Backendless.UserService.update(user);
+		
 		return true;
 
 	}
@@ -124,6 +133,11 @@ public class GroupService implements IBackendlessService{
 
 				group.setTeamMembersList(memberList.substring(0, indexOfFirstChar));
 				Backendless.Persistence.save(group);
+				
+				BackendlessUser user =Backendless.UserService.findById(memberId);
+			 	user.setProperty("groupId", "");
+			 	Backendless.UserService.update(user);
+			 	
 				return true;
 			} else {
 				// member is neither owner nor the last user
@@ -136,6 +150,11 @@ public class GroupService implements IBackendlessService{
 				String afterDeletedMember = group.getTeamMembersList().substring((indexOfFirstChar + memberId.length() + 1), group.getTeamMembersList().length());
 				group.setTeamMembersList(beforeDeletedMember + afterDeletedMember);
 				Backendless.Persistence.save(group);
+				
+				BackendlessUser user =Backendless.UserService.findById(memberId);
+			 	user.setProperty("groupId", "");
+			 	Backendless.UserService.update(user);
+				
 				return true;
 			}
 		}
