@@ -59,6 +59,7 @@ public class PostService implements IBackendlessService{
 		Backendless.Persistence.save(group);
 		return post.getObjectId();
 	}
+
 	public boolean deletePost(String postId, String userId) throws Exception{
 		if(postId == null || userId == null || postId.trim() == "" || userId.trim() == ""){
 			throw new IllegalArgumentException("Invalid input argument");
@@ -121,19 +122,26 @@ public class PostService implements IBackendlessService{
 		return Backendless.Persistence.of(Post.class).findById(postId);
 	}
 	
-	public int addUpVote(String postId){
+	public int addUpVote(String postId, String userId){
+
 		Post post = Backendless.Persistence.of(Post.class).findById(postId);
 		//int changedUpVote = post.getUpVote() + 1;
-		post.addUpVote();
-		Backendless.Persistence.save(post);
+		if (!post.getUpVoteList().contains(userId)){
+			// The user has not already upVoted
+			post.addUpVote();
+			Backendless.Persistence.save(post);
+		}
 		return post.getUpVote();
 	}
 	
-	public int addDownVote(String postId){
+	public int addDownVote(String postId, String userId){
 		Post post = Backendless.Persistence.of(Post.class).findById(postId);
-		post.addDownVote();
+		if (!post.getUpVoteList().contains(userId)){
+			// The user has not already upVoted
+			post.addDownVote();
+			Backendless.Persistence.save(post);
+		}
 		//int changedDownVote = post.getUpVote() + 1;
-		Backendless.Persistence.save(post);
 		return post.getDownVote();
 	}
 }

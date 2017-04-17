@@ -12,7 +12,8 @@ public class Post {
 	private String userId;
 	private String groupId;
 	private boolean anonymous;
-
+	private String upVoteList;
+	private String downVoteList;
 	
 	public String getGroupId(){
 		return this.groupId;
@@ -38,6 +39,12 @@ public class Post {
 //	public int gerCon(){
 //		return this.downVote;
 //	}
+
+
+	public String getUpVoteList(){return this.upVoteList;}
+	public String getDownVoteList() {return this.downVoteList;}
+
+
 	public String getContent(){
 		return this.content;
 	}
