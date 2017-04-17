@@ -10,6 +10,8 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import java.util.*;
 
+import sharehome.com.androidsharehome2.backend.Group;
+import sharehome.com.androidsharehome2.backend.Grocery;
 import sharehome.com.androidsharehome2.backend.Post;
 
 public class GroupService
@@ -40,6 +42,30 @@ public class GroupService
     }
 
 
+    
+    public sharehome.com.androidsharehome2.backend.Group getGroupById(java.lang.String groupId)
+    {
+        Object[] args = new Object[]{groupId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getGroupById", args, sharehome.com.androidsharehome2.backend.Group.class );
+    }
+    
+    public void getGroupByIdAsync(java.lang.String groupId, AsyncCallback<sharehome.com.androidsharehome2.backend.Group> callback)
+    {
+        Object[] args = new Object[]{groupId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getGroupById", args, sharehome.com.androidsharehome2.backend.Group.class, callback);
+    }
+    
+    public java.util.List<sharehome.com.androidsharehome2.backend.Grocery> getAllGrocery(java.lang.String groupId)
+    {
+        Object[] args = new Object[]{groupId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllGrocery", args, java.util.List.class );
+    }
+    
+    public void getAllGroceryAsync(java.lang.String groupId, AsyncCallback<java.util.List<sharehome.com.androidsharehome2.backend.Grocery>> callback)
+    {
+        Object[] args = new Object[]{groupId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllGrocery", args, java.util.List.class, callback);
+    }
     
     public java.util.List<sharehome.com.androidsharehome2.backend.Post> getAllPost(java.lang.String groupId)
     {

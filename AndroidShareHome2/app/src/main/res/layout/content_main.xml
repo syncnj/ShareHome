@@ -14,7 +14,7 @@
     tools:showIn="@layout/app_bar_main">
 
     <ListView
-        android:id="@+id/list"
+        android:id="@+id/post_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </RelativeLayout>

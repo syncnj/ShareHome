@@ -13,4 +13,8 @@
     tools:context="sharehome.com.androidsharehome2.GroceryListActivity"
     tools:showIn="@layout/app_bar_grocery_list">
 
+    <ListView
+        android:id="@+id/grocery_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

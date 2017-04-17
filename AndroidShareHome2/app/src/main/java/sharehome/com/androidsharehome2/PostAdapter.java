@@ -46,11 +46,6 @@ public class PostAdapter extends ArrayAdapter<Post> {
                 upvoteView.setText(Integer.toString(currentPost.getUpVote()));
             }
         });
-//        upvoteView.setOnClickListener(new Button.OnClickListener() {
-//            public void onItemClick(AdapterView<?> list, View v, int pos, long id) {
-//                // Your code for item clicks
-//            }
-//        });
 
         Button downvoteView = (Button) listItemView.findViewById(R.id.downvotes);
         downvoteView.setText(Integer.toString(currentPost.getDownVote()) + " \u2193");

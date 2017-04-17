@@ -65,6 +65,18 @@ public class GroceryService
         Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewGrocery", args, java.lang.String.class, callback);
     }
     
+    public int changeStatus(java.lang.String groceryId)
+    {
+        Object[] args = new Object[]{groceryId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "changeStatus", args, int.class );
+    }
+    
+    public void changeStatusAsync(java.lang.String groceryId, AsyncCallback<Integer> callback)
+    {
+        Object[] args = new Object[]{groceryId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "changeStatus", args, Integer.class, callback);
+    }
+    
     public boolean deleteGrocery(java.lang.String groceryId, java.lang.String groupId)
     {
         Object[] args = new Object[]{groceryId, groupId};

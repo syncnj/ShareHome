@@ -1,5 +1,6 @@
 package sharehome.com.androidsharehome2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,10 +14,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Adapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import sharehome.com.androidsharehome2.backend.Grocery;
 import sharehome.com.androidsharehome2.backend.GroupService;
+import sharehome.com.androidsharehome2.backend.Post;
+import sharehome.com.androidsharehome2.backend.GroceryService;
+
 
 public class GroceryListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,6 +56,29 @@ public class GroceryListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Create Display of everything!
+
+        GroupService groupService = GroupService.getInstance();
+        groupService.getAllGroceryAsync("96080834-07E4-BE91-FFDD-F5CA082EFC00", new AsyncCallback<List<Grocery>>() {
+            @Override
+            public void handleResponse(List<Grocery> response){
+                Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                System.out.println(response);
+                ListView groceryListView = (ListView) findViewById(R.id.grocery_list);
+                GroceryAdapter adapter = new GroceryAdapter(getApplicationContext(), response);
+                groceryListView.setAdapter(adapter);
+            }
+
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                System.out.println("Failed to get all posts");
+            }
+        });
+
+
+
     }
 
     @Override

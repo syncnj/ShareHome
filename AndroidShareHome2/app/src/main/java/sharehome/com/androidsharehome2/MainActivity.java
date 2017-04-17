@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity
                 public void handleResponse(List<Post> response) {
                     Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
                     System.out.println(response);
-                    ListView postListView = (ListView) findViewById(R.id.list);
+                    ListView postListView = (ListView) findViewById(R.id.post_list);
                     PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
                     postListView.setAdapter(adapter);
                     System.out.print("Successfully retrieved posts");
