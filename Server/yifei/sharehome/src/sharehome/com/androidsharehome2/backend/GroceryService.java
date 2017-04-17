@@ -88,11 +88,11 @@ public class GroceryService implements IBackendlessService{
 		return Backendless.Persistence.of(Grocery.class).findById(groceryId);
 	}
 	
-	public int changeStatus(String groceryId){
-		Grocery grocery = Backendless.Persistence.of(Grocery.class).findById(groceryId);
-		grocery.changeStatus();
-		Backendless.Persistence.save(grocery);
-		return grocery.getStatus();
-	}
+//	public int changeStatus(String groceryId){
+//		Grocery grocery = Backendless.Persistence.of(Grocery.class).findById(groceryId);
+//		grocery.changeStatus();
+//		
+//		return grocery.getStatus();
+//	}
 	
 }

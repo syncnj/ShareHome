@@ -1,5 +1,7 @@
 package sharehome.com.androidsharehome2.backend;
 
+import com.backendless.Backendless;
+
 public class Post {
 	private String postTitle;
 	private String objectId;
@@ -50,9 +52,11 @@ public class Post {
 	}
 	public void addUpVote(){
 		this.upVote ++;
+		Backendless.Persistence.save(this);
 	}
 	public void addDownVote(){
 		this.downVote ++;
+		Backendless.Persistence.save(this);
 	}
 	public void setUserId(String userId){
 		this.userId = userId;

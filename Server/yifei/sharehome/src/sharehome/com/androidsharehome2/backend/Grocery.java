@@ -1,5 +1,7 @@
 package sharehome.com.androidsharehome2.backend;
 
+import com.backendless.Backendless;
+
 /**
  * Created by yblur on 4/14/2017.
  */
@@ -48,6 +50,7 @@ public class Grocery {
 		else if(status == 3){
 			status = 2;
 		}
+		Backendless.Persistence.save(this);
 	}
 }
 
