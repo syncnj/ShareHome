@@ -50,8 +50,8 @@ public class PostService implements IBackendlessService{
 		post.setPostTitle(postTitle);
 		post.setUserId(userId);
 		post.setGroupId(groupId);
-		//post.setDownVote(0);
-		//post.setUpVote(0);
+		post.setDownVote(0);
+		post.setUpVote(0);
 		post.setContent(postContent);
 		Backendless.Persistence.save(post);
 	
@@ -119,6 +119,22 @@ public class PostService implements IBackendlessService{
 	}
 	public Post getPostById(String postId){
 		return Backendless.Persistence.of(Post.class).findById(postId);
+	}
+	
+	public int addUpVote(String postId){
+		Post post = Backendless.Persistence.of(Post.class).findById(postId);
+		//int changedUpVote = post.getUpVote() + 1;
+		post.addUpVote();
+		Backendless.Persistence.save(post);
+		return post.getUpVote();
+	}
+	
+	public int addDownVote(String postId){
+		Post post = Backendless.Persistence.of(Post.class).findById(postId);
+		post.addDownVote();
+		//int changedDownVote = post.getUpVote() + 1;
+		Backendless.Persistence.save(post);
+		return post.getDownVote();
 	}
 }
 

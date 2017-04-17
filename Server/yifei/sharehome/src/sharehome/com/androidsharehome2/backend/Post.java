@@ -33,9 +33,9 @@ public class Post {
 	public int getDownVote(){
 		return this.downVote;
 	}
-	public int gerCon(){
-		return this.downVote;
-	}
+//	public int gerCon(){
+//		return this.downVote;
+//	}
 	public String getContent(){
 		return this.content;
 	}
