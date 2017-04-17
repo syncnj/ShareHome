@@ -1,0 +1,50 @@
+[DEBUG]2017-04-17 08:12:54,085::TimersLogger::Message processor - 0::MessageDispatcher::On message received. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:12:54,086::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. APP_ID::19E73C32-D357-313A-FF64-12612084E000 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'} ThreadID::19
+
+[DEBUG]2017-04-17 08:12:54,097::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. Execute Task. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Task::InvocationTask[ appId:19E73C32-D357-313A-FF64-12612084E000 versionId:BC901F6E-C4EB-E633-FF84-AE348256BD00 ] Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:12:54,104::TimersLogger::Worker Child::EventInvocationTask::CodeRunner starts timer execution, should be log about success::19E73C32-D357-313A-FF64-12612084E000::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:17:09,558::TimersLogger::Message processor - 0::MessageDispatcher::On message received. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:17:09,559::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. APP_ID::19E73C32-D357-313A-FF64-12612084E000 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'} ThreadID::19
+
+[DEBUG]2017-04-17 08:17:09,568::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. Execute Task. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Task::InvocationTask[ appId:19E73C32-D357-313A-FF64-12612084E000 versionId:BC901F6E-C4EB-E633-FF84-AE348256BD00 ] Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:17:09,573::TimersLogger::Worker Child::EventInvocationTask::CodeRunner starts timer execution, should be log about success::19E73C32-D357-313A-FF64-12612084E000::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:17:14,888::TimersLogger::Message processor - 0::MessageDispatcher::On message received. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:17:14,888::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. APP_ID::19E73C32-D357-313A-FF64-12612084E000 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'} ThreadID::19
+
+[DEBUG]2017-04-17 08:17:14,889::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. Execute Task. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Task::InvocationTask[ appId:19E73C32-D357-313A-FF64-12612084E000 versionId:BC901F6E-C4EB-E633-FF84-AE348256BD00 ] Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:17:14,895::TimersLogger::Worker Child::EventInvocationTask::CodeRunner starts timer execution, should be log about success::19E73C32-D357-313A-FF64-12612084E000::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:17:57,999::TimersLogger::Message processor - 0::MessageDispatcher::On message received. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:17:57,999::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. APP_ID::19E73C32-D357-313A-FF64-12612084E000 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'} ThreadID::19
+
+[DEBUG]2017-04-17 08:17:58,000::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. Execute Task. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Task::InvocationTask[ appId:19E73C32-D357-313A-FF64-12612084E000 versionId:BC901F6E-C4EB-E633-FF84-AE348256BD00 ] Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:17:58,002::TimersLogger::Worker Child::EventInvocationTask::CodeRunner starts timer execution, should be log about success::19E73C32-D357-313A-FF64-12612084E000::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:19:37,633::TimersLogger::Message processor - 0::MessageDispatcher::On message received. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:19:37,634::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. APP_ID::19E73C32-D357-313A-FF64-12612084E000 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'} ThreadID::19
+
+[DEBUG]2017-04-17 08:19:37,642::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. Execute Task. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Task::InvocationTask[ appId:19E73C32-D357-313A-FF64-12612084E000 versionId:BC901F6E-C4EB-E633-FF84-AE348256BD00 ] Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:19:37,650::TimersLogger::Worker Child::EventInvocationTask::CodeRunner starts timer execution, should be log about success::19E73C32-D357-313A-FF64-12612084E000::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:21:08,129::TimersLogger::Message processor - 0::MessageDispatcher::On message received. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:21:08,129::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. APP_ID::19E73C32-D357-313A-FF64-12612084E000 Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'} ThreadID::19
+
+[DEBUG]2017-04-17 08:21:08,129::TimersLogger::Message processor - 0::CodeExecutor::InvokeEvent. Execute Task. APP_ID::19E73C32-D357-313A-FF64-12612084E000 ThreadID::19 Task::InvocationTask[ appId:19E73C32-D357-313A-FF64-12612084E000 versionId:BC901F6E-C4EB-E633-FF84-AE348256BD00 ] Timer::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:21:08,130::TimersLogger::Worker Child::EventInvocationTask::CodeRunner starts timer execution, should be log about success::19E73C32-D357-313A-FF64-12612084E000::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
+[DEBUG]2017-04-17 08:21:10,232::TimersLogger::Worker Child::EventInvocationTask::CodeRunner successfully finished timer execution::19E73C32-D357-313A-FF64-12612084E000::{'startDate':1492411200000,'frequency':{'schedule':'custom','repeat':{'every':3600}},'timername':'TaskManager'}
+
