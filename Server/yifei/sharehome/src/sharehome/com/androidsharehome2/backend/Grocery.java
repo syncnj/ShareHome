@@ -37,7 +37,7 @@ public class Grocery {
 	public void setGroupId(String groupId){
 		this.groupId = groupId;
 	}
-	public void changeStatus(){
+	public void setStatusLoop(){
 		if(status == 0){
 			status = 1;
 		}
@@ -50,7 +50,7 @@ public class Grocery {
 		else if(status == 3){
 			status = 2;
 		}
-		Backendless.Persistence.save(this);
+		//Backendless.Persistence.save(this);
 	}
 }
 
