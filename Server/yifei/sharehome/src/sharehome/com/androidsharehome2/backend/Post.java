@@ -52,11 +52,11 @@ public class Post {
 	}
 	public void addUpVote(){
 		this.upVote ++;
-		Backendless.Persistence.save(this);
+		//Backendless.Persistence.save(this);
 	}
 	public void addDownVote(){
 		this.downVote ++;
-		Backendless.Persistence.save(this);
+		//Backendless.Persistence.save(this);
 	}
 	public void setUserId(String userId){
 		this.userId = userId;

@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class GroceryService implements IBackendlessService{
-	public String createNewGrocery(String groupId, String groceryName){
-		if(groupId == null || groceryName == null ||
+	public String createNewGrocery(String groupId, String groceryName, int status){
+		if(groupId == null || groceryName == null || status == 0 ||
 				groupId.trim() == "" || groceryName.trim() == ""){
 			throw new IllegalArgumentException("Invalid input argument");
 		}
@@ -33,7 +33,7 @@ public class GroceryService implements IBackendlessService{
 		Grocery grocery = new Grocery();
 		grocery.setGroceryName(groceryName);
 		grocery.setGroupId(groupId);
-		
+		grocery.setStatus(status);
 		
 		Backendless.Persistence.save(grocery);
 		
@@ -88,11 +88,11 @@ public class GroceryService implements IBackendlessService{
 		return Backendless.Persistence.of(Grocery.class).findById(groceryId);
 	}
 	
-//	public int changeStatus(String groceryId){
-//		Grocery grocery = Backendless.Persistence.of(Grocery.class).findById(groceryId);
-//		grocery.changeStatus();
-//		
-//		return grocery.getStatus();
-//	}
+	public int changeStatus(String groceryId){
+		Grocery grocery = Backendless.Persistence.of(Grocery.class).findById(groceryId);
+		grocery.changeStatus();
+		Backendless.Persistence.save(grocery);
+		return grocery.getStatus();
+	}
 	
 }

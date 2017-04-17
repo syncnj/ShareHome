@@ -98,7 +98,11 @@ public class TaskService implements IBackendlessService{
 		int indexOfFirstMember = task.getMembersIdList().indexOf(",") + 1;
 		String movedMember =  task.getMembersIdList().substring(0,indexOfFirstMember);
 		task.setMembersIdList(task.getMembersIdList().substring(indexOfFirstMember) + movedMember);
+		
+		Date newStartTime = new Date(task.getStartTime().getTime() + task.getDuration() * 3600 *1000);
+		task.setStartTime(newStartTime);
 		Backendless.Persistence.save(task);
+		
 	}
 	
 }

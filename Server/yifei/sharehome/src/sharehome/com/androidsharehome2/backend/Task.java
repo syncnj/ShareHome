@@ -63,7 +63,7 @@ public class Task {
 	
 	public void addMember(String memberId){
 		this.membersIdList += memberId + ",";
-		Backendless.Persistence.save(this);
+		
 	}
 	public void setStartTime(Date startTime){
 		this.startTime = startTime;

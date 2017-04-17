@@ -9,8 +9,27 @@ public class Transaction {
     private String transTitle;
     private String content;
     private String requestor;
-    private List<String> otherPeople; // Other people
+    private String otherPeople; // Other people
 
     private double transAmount;
 
+    public String getTransTitle(){
+    	return this.transTitle;
+    }
+    public String getContent(){
+    	return this.content;
+    }
+    public String getRequestor(){
+    	return this.requestor;
+    }
+    public String getOtherPeople(){
+    	return this.otherPeople;
+    }
+    public double getTransAmount(){
+    	return this.transAmount;
+    }
+    
+    
+    
+    
 }
