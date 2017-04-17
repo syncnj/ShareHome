@@ -32,10 +32,12 @@ public class TaskManagerTimer extends com.backendless.servercode.extension.Timer
 
     //BackendlessCollection<Map> allTasks = Backendless.Persistence.of( "Task" ).find();
     for ( Task task: tasksDue ){
+        //System.out.println(task);
         String taskId = task.getObjectId();
         TaskService taskService = new TaskService();
+        System.out.print("Task ID is : " + taskId);
         taskService.rotate(taskId);
-      System.out.print(taskId);
+
     }
   }
     
