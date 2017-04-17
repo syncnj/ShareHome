@@ -75,7 +75,7 @@ public class GroceryService implements IBackendlessService{
 
 			String beforeDeletedGrocery = group.getGroceryIdList().substring(0, indexOfFirstChar);
 			String afterDeletedGrocery = group.getGroceryIdList().substring((indexOfFirstChar + groceryId.length() + 1), group.getGroceryIdList().length());
-			group.setTeamMembersList(beforeDeletedGrocery + afterDeletedGrocery);
+			group.setGroceryIdList(beforeDeletedGrocery + afterDeletedGrocery);
 			Backendless.Persistence.save(group);
 
 			Backendless.Persistence.of(Grocery.class).remove(grocery);

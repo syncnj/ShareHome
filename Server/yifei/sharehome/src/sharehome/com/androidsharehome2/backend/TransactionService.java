@@ -54,4 +54,51 @@ public class TransactionService implements IBackendlessService {
 		return transaction.getObjectId();
 		
     }
+    
+    public boolean deleteTransaction(String transactionId, String groupId) throws Exception{
+    	if(transactionId == null || groupId == null || transactionId.trim() == "" || groupId.trim() == ""){
+			throw new IllegalArgumentException("Invalid input argument");
+		}
+		
+		Transaction transaction = Backendless.Persistence.of(Transaction.class).findById(transactionId);
+		Group group = Backendless.Persistence.of(Group.class).findById(groupId);
+		String transactionList = group.getTransactionIdList();
+		int indexOfFirstChar = transactionList.indexOf(transactionId);
+		
+		if (indexOfFirstChar + transactionId.length() + 1 == transactionList.length()) {
+			// member is last user in group
+			if ( indexOfFirstChar != 0 && transactionList.charAt(indexOfFirstChar - 1) != ',' ){
+				throw new Exception("Grocery can't be found");
+			}
+
+			group.setTransactionIdList(transactionList.substring(0, indexOfFirstChar));
+			Backendless.Persistence.save(group);
+			
+			Backendless.Persistence.of(Transaction.class).remove(transaction);
+			
+			return true;
+		} else {
+
+			if ( transactionList.charAt(indexOfFirstChar - 1) != ',' || transactionList.charAt(transactionList.lastIndexOf(transactionId) + 1) != ','){
+				throw new Exception("Transaction can't be found");
+			}
+
+			String beforeDeletedTransaction = group.getTransactionIdList().substring(0, indexOfFirstChar);
+			String afterDeletedTransaction = group.getTransactionIdList().substring((indexOfFirstChar + transactionId.length() + 1), group.getTransactionIdList().length());
+			group.setTeamMembersList(beforeDeletedTransaction + afterDeletedTransaction);
+			Backendless.Persistence.save(group);
+
+			Backendless.Persistence.of(Transaction.class).remove(transaction);
+			
+			return true;
+		}
+    	
+    	
+    	
+    	
+    }
+    
+    
+    
+    
 }
