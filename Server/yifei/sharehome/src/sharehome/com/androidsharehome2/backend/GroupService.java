@@ -48,6 +48,7 @@ public class GroupService implements IBackendlessService{
 		group.setTeamMembersList(leaderId +",");
 		group.setPostIdList("");
 		group.setGroceryIdList("");
+		group.setTaskIdList("");
 		
 	 	Backendless.Persistence.save( group );
 	 	BackendlessUser user =Backendless.UserService.findById(leaderId);
