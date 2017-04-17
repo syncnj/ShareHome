@@ -129,6 +129,7 @@ public class PostService implements IBackendlessService{
 		if (!post.getUpVoteList().contains(userId)){
 			// The user has not already upVoted
 			post.addUpVote();
+			post.upVoteList += (userId +",");
 			Backendless.Persistence.save(post);
 		}
 		return post.getUpVote();
@@ -139,6 +140,7 @@ public class PostService implements IBackendlessService{
 		if (!post.getUpVoteList().contains(userId)){
 			// The user has not already upVoted
 			post.addDownVote();
+			post.downVoteList += (userId +",");
 			Backendless.Persistence.save(post);
 		}
 		//int changedDownVote = post.getUpVote() + 1;
