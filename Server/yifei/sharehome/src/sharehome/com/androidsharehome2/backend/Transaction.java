@@ -12,8 +12,12 @@ public class Transaction {
     private String otherPeople; // Other people
     private String objectId;
     private String ownerId;
+    private String groupId;
     private double transAmount;
 
+    public String getGroupId(){
+    	return this.groupId;
+    }
     public String getObjectId(){
     	return this.objectId;
     }
@@ -49,5 +53,8 @@ public class Transaction {
     }
     public void setTransAmount(double transAmount){
     	this.transAmount = transAmount;
+    }
+    public void setGroupId(String groupId){
+    	this.groupId = groupId;
     }
 }

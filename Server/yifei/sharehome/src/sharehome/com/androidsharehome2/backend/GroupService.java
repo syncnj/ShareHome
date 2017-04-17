@@ -210,6 +210,47 @@ public class GroupService implements IBackendlessService{
 		
 	}
 	
+	public List<Task> getAllTask(String groupId){
+		if( groupId == null){
+			throw new IllegalArgumentException("Missing input message!!!");
+		}
+		// Group group = Backendless.Persistence.of(Group.class).findById(groupId.trim());
+	 
+		QueryOptions queryOptions = new QueryOptions();
+		List<String> sortBy = new ArrayList<String>();
+		sortBy.add("startTime DESC");
+		queryOptions.setSortBy(sortBy);
+	 
+		String whereClause = "groupId = '" + groupId.trim() + "'";
+		BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+		dataQuery.setWhereClause(whereClause);
+		dataQuery.setQueryOptions(queryOptions);
+	 
+		BackendlessCollection<Task> taskResult = Backendless.Data.of(Task.class).find(dataQuery);
+		return taskResult.getCurrentPage();
+	}
+	
+	public List<Transaction> getAllTransaction(String groupId){
+		if( groupId == null){
+			throw new IllegalArgumentException("Missing input message!!!");
+		}
+		// Group group = Backendless.Persistence.of(Group.class).findById(groupId.trim());
+	 
+		QueryOptions queryOptions = new QueryOptions();
+		List<String> sortBy = new ArrayList<String>();
+		sortBy.add("created DESC");
+		queryOptions.setSortBy(sortBy);
+	 
+		String whereClause = "groupId = '" + groupId.trim() + "'";
+		BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+		dataQuery.setWhereClause(whereClause);
+		dataQuery.setQueryOptions(queryOptions);
+	 
+		BackendlessCollection<Transaction> transactionResult = Backendless.Data.of(Transaction.class).find(dataQuery);
+		return transactionResult.getCurrentPage();
+	}
+	
+	
 	public Group getGroupById(String groupId){
 		return Backendless.Persistence.of(Group.class).findById(groupId);
 	}

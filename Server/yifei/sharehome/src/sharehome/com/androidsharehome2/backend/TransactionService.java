@@ -18,28 +18,28 @@ public class TransactionService implements IBackendlessService {
 			throw new IllegalArgumentException("Invalid input argument");
 		}
     	
-    	BackendlessDataQuery dataQuery = new BackendlessDataQuery();
-		String whereClause = "objectId = '" + requestorId.trim() + "'";
-		dataQuery.setWhereClause( whereClause );
-
-		BackendlessCollection<BackendlessUser> userResult = Backendless.Data.of( BackendlessUser.class).find(dataQuery);
-
-		if (userResult.getCurrentPage().isEmpty()){
-			throw new RuntimeException(" ID is invalid or could not be found in the database");
-		}
+//    	BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+//		String whereClause = "objectId = '" + requestorId.trim() + "'";
+//		dataQuery.setWhereClause( whereClause );
+//
+//		BackendlessCollection<BackendlessUser> userResult = Backendless.Data.of( BackendlessUser.class).find(dataQuery);
+//
+//		if (userResult.getCurrentPage().isEmpty()){
+//			throw new RuntimeException(" ID is invalid or could not be found in the database");
+//		}
     	
 		
 		Group group = Backendless.Persistence.of(Group.class).findById(groupId);
 		
-		whereClause = "groupId = '" + groupId.trim() + "' AND transactionTitle = '" + title.trim() + "'";
-		//if (true)throw new RuntimeException(""+ whereClause);
-		dataQuery.setWhereClause( whereClause );
-		BackendlessCollection<Map> result = Backendless.Persistence.of( "Transaction" ).find( dataQuery);
-
-		if ( !result.getCurrentPage().isEmpty()){
-			throw new RuntimeException("Same Transaction already exist" + result.getCurrentPage());
-
-		}
+//		whereClause = "groupId = '" + groupId.trim() + "' AND transactionTitle = '" + title.trim() + "'";
+//		//if (true)throw new RuntimeException(""+ whereClause);
+//		dataQuery.setWhereClause( whereClause );
+//		BackendlessCollection<Map> result = Backendless.Persistence.of( "Transaction" ).find( dataQuery);
+//
+//		if ( !result.getCurrentPage().isEmpty()){
+//			throw new RuntimeException("Same Transaction already exist" + result.getCurrentPage());
+//
+//		}
     	
 		
 		Transaction transaction = new Transaction();
@@ -47,6 +47,7 @@ public class TransactionService implements IBackendlessService {
 		transaction.setContent(content);
 		transaction.setOtherPeople(otherPeople);
 		transaction.setRequestor(requestorId);
+		transaction.setGroupId(groupId);
 		Backendless.Persistence.save(transaction);
 		
 		group.addTransaction(transaction.getObjectId());
@@ -97,6 +98,9 @@ public class TransactionService implements IBackendlessService {
     	
     	
     }
+    public Transaction getTransactionById(String transactionId){
+		return Backendless.Persistence.of(Transaction.class).findById(transactionId);
+	}
     
     
     

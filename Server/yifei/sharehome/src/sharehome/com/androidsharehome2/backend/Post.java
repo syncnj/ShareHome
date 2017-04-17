@@ -44,7 +44,10 @@ public class Post {
 	public String getUpVoteList(){return this.upVoteList;}
 	public String getDownVoteList() {return this.downVoteList;}
 
-
+	public void setUpVoteList(String newList){this.upVoteList = newList;}
+	public void setDownVoteList(String newList) {this.downVoteList = newList;}
+	
+	
 	public String getContent(){
 		return this.content;
 	}
