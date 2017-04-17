@@ -40,16 +40,35 @@ public class GroceryAdapter extends ArrayAdapter<Grocery> {
 
         // Status button
         final Button buttonView = (Button) listItemView.findViewById(R.id.status_button);
-        buttonView.setText(Integer.toString(currentGrocery.getStatus()));
+        Integer status = (Integer) currentGrocery.getStatus();
+        String text = status.toString();
+        if(status == 3){
+            text = "Full";
+        } else if (status == 1){
+            text = "Restock";
+        } else if (status == 2){
+            text = "Low";
+        }
+        buttonView.setText(text);
         buttonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO: Put next two lines in Grocery.setStatus()
+//                currentGrocery.setStatus(currentGrocery.getStatus());
+
                 GroceryService.getInstance().changeStatusAsync(currentGrocery.getObjectId(), new AsyncCallback<Integer>() {
                     @Override
                     public void handleResponse(Integer response) {
                         currentGrocery.setStatus(response);
-                        buttonView.setText(Integer.toString(currentGrocery.getStatus()));
+                        String text = Integer.toString(response);
+                        if(response == 3){
+                            text = "Full";
+                        } else if (response == 1){
+                            text = "Restock";
+                        } else if (response == 2){
+                            text = "Low";
+                        }
+                        buttonView.setText(text);
                     }
 
                     @Override

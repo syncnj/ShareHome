@@ -10,6 +10,7 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import java.util.*;
 
+import sharehome.com.androidsharehome2.backend.Post;
 
 public class PostService
 {
@@ -40,16 +41,28 @@ public class PostService
 
 
     
-    public boolean deletedPost(java.lang.String postId, java.lang.String userId)
+    public int addUpVote(java.lang.String postId)
     {
-        Object[] args = new Object[]{postId, userId};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deletedPost", args, boolean.class );
+        Object[] args = new Object[]{postId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addUpVote", args, int.class );
     }
     
-    public void deletedPostAsync(java.lang.String postId, java.lang.String userId, AsyncCallback<Boolean> callback)
+    public void addUpVoteAsync(java.lang.String postId, AsyncCallback<Integer> callback)
     {
-        Object[] args = new Object[]{postId, userId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deletedPost", args, Boolean.class, callback);
+        Object[] args = new Object[]{postId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addUpVote", args, Integer.class, callback);
+    }
+    
+    public int addDownVote(java.lang.String postId)
+    {
+        Object[] args = new Object[]{postId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addDownVote", args, int.class );
+    }
+    
+    public void addDownVoteAsync(java.lang.String postId, AsyncCallback<Integer> callback)
+    {
+        Object[] args = new Object[]{postId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addDownVote", args, Integer.class, callback);
     }
     
     public java.lang.String createNewPost(java.lang.String userId, java.lang.String groupId, java.lang.String postTitle, java.lang.String postContent)
@@ -62,6 +75,30 @@ public class PostService
     {
         Object[] args = new Object[]{userId, groupId, postTitle, postContent};
         Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewPost", args, java.lang.String.class, callback);
+    }
+    
+    public sharehome.com.androidsharehome2.backend.Post getPostById(java.lang.String postId)
+    {
+        Object[] args = new Object[]{postId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getPostById", args, sharehome.com.androidsharehome2.backend.Post.class );
+    }
+    
+    public void getPostByIdAsync(java.lang.String postId, AsyncCallback<sharehome.com.androidsharehome2.backend.Post> callback)
+    {
+        Object[] args = new Object[]{postId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getPostById", args, sharehome.com.androidsharehome2.backend.Post.class, callback);
+    }
+    
+    public boolean deletePost(java.lang.String postId, java.lang.String userId)
+    {
+        Object[] args = new Object[]{postId, userId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deletePost", args, boolean.class );
+    }
+    
+    public void deletePostAsync(java.lang.String postId, java.lang.String userId, AsyncCallback<Boolean> callback)
+    {
+        Object[] args = new Object[]{postId, userId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deletePost", args, Boolean.class, callback);
     }
     
 }

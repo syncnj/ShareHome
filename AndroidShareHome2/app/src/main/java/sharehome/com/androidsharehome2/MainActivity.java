@@ -35,13 +35,21 @@ import sharehome.com.androidsharehome2.backend.Post;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    CallbackManager callbackManager;
-    LoginManager loginManager;
+    private CallbackManager callbackManager;
+    private LoginManager loginManager;
+    private GroupService g = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Exit if coming from different activity logging out
+        if(getIntent().getBooleanExtra("EXIT", false)){
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_main);
         //initialize Backendless server
         String appVersion = "v1";
@@ -118,11 +126,6 @@ public class MainActivity extends AppCompatActivity
 
         // Create Display of everything!
 
-        System.out.println("Here we are.");
-
-        // ArrayList<Post> posts = server return;
-        List<Post> posts = new ArrayList<Post>();
-        GroupService g = null;
         try {
             g = GroupService.getInstance();
         }
@@ -170,7 +173,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.shared, menu);
         return true;
     }
 
@@ -182,7 +185,37 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {// Create Display of everything!
+
+            try {
+                g = GroupService.getInstance();
+            } catch (Exception e) {
+                System.out.println("It unsuccessfully found a group");
+            }
+            g.getAllPostAsync("73429308-0C76-21C9-FF0C-BB7CAEEF9100", new AsyncCallback<List<Post>>() {
+                @Override
+                public void handleResponse(List<Post> response) {
+                    Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                    System.out.println(response);
+                    ListView postListView = (ListView) findViewById(R.id.post_list);
+                    PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
+                    postListView.setAdapter(adapter);
+                    System.out.print("Successfully retrieved posts");
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+                    System.out.println("Failed to get all posts");
+                }
+            });
+            return true;
+        } else if(id == R.id.action_logout){
+            try {
+                loginManager.logOut();
+                finish();
+            } catch (Exception e) {
+                System.out.println("Hello" + e);
+            }
             return true;
         }
 
@@ -216,10 +249,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_logout) {
-            //Todo:MAKE THIS to Exit
             try {
                 loginManager.logOut();
-                System.exit(0);
+                finish();
             } catch (Exception e) {
                 System.out.println("Hello" + e);
             }

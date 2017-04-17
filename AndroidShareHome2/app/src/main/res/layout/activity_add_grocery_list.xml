@@ -22,7 +22,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_add_grocery_list"
-        app:menu="@menu/activity_add_grocery_list_drawer" >
+        app:menu="@menu/activity_shared_drawer" >
 
     </android.support.design.widget.NavigationView>
 

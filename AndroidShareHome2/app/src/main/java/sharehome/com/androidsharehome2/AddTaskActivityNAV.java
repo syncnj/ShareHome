@@ -1,6 +1,7 @@
 package sharehome.com.androidsharehome2;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,9 +20,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
+
 public class AddTaskActivityNAV extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private LoginManager loginManager;
     static String[] Roommates = {"Tom", "Richard", "Cassie", "Leo"};
     boolean[] checkedItems = new boolean[Roommates.length];
     AlertDialog ad;
@@ -38,6 +42,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
         setContentView(R.layout.activity_add_task_nav);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        loginManager = LoginManager.getInstance();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +119,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.add_task_activity_nav, menu);
+        getMenuInflater().inflate(R.menu.shared, menu);
         return true;
     }
 
@@ -126,7 +131,15 @@ public class AddTaskActivityNAV extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+            return true;
+        } else if(id == R.id.action_logout){
+            loginManager.logOut();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("EXIT", true);
+            startActivity(intent);
+            finish();
             return true;
         }
 
@@ -139,18 +152,34 @@ public class AddTaskActivityNAV extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_profile) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_transactions) {
+            Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
+            startActivity(intent);
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_groceries) {
+            Intent intent = new Intent(getApplicationContext(), GroceryListActivity.class);
+            startActivity(intent);
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_tasks) {
+            Intent intent = new Intent(getApplicationContext(), TasksActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nav_new) {
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_logout) {
+            // TODO: This doesn't exit the app
+            loginManager.logOut();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("EXIT", true);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

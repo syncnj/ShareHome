@@ -20,6 +20,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_add_transaction"
-        app:menu="@menu/activity_add_transaction_drawer" />
+        app:menu="@menu/activity_shared_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -24,19 +24,22 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
+import com.facebook.login.LoginManager;
 
 import java.util.ArrayList;
-
-import static sharehome.com.androidsharehome2.R.menu.tasks;
 
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private LoginManager loginManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+
+        loginManager = LoginManager.getInstance();
+
         //local mocks for new user
 
 //BackendlessUser user = Backendless.UserService.CurrentUser();
@@ -88,7 +91,7 @@ public class TasksActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(tasks, menu);
+        getMenuInflater().inflate(R.menu.shared, menu);
         return true;
     }
 
@@ -100,7 +103,15 @@ public class TasksActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+            return true;
+        } else if(id == R.id.action_logout){
+            loginManager.logOut();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("EXIT", true);
+            startActivity(intent);
+            finish();
             return true;
         }
 
@@ -133,8 +144,14 @@ public class TasksActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_logout) {
+            // TODO: This doesn't exit the app
+            loginManager.logOut();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("EXIT", true);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

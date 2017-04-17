@@ -42,6 +42,7 @@ public class PostAdapter extends ArrayAdapter<Post> {
         upvoteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO:only local changes yet, not transmitting to server
                 currentPost.setUpVote(9);
                 upvoteView.setText(Integer.toString(currentPost.getUpVote()));
             }

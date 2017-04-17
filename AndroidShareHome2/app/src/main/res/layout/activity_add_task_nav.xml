@@ -20,6 +20,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_add_task_activity_nav"
-        app:menu="@menu/activity_add_task_nav_drawer2" />
+        app:menu="@menu/activity_shared_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
