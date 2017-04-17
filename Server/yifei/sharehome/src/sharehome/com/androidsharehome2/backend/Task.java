@@ -1,17 +1,23 @@
 package sharehome.com.androidsharehome2.backend;
+
+import java.util.Date;
 import java.util.List;
 
 import com.backendless.Backendless;
 
 public class Task {
 	private String taskName;
-	private String duration;
+	private int duration; //days
 	private String objectId;
 	private String ownerId;
 	private String membersIdList;
 	private String userOnDuty;
 	private String groupId;
+	private Date startTime;
 	
+	public Date getStartTime(){
+		return this.startTime;
+	}
 	public String getGroupId(){
 		return this.groupId;
 	}
@@ -19,7 +25,7 @@ public class Task {
 	public String getTaskName(){
 		return this.taskName;
 	}
-	public String getDuration(){
+	public int getDuration(){
 		return this.duration;
 	}
 	public String getObjectId(){
@@ -39,7 +45,7 @@ public class Task {
 		this.taskName = taskName;
 	}
 	
-	public void setDuration(String duration){
+	public void setDuration(int duration){
 		this.duration = duration;
 	}
 
@@ -58,6 +64,9 @@ public class Task {
 	public void addMember(String memberId){
 		this.membersIdList += memberId + ",";
 		Backendless.Persistence.save(this);
+	}
+	public void setStartTime(Date startTime){
+		this.startTime = startTime;
 	}
 }
 

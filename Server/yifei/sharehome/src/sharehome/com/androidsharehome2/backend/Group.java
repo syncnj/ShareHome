@@ -9,6 +9,11 @@ public class Group {
 	private String leaderId;
 	private String postIdList;
 	private String groceryIdList;
+	private String taskIdList;
+	
+	public String getTaskIdList(){
+		return taskIdList;
+	}
 	
 	public String getGroceryIdList(){
 		return groceryIdList;
@@ -63,5 +68,12 @@ public class Group {
 	}
 	public void addGrocery(String GroceryId){
 		this.groceryIdList += GroceryId + ",";
+	}
+	public void setTaskIdList(String taskIdList){
+		this.taskIdList = taskIdList;
+	}
+	
+	public void addTask(String taskId){
+		this.taskIdList += taskId + ", ";
 	}
 }
