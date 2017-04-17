@@ -35,7 +35,7 @@ public class TaskService implements IBackendlessService{
 	    Task task = new Task();
 		task.setTaskName(taskName);
 		task.setDuration(duration);
-		task.setMembersIdList(membersIdList);
+		task.setMembersIdList(membersIdList+ ",");
 		task.setGroupId(groupId);
 		task.setStartTime(startTime);
 		Backendless.Persistence.save(task);
@@ -98,7 +98,7 @@ public class TaskService implements IBackendlessService{
 		int indexOfFirstMember = task.getMembersIdList().indexOf(",") + 1;
 		String movedMember =  task.getMembersIdList().substring(0,indexOfFirstMember);
 		task.setMembersIdList(task.getMembersIdList().substring(indexOfFirstMember) + movedMember);
-		
+		Backendless.Persistence.save(task);
 	}
 	
 }
