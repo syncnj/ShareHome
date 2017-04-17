@@ -1,11 +1,11 @@
 package com.sharehome.timers;
 
+import sharehome.com.androidsharehome2.backend.*;
 import com.backendless.Backendless;
 import com.backendless.persistence.BackendlessDataQuery;
 import com.backendless.servercode.annotation.BackendlessTimer;
 
 import java.util.List;
-import java.util.Map;
 
 /**
 * TaskManagerTimer is a timer.
@@ -28,12 +28,14 @@ public class TaskManagerTimer extends com.backendless.servercode.extension.Timer
     BackendlessDataQuery dataQuery = new BackendlessDataQuery();
     dataQuery.setWhereClause( whereClause );
 
-    List<Map> tasksDue = Backendless.Persistence.of( "Task" ).find( dataQuery ).getCurrentPage();
+    List<Task> tasksDue = Backendless.Persistence.of(sharehome.com.androidsharehome2.backend.Task.class).find( dataQuery ).getCurrentPage();
 
     //BackendlessCollection<Map> allTasks = Backendless.Persistence.of( "Task" ).find();
-    for ( Map task: tasksDue ){
-        
-      System.out.print(task);
+    for ( Task task: tasksDue ){
+        String taskId = task.getObjectId();
+        TaskService taskService = new TaskService();
+        taskService.rotate(taskId);
+      System.out.print(taskId);
     }
   }
     

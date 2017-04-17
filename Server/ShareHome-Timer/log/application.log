@@ -3114,3 +3114,20 @@ Caused by: java.net.UnknownHostException: cl.backendless.com
 2017-04-17 08:19:28,034 [INFO] Deploying model to server, and starting debug...
 2017-04-17 08:19:28,203 [INFO] Model successfully deployed.
 2017-04-17 08:19:28,208 [INFO] Waiting for events...
+2017-04-17 08:58:08,475 [INFO] JDK from "JAVA_HOME" - C:\Program Files\Java\jdk1.8.0_121
+2017-04-17 08:58:08,478 [INFO] JRE from "JRE_HOME"  - C:\Program Files\Java\jre1.8.0_121
+2017-04-17 08:58:08,552 [WARN] Could not initialize sentinel, will be used general jedis pool
+2017-04-17 08:58:08,774 [INFO] CodeRunner(tm) Backendless Debugging Utility
+2017-04-17 08:58:08,776 [INFO] Copyright(C) 2017 Backendless Corp. All rights reserved. 
+2017-04-17 08:58:08,780 [INFO] Version: 3.1.0 Build date: 2017-04-08T10:46:14Z
+2017-04-17 08:58:08,788 [INFO] CodeRunner session is running for 2 hours and will be terminated on 10:58:08.785[UTC]
+2017-04-17 08:58:08,916 [INFO] Registering runner on: 'https://api.backendless.com' with version 'v1'
+2017-04-17 08:58:08,923 [INFO] Application ID:  '19E73C32-D357-313A-FF64-12612084E000'
+2017-04-17 08:58:08,923 [INFO] Secret key:      '74D397CD-BE82-B9E3-FF63-45EDE3668000'
+2017-04-17 08:58:11,309 [INFO] Runner successfully registered
+2017-04-17 08:58:11,355 [INFO] Parsing event model...
+2017-04-17 08:58:11,424 [WARN] Timer's 'TaskManager' start time is in the past. The timer will run accordingly to the schedule.
+2017-04-17 08:58:14,389 [INFO] Build successfully: 0 handlers, 1 timer, 1 service
+2017-04-17 08:58:14,391 [INFO] Deploying model to server, and starting debug...
+2017-04-17 08:58:18,287 [INFO] Model successfully deployed.
+2017-04-17 08:58:18,292 [INFO] Waiting for events...
