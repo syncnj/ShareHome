@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\f34aee09e7abb3e6a389f3655a2c323a90708fbd\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="4a26a1154d053ab11aaf4c3967c42a4d66390991">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0fcd0e006d33031bb370435decbf6a7a64a408d3\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\07d4f22f07b201a6d2ca526626d7a620380af521\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d4cf6227dd6a2ceff0f7dcf0c324380b7abf2c28">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_61dc819cd1804d5ad285ccf1c7618dd23f2ada73\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\8694ad469a6d09475ba39130616e54627a43d0b2\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="efb8cb62d47d157c29d1521daac7eefd4cb881ee">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c72eb9f9a086af3a4d84d322b7d77543aaa6eab9\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="309729a4de94c3abbed88e40ce98d50956609dfe">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_820d09299ca625936d77b1359cb1c8a645705923\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\0a09a939b28bb447f2175eddf220d8996f0b2282\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="38789e20ace9ab7dbd00554bd2673ab424478d3b">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_7c1cbb3637ea8077936283b82a61c81219f96797\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\22fba968ca721ce73dac8f7547f1c0020bfacd94\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="47635644d0d5c103c1dd8360549eb9ba3225c7d3">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_5ab41f231cc44517a2fb6829b4c3a3ef9e9c53a9\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\dee3cd13023e12368a6e49c8cfb73425a87063e8\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="150252b33b00274cc868578ade018fda0d43a3eb">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_249f1909612b91e6840eb82220b346e2f0e600c1\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_0d09d5466c8aa73663d432f039f0a5bf47f4fb28\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\8eb29868fe3df89647ceb07d631344111b7f00df\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="6ef31f1555bb4cc513ec8d52711365a8b89f3600">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0723898609c7c7c017d4597ee9a9de15df22fb00\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\0370b92a5f88536f4a5421b2596a6d0f245e81ee\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="052f5f840f21174a3ecf6544130194e2652cbb73">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_beeac174bcf81cc08a51fb7a5f9f89f2cc076028\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\623ab7eae65c8441a364748f2c2b0e31f0edab31\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="95519720620b553f63afc789beba9ad582807f7c">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_3dfec0d31ad7748521b85abc9c460474e3e24c03\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\1be2ed1f6533dd9f1562722878ff4a62266dcd07\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="45f697922e6f072daa12f8a2995dc77ab03c11da">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_4cac2ed97922190a29b6269ce6c50d4d1e01a627\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\74219f4b1a83b82d547a2f29456c3bfbbab38238\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_eed005832f0dd38bbccdd2947c208b7a58e51e0d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.3.1\support-annotations-25.3.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="bf8841d29fa39e077730e7a91222c2ce269fa7c9">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-25.3.1_711e9de55c2ac115620404d270769ae0cd64e6c7\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zhigong\.android\build-cache\40f70311cdb4f21f0efc9aacdc2a922edd77303f\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="da27a32db6af8954ee8061537c7d476fcb1df46f">
+        <dex dex="C:\Users\zhigong\Documents\GitHub\ShareHome\AndroidShareHome2\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_4a1b2fa4b0cd8bf5bd60c18a4bf538b07c335ab8\classes.dex" />
+    </item>
+
+</items>
