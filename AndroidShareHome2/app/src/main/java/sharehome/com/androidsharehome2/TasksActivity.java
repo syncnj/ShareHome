@@ -1,5 +1,6 @@
 package sharehome.com.androidsharehome2;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,21 +25,51 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 import com.facebook.login.LoginManager;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+
+import sharehome.com.androidsharehome2.backend.GroupService;
 
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private LoginManager loginManager;
-
+            GroupService groupService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
 
         loginManager = LoginManager.getInstance();
+
+        groupService = GroupService.getInstance();
+        groupService.getMemberListAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<String>() {
+            @Override
+            public void handleResponse(String response) {
+                String FILENAME = "members";
+
+               try {
+                   FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+                   fos.write(response.getBytes());
+                   fos.close();
+                   Toast.makeText(TasksActivity.this, response, Toast.LENGTH_LONG).show();
+               }catch(Exception e){
+                   System.out.println("EXCEPTION");
+               }
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+
+            }
+        });
+
+
 
         //local mocks for new user
 

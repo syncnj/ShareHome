@@ -10,11 +10,13 @@ public class Post
     private boolean anonymous;
     private java.lang.String content;
     private int downVote;
+    private java.lang.String downVoteList;
     private java.lang.String groupId;
     private java.lang.String objectId;
     private java.lang.String ownerId;
     private java.lang.String postTitle;
     private int upVote;
+    private java.lang.String upVoteList;
     private java.lang.String userId;
     public void setAnonymous(boolean anonymous)
     {
@@ -27,6 +29,10 @@ public class Post
     public void setDownVote(int downVote)
     {
       this.downVote = downVote;
+    }
+    public void setDownVoteList(java.lang.String downVoteList)
+    {
+      this.downVoteList = downVoteList;
     }
     public void setGroupId(java.lang.String groupId)
     {
@@ -48,6 +54,10 @@ public class Post
     {
       this.upVote = upVote;
     }
+    public void setUpVoteList(java.lang.String upVoteList)
+    {
+      this.upVoteList = upVoteList;
+    }
     public void setUserId(java.lang.String userId)
     {
       this.userId = userId;
@@ -63,6 +73,10 @@ public class Post
     public int getDownVote( )
     {
       return downVote;
+    }
+    public java.lang.String getDownVoteList( )
+    {
+      return downVoteList;
     }
     public java.lang.String getGroupId( )
     {
@@ -83,6 +97,10 @@ public class Post
     public int getUpVote( )
     {
       return upVote;
+    }
+    public java.lang.String getUpVoteList( )
+    {
+      return upVoteList;
     }
     public java.lang.String getUserId( )
     {

@@ -10,10 +10,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+
 import java.util.List;
 
 import sharehome.com.androidsharehome2.backend.Post;
 
+import static com.backendless.servercode.services.codegen.ServiceCodeFormat.as;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static sharehome.com.androidsharehome2.R.id.fab;
 import static sharehome.com.androidsharehome2.R.id.upvotes;
@@ -42,14 +47,42 @@ public class PostAdapter extends ArrayAdapter<Post> {
         upvoteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO:only local changes yet, not transmitting to server
-                currentPost.setUpVote(9);
-                upvoteView.setText(Integer.toString(currentPost.getUpVote()));
+                //TODO: increment locally?
+//                currentPost.setUpVote(9);
+//                upvoteView.setText(Integer.toString(currentPost.getUpVote()));
+                PostService.getInstance().addUpVoteAsync(currentPost.getObjectId(), Backendless.UserService.CurrentUser().getObjectId().toString(), new AsyncCallback<Integer>() {
+                    @Override
+                    public void handleResponse(Integer response) {
+                        upvoteView.setText(Integer.toString(response) + "\u2191");
+                    }
+
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
+
+                    }
+                });
             }
         });
 
-        Button downvoteView = (Button) listItemView.findViewById(R.id.downvotes);
+        final Button downvoteView = (Button) listItemView.findViewById(R.id.downvotes);
         downvoteView.setText(Integer.toString(currentPost.getDownVote()) + " \u2193");
+        downvoteView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: increment locally?
+                PostService.getInstance().addDownVoteAsync(currentPost.getObjectId(), Backendless.UserService.CurrentUser().getObjectId().toString(), new AsyncCallback<Integer>() {
+                    @Override
+                    public void handleResponse(Integer response) {
+                        downvoteView.setText(Integer.toString(response) + "\u2193");
+                    }
+
+                    @Override
+                    public void handleFault(BackendlessFault fault) {
+
+                    }
+                });
+            }
+        });
         return listItemView;
     }
 }

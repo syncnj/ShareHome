@@ -1,5 +1,6 @@
 package sharehome.com.androidsharehome2;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,14 +21,27 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.UserService;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 import com.facebook.login.LoginManager;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+
+import sharehome.com.androidsharehome2.backend.GroupService;
 
 public class AddTaskActivityNAV extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private LoginManager loginManager;
-    static String[] Roommates = {"Tom", "Richard", "Cassie", "Leo"};
-    boolean[] checkedItems = new boolean[Roommates.length];
+    String[] Roommates = {};
+
     AlertDialog ad;
     Button openRoommateList;
     Button submitTask;
@@ -35,6 +49,8 @@ public class AddTaskActivityNAV extends AppCompatActivity
     String TimePeriod;
     EditText TaskNameInput;
     String TaskNameString;
+    GroupService groupService;
+    boolean[] checkedItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +58,40 @@ public class AddTaskActivityNAV extends AppCompatActivity
         setContentView(R.layout.activity_add_task_nav);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        byte[] b = {};
+        String members = "";
+        try {
+            File file = new File("members");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(openFileInput("members")));
+            members = reader.readLine();
+//            FileInputStream fis = openFileInput("members");
+//            fis.read(b);
+////            System.out.println(b.toString() + "HELLO");
+//            members = b.toString();
+        }catch(Exception e){
+            System.out.println("EXCEPTION");
+        }
+        Toast.makeText(AddTaskActivityNAV.this, "AddTasks Activity Toast", Toast.LENGTH_LONG).show();
+        System.out.println("\n Members: " + members.toString());
+        Roommates = members.split(",");
+        System.out.println(Roommates.length);
+       checkedItems = new boolean[Roommates.length];
+//        // System.out.println("Members after split: " + Roommates.toString());
+//        for(int i = 0; i < Roommates.length; i++){
+//            Roommates[i] = "55555";
+//            System.out.println("Member: " + Roommates[i]);
+//        }
+
         loginManager = LoginManager.getInstance();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -72,7 +112,9 @@ public class AddTaskActivityNAV extends AppCompatActivity
         openRoommateList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ad.show();
+                if(ad != null) {
+                    ad.show();
+                }
             }
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

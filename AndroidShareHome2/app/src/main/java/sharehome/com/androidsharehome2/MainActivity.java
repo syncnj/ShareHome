@@ -2,6 +2,7 @@ package sharehome.com.androidsharehome2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity
     private CallbackManager callbackManager;
     private LoginManager loginManager;
     private GroupService g = null;
-
+    private BackendlessUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +56,9 @@ public class MainActivity extends AppCompatActivity
         String appVersion = "v1";
         Backendless.initApp( this, "19E73C32-D357-313A-FF64-12612084E000", "19F8B6BD-34A1-655C-FF3E-9BD31F1B0C00",appVersion);
         //create new user
-        BackendlessUser user = new BackendlessUser();
-
-        user.setPassword("Gerald");
+//        user = new BackendlessUser();
+//
+//        user.setPassword("Gerald");
 
 
         callbackManager = CallbackManager.Factory.create();
@@ -73,6 +74,33 @@ public class MainActivity extends AppCompatActivity
                     public void handleResponse( BackendlessUser loggedInUser )
                     {
                         // user logged in successfully
+
+                        user = loggedInUser;
+
+                        // Create Display of everything!
+
+                        try {
+                            g = GroupService.getInstance();
+                        }
+                        catch(Exception e){
+                            System.out.println("It unsuccessfully found a group");
+                        }
+                        g.getAllPostAsync(user.getProperty("groupId").toString(), new AsyncCallback<List<Post>>() {
+                            @Override
+                            public void handleResponse(List<Post> response) {
+                                Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                                System.out.println(response);
+                                ListView postListView = (ListView) findViewById(R.id.post_list);
+                                PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
+                                postListView.setAdapter(adapter);
+                                System.out.print("Successfully retrieved posts");
+                            }
+
+                            @Override
+                            public void handleFault(BackendlessFault fault) {
+                                System.out.println("Failed to get all posts");
+                            }
+                        });
                     }
 
                     @Override
@@ -82,22 +110,23 @@ public class MainActivity extends AppCompatActivity
                     }
                 } );
 
+        // System.out.println("userid = " + user.getObjectId().toString());
 
 
-        Backendless.UserService.register( user, new AsyncCallback<BackendlessUser>()
-        {
-            @Override
-            public void handleResponse( BackendlessUser backendlessUser )
-            {
-                Log.i( "Registration", backendlessUser.getEmail() + " successfully registered" );
-
-            }
-            public void handleFault( BackendlessFault fault )
-            {
-                // user update failed, to get the error code call fault.getCode()
-                System.out.print("register failed");
-            }
-        } );
+//        Backendless.UserService.register( user, new AsyncCallback<BackendlessUser>()
+//        {
+//            @Override
+//            public void handleResponse( BackendlessUser backendlessUser )
+//            {
+//                Log.i( "Registration", backendlessUser.getEmail() + " successfully registered" );
+//
+//            }
+//            public void handleFault( BackendlessFault fault )
+//            {
+//                // user update failed, to get the error code call fault.getCode()
+//                System.out.print("register failed");
+//            }
+//        } );
 
 
 
@@ -123,33 +152,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        // Create Display of everything!
-
-        try {
-            g = GroupService.getInstance();
-        }
-        catch(Exception e){
-            System.out.println("It unsuccessfully found a group");
-        }
-        g.getAllPostAsync("73429308-0C76-21C9-FF0C-BB7CAEEF9100", new AsyncCallback<List<Post>>() {
-                @Override
-                public void handleResponse(List<Post> response) {
-                    Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
-                    System.out.println(response);
-                    ListView postListView = (ListView) findViewById(R.id.post_list);
-                    PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
-                    postListView.setAdapter(adapter);
-                    System.out.print("Successfully retrieved posts");
-                }
-
-                @Override
-                public void handleFault(BackendlessFault fault) {
-                    System.out.println("Failed to get all posts");
-                }
-            });
-
-
     }
 
 
@@ -185,14 +187,14 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {// Create Display of everything!
+        if (id == R.id.action_refresh && user != null) {// Create Display of everything!
 
             try {
                 g = GroupService.getInstance();
             } catch (Exception e) {
                 System.out.println("It unsuccessfully found a group");
             }
-            g.getAllPostAsync("73429308-0C76-21C9-FF0C-BB7CAEEF9100", new AsyncCallback<List<Post>>() {
+            g.getAllPostAsync(user.getProperty("groupId").toString(), new AsyncCallback<List<Post>>() {
                 @Override
                 public void handleResponse(List<Post> response) {
                     Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
@@ -208,6 +210,7 @@ public class MainActivity extends AppCompatActivity
                     System.out.println("Failed to get all posts");
                 }
             });
+
             return true;
         } else if(id == R.id.action_logout){
             try {

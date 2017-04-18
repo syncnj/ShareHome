@@ -13,7 +13,9 @@ public class Group
     private java.lang.String objectId;
     private java.lang.String ownerId;
     private java.lang.String postIdList;
+    private java.lang.String taskIdList;
     private java.lang.String teamMembersList;
+    private java.lang.String transactionIdList;
     public void setGroceryIdList(java.lang.String groceryIdList)
     {
       this.groceryIdList = groceryIdList;
@@ -38,9 +40,17 @@ public class Group
     {
       this.postIdList = postIdList;
     }
+    public void setTaskIdList(java.lang.String taskIdList)
+    {
+      this.taskIdList = taskIdList;
+    }
     public void setTeamMembersList(java.lang.String teamMembersList)
     {
       this.teamMembersList = teamMembersList;
+    }
+    public void setTransactionIdList(java.lang.String transactionIdList)
+    {
+      this.transactionIdList = transactionIdList;
     }
     public java.lang.String getGroceryIdList( )
     {
@@ -66,8 +76,16 @@ public class Group
     {
       return postIdList;
     }
+    public java.lang.String getTaskIdList( )
+    {
+      return taskIdList;
+    }
     public java.lang.String getTeamMembersList( )
     {
       return teamMembersList;
+    }
+    public java.lang.String getTransactionIdList( )
+    {
+      return transactionIdList;
     }
 }

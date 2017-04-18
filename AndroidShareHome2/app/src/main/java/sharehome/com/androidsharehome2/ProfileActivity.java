@@ -13,10 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 import com.facebook.login.LoginManager;
 
 import java.util.InputMismatchException;
@@ -27,11 +30,23 @@ public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private LoginManager loginManager;
+    private EditText AddMeber_Email;
+    private EditText CreateGroup_Name;
+     String AddMeber_EmailString;
+     String CreateGroup_NameString;
+    Button AddMemberViaEmail;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        AddMeber_Email = (EditText)findViewById(R.id.findMember_email);
+        CreateGroup_Name = (EditText)findViewById(R.id.group_name_input) ;
+
+        CreateGroup_NameString = CreateGroup_Name.getText().toString();
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -164,5 +179,22 @@ public class ProfileActivity extends AppCompatActivity
         }).start();
 
         return "";
+    }
+
+    public void AddMember(View v){
+        AddMeber_EmailString = AddMeber_Email.getText().toString();
+        GroupService g = GroupService.getInstance();
+        g.addMemberbyEmailAsync(AddMeber_EmailString, Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<Boolean>() {
+            @Override
+            public void handleResponse(Boolean response) {
+                AddMeber_Email.setText("");
+                Toast.makeText(ProfileActivity.this, "new member Added", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Toast.makeText(ProfileActivity.this, fault.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
