@@ -1,0 +1,83 @@
+2017-04-18 00:55:08,485 [INFO] JDK from "JAVA_HOME" - C:\Program Files\Java\jdk1.8.0_121
+2017-04-18 00:55:08,518 [INFO] JRE from "JRE_HOME"  - C:\Program Files\Java\jre1.8.0_121
+2017-04-18 00:55:08,673 [INFO] CodeRunner(tm) Backendless Debugging Utility
+2017-04-18 00:55:08,674 [INFO] Copyright(C) 2017 Backendless Corp. All rights reserved. 
+2017-04-18 00:55:08,674 [INFO] Version: 3.0.19 Build date: 20160613-1132
+2017-04-18 00:55:08,677 [INFO] CodeRunner session is running for 2 hours and will be terminated on 02:55:08.675[UTC]
+2017-04-18 00:55:08,762 [INFO] Registering runner on: 'http://api.backendless.com' with version 'v1'
+2017-04-18 00:55:08,764 [INFO] Application ID:  '19E73C32-D357-313A-FF64-12612084E000'
+2017-04-18 00:55:08,765 [INFO] Secret key:      '74D397CD-BE82-B9E3-FF63-45EDE3668000'
+2017-04-18 00:55:10,158 [INFO] Runner successfully registered
+2017-04-18 00:55:10,174 [INFO] Parsing event model...
+2017-04-18 00:55:12,740 [INFO] Build successfully: 0 handlers, 0 timers, 5 services
+2017-04-18 00:55:12,742 [INFO] Deploying model to server, and starting debug...
+2017-04-18 00:55:15,958 [INFO] Model successfully deployed.
+2017-04-18 00:55:15,959 [INFO] Waiting for events...
+2017-04-18 01:51:08,606 [ERROR] null
+2017-04-18 01:51:08,776 [ERROR] null
+2017-04-18 01:51:09,812 [INFO] Debugging Utility disconnected successfully
+2017-04-18 01:51:09,812 [INFO] Thank you for using Backendless
+2017-04-18 02:21:32,590 [INFO] JDK from "JAVA_HOME" - C:\Program Files\Java\jdk1.8.0_121
+2017-04-18 02:21:32,593 [INFO] JRE from "JRE_HOME"  - C:\Program Files\Java\jre1.8.0_121
+2017-04-18 02:21:32,746 [INFO] CodeRunner(tm) Backendless Debugging Utility
+2017-04-18 02:21:32,747 [INFO] Copyright(C) 2017 Backendless Corp. All rights reserved. 
+2017-04-18 02:21:32,748 [INFO] Version: 3.0.19 Build date: 20160613-1132
+2017-04-18 02:21:32,751 [INFO] CodeRunner session is running for 2 hours and will be terminated on 04:21:32.749[UTC]
+2017-04-18 02:21:32,854 [INFO] Registering runner on: 'http://api.backendless.com' with version 'v1'
+2017-04-18 02:21:32,856 [INFO] Application ID:  '19E73C32-D357-313A-FF64-12612084E000'
+2017-04-18 02:21:32,856 [INFO] Secret key:      '74D397CD-BE82-B9E3-FF63-45EDE3668000'
+2017-04-18 02:21:33,408 [INFO] Runner successfully registered
+2017-04-18 02:21:33,421 [INFO] Parsing event model...
+2017-04-18 02:21:55,167 [INFO] Debugging Utility disconnected successfully
+2017-04-18 02:21:55,170 [INFO] Thank you for using Backendless
+2017-04-18 02:22:07,103 [INFO] JDK from "JAVA_HOME" - C:\Program Files\Java\jdk1.8.0_121
+2017-04-18 02:22:07,109 [INFO] JRE from "JRE_HOME"  - C:\Program Files\Java\jre1.8.0_121
+2017-04-18 02:22:07,277 [INFO] CodeRunner(tm) Backendless Debugging Utility
+2017-04-18 02:22:07,278 [INFO] Copyright(C) 2017 Backendless Corp. All rights reserved. 
+2017-04-18 02:22:07,278 [INFO] Version: 3.0.19 Build date: 20160613-1132
+2017-04-18 02:22:07,281 [INFO] CodeRunner session is running for 2 hours and will be terminated on 04:22:07.280[UTC]
+2017-04-18 02:22:07,369 [INFO] Registering runner on: 'http://api.backendless.com' with version 'v1'
+2017-04-18 02:22:07,371 [INFO] Application ID:  '19E73C32-D357-313A-FF64-12612084E000'
+2017-04-18 02:22:07,371 [INFO] Secret key:      '74D397CD-BE82-B9E3-FF63-45EDE3668000'
+2017-04-18 02:22:07,776 [INFO] Runner successfully registered
+2017-04-18 02:22:07,786 [INFO] Parsing event model...
+2017-04-18 02:22:52,925 [INFO] Debugging Utility disconnected successfully
+2017-04-18 02:22:52,926 [INFO] Thank you for using Backendless
+2017-04-18 02:23:10,563 [INFO] JDK from "JAVA_HOME" - C:\Program Files\Java\jdk1.8.0_121
+2017-04-18 02:23:10,573 [INFO] JRE from "JRE_HOME"  - C:\Program Files\Java\jre1.8.0_121
+2017-04-18 02:23:10,752 [INFO] CodeRunner(tm) Backendless Debugging Utility
+2017-04-18 02:23:10,752 [INFO] Copyright(C) 2017 Backendless Corp. All rights reserved. 
+2017-04-18 02:23:10,753 [INFO] Version: 3.0.19 Build date: 20160613-1132
+2017-04-18 02:23:10,757 [INFO] CodeRunner session is running for 2 hours and will be terminated on 04:23:10.755[UTC]
+2017-04-18 02:23:10,846 [INFO] Registering runner on: 'http://api.backendless.com' with version 'v1'
+2017-04-18 02:23:10,848 [INFO] Application ID:  '19E73C32-D357-313A-FF64-12612084E000'
+2017-04-18 02:23:10,849 [INFO] Secret key:      '74D397CD-BE82-B9E3-FF63-45EDE3668000'
+2017-04-18 02:23:11,251 [INFO] Runner successfully registered
+2017-04-18 02:23:11,261 [INFO] Parsing event model...
+2017-04-18 02:23:13,855 [INFO] Build successfully: 0 handlers, 0 timers, 5 services
+2017-04-18 02:23:13,858 [INFO] Deploying model to server, and starting debug...
+2017-04-18 02:23:17,778 [INFO] Model successfully deployed.
+2017-04-18 02:23:17,778 [INFO] Waiting for events...
+2017-04-18 02:33:30,845 [ERROR] null
+2017-04-18 02:33:31,445 [ERROR] null
+2017-04-18 02:33:31,840 [INFO] Debugging Utility disconnected successfully
+2017-04-18 02:33:31,840 [INFO] Thank you for using Backendless
+2017-04-18 02:33:42,561 [INFO] JDK from "JAVA_HOME" - C:\Program Files\Java\jdk1.8.0_121
+2017-04-18 02:33:42,570 [INFO] JRE from "JRE_HOME"  - C:\Program Files\Java\jre1.8.0_121
+2017-04-18 02:33:42,767 [INFO] CodeRunner(tm) Backendless Debugging Utility
+2017-04-18 02:33:42,767 [INFO] Copyright(C) 2017 Backendless Corp. All rights reserved. 
+2017-04-18 02:33:42,768 [INFO] Version: 3.0.19 Build date: 20160613-1132
+2017-04-18 02:33:42,773 [INFO] CodeRunner session is running for 2 hours and will be terminated on 04:33:42.771[UTC]
+2017-04-18 02:33:42,864 [INFO] Registering runner on: 'http://api.backendless.com' with version 'v1'
+2017-04-18 02:33:42,866 [INFO] Application ID:  '19E73C32-D357-313A-FF64-12612084E000'
+2017-04-18 02:33:42,866 [INFO] Secret key:      '74D397CD-BE82-B9E3-FF63-45EDE3668000'
+2017-04-18 02:33:43,280 [INFO] Runner successfully registered
+2017-04-18 02:33:43,289 [INFO] Parsing event model...
+2017-04-18 02:33:45,928 [INFO] Build successfully: 0 handlers, 0 timers, 5 services
+2017-04-18 02:33:45,930 [INFO] Deploying model to server, and starting debug...
+2017-04-18 02:33:47,466 [INFO] Model successfully deployed.
+2017-04-18 02:33:47,467 [INFO] Waiting for events...
+2017-04-18 02:36:35,932 [ERROR] null
+2017-04-18 02:36:36,120 [ERROR] null
+2017-04-18 02:36:36,621 [INFO] Debugging Utility disconnected successfully
+2017-04-18 02:36:36,623 [INFO] Thank you for using Backendless

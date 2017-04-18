@@ -1,10 +1,9 @@
 <component name="ArtifactManager">
   <artifact type="jar" build-on-make="true" name="sharehome:jar">
-    <output-path>$PROJECT_DIR$/classes/artifacts/sharehome_jar</output-path>
+    <output-path>$PROJECT_DIR$/out/artifacts/sharehome_jar</output-path>
     <root id="archive" name="sharehome.jar">
       <element id="module-output" name="sharehome" />
-      <element id="library" level="module" name="backendless.jar" module-name="sharehome" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/backendless/backendless/3.0.25/backendless-3.0.25.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/backendless.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

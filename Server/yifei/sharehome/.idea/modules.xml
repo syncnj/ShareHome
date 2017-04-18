@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/sharehome.iml" filepath="$PROJECT_DIR$/.idea/sharehome.iml" />
-      <module fileurl="file://D:\Dropbox\CS506\ShareHome\Server\yifei\sharehome\sharehome.iml" filepath="D:\Dropbox\CS506\ShareHome\Server\yifei\sharehome\sharehome.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sharehome.iml" filepath="$PROJECT_DIR$/sharehome.iml" />
     </modules>
   </component>
 </project>

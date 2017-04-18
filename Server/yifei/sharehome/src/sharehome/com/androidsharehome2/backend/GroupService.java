@@ -94,6 +94,42 @@ public class GroupService implements IBackendlessService{
 
 	}
 
+	public boolean addMemberbyEmail(String email, String groupId){
+
+		if(email == null || groupId == null || groupId.trim() == ""){
+			throw new IllegalArgumentException("Invalid input argument");
+		}
+		email = email.trim();
+
+		Group group = Backendless.Persistence.of(Group.class).findById(groupId);
+		if(group == null){
+			throw new RuntimeException("Group can't be found using groupID: " + groupId);
+			//return false;
+		}
+
+
+		BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+		String whereClause = "email = '" + email + "'";
+		dataQuery.setWhereClause( whereClause );
+
+		BackendlessCollection<BackendlessUser> userResult = Backendless.Data.of( BackendlessUser.class).find(dataQuery);
+
+		if (userResult.getCurrentPage().isEmpty() ){
+			throw new RuntimeException("email could not be found in the user database");
+		}
+		String userObjectId = userResult.getCurrentPage().get(0).getObjectId();
+		if (group.getTeamMembersList().contains(userObjectId)){
+			throw new RuntimeException("Member already in group");
+		}
+
+		group.addTeamMember(userObjectId);
+		Backendless.Persistence.save( group );
+
+		BackendlessUser user = Backendless.UserService.findById(userObjectId);
+		user.setProperty("groupId", group.getObjectId());
+		Backendless.UserService.update(user);
+		return true;
+	}
 	 public String getMemberList(String groupId){
 		 if( groupId == null){
 				throw new IllegalArgumentException("Missing input message!!!");
@@ -126,7 +162,24 @@ public class GroupService implements IBackendlessService{
 		if (memberList.contains(memberId)) {
 			int indexOfFirstChar = memberList.indexOf(memberId);
 			if (indexOfFirstChar == 0) {  // member is owner
-				throw new Exception("owner can not be deleted!!!");
+				//throw new Exception("owner can not be deleted!!!");  -- original plan
+
+				// We now allow owners to be removed.  -- Yi Shen
+				if (group.getTeamMembersList().equals(memberId + ",")){
+					// Only one people left, we want to remove the group
+					Backendless.Persistence.of( Group.class ).remove( group );
+					System.out.println("Removed last member: " + group);
+				}
+				else{
+					String afterDeletedMember = group.getTeamMembersList().substring((indexOfFirstChar + memberId.length() + 1), group.getTeamMembersList().length());
+					group.setTeamMembersList(afterDeletedMember);
+					// Now we change leaderId
+					String newLeaderId = afterDeletedMember.substring(0, memberId.length()+1);
+					System.out.println("new LeaderID: " + newLeaderId);
+					group.setLeaderId(newLeaderId);
+					Backendless.Persistence.save(group);
+				}
+				return true;
 
 			}
 

@@ -3,5 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="F:/java-neon/CodeRunnerSDK_3.0.19/libs/backendless.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="lib/backendless.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/backendless"/>
+	<classpathentry kind="output" path="CodeRunnerSDK_3.0.19/classes/production/sharehome"/>
 </classpath>
