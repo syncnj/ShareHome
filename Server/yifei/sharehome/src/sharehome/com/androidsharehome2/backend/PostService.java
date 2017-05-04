@@ -53,6 +53,8 @@ public class PostService implements IBackendlessService{
 		post.setDownVote(0);
 		post.setUpVote(0);
 		post.setContent(postContent);
+		post.setDownVoteList("");
+		post.setUpVoteList("");
 		Backendless.Persistence.save(post);
 	
 		group.addPost(post.getObjectId());
@@ -137,7 +139,7 @@ public class PostService implements IBackendlessService{
 	
 	public int addDownVote(String postId, String userId){
 		Post post = Backendless.Persistence.of(Post.class).findById(postId);
-		if (!post.getUpVoteList().contains(userId)){
+		if (!post.getDownVoteList().contains(userId)){
 			// The user has not already upVoted
 			post.addDownVote();
 			post.setDownVoteList(post.getDownVoteList() + userId +",");

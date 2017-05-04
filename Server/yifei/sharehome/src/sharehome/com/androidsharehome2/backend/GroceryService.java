@@ -19,7 +19,7 @@ public class GroceryService implements IBackendlessService{
 		// Find so that if error then return
 
 		//Now check for duplicate:
-		String whereClause = "groupId = '" + groupId.trim() + "'";
+		String whereClause = "groceryName = '" + groceryName.trim() + "'";
 		//if (true)throw new RuntimeException(""+ whereClause);
 		BackendlessDataQuery dataQuery = new BackendlessDataQuery();
 		dataQuery.setWhereClause( whereClause );
