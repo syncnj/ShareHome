@@ -21,7 +21,7 @@ public class TaskService implements IBackendlessService{
 		}
 		Group group =  Backendless.Persistence.of(Group.class).findById(groupId);
 		
-		String whereClause = "groupId = '" + groupId.trim() + "'";
+		String whereClause = "taskName = '" + taskName.trim() + "'";
 		BackendlessDataQuery dataQuery = new BackendlessDataQuery();
 		dataQuery.setWhereClause( whereClause );
 		BackendlessCollection<Map> result = Backendless.Persistence.of( "Task" ).find( dataQuery);
@@ -38,6 +38,8 @@ public class TaskService implements IBackendlessService{
 		task.setMembersIdList(membersIdList+ ",");
 		task.setGroupId(groupId);
 		task.setStartTime(startTime);
+		String[] membersId = membersIdList.split(",");
+		task.setUserOnDuty(membersId[0]);
 		Backendless.Persistence.save(task);
 		
 		
@@ -98,9 +100,12 @@ public class TaskService implements IBackendlessService{
 		int indexOfFirstMember = task.getMembersIdList().indexOf(",") + 1;
 		String movedMember =  task.getMembersIdList().substring(0,indexOfFirstMember);
 		task.setMembersIdList(task.getMembersIdList().substring(indexOfFirstMember) + movedMember);
+		String[] membersId = task.getMembersIdList().split(",");
+		task.setUserOnDuty(membersId[0]);
 		
 		Date newStartTime = new Date(task.getStartTime().getTime() + task.getDuration() * 3600 *1000);
 		task.setStartTime(newStartTime);
+		
 		Backendless.Persistence.save(task);
 		
 	}
