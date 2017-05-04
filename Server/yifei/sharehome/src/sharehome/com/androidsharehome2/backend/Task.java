@@ -11,7 +11,7 @@ public class Task {
 	private String objectId;
 	private String ownerId;
 	private String membersIdList;
-	private String userOnDuty;
+	private String userNameOnDuty;
 	private String groupId;
 	private Date startTime;
 	
@@ -38,7 +38,7 @@ public class Task {
 		return this.membersIdList;
 	}
 	public String getUserOnDuty(){
-		return this.userOnDuty;
+		return this.userNameOnDuty;
 	}
 
 	public void setTaskName(String taskName){
@@ -53,8 +53,8 @@ public class Task {
 		this.membersIdList = membersIdList;
 	}
 	
-	public void setUserOnDuty(String userOnDuty){
-		this.userOnDuty = userOnDuty;
+	public void setUserOnDuty(String userNameOnDuty){
+		this.userNameOnDuty = userNameOnDuty;
 	}
 	
 	public void setGroupId(String groupId){
