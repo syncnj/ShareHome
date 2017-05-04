@@ -53,8 +53,8 @@ public class PostService implements IBackendlessService{
 		post.setDownVote(0);
 		post.setUpVote(0);
 		post.setContent(postContent);
-		post.setDownVoteList("");
-		post.setUpVoteList("");
+		post.setVotedList("");
+
 		Backendless.Persistence.save(post);
 	
 		group.addPost(post.getObjectId());
@@ -128,10 +128,10 @@ public class PostService implements IBackendlessService{
 
 		Post post = Backendless.Persistence.of(Post.class).findById(postId);
 		//int changedUpVote = post.getUpVote() + 1;
-		if (!post.getUpVoteList().contains(userId)){
+		if (!post.getVotedList().contains(userId)){
 			// The user has not already upVoted
 			post.addUpVote();
-			post.setUpVoteList(post.getUpVoteList() + userId +",");
+			post.setVotedList(post.getVotedList() + userId +",");
 			Backendless.Persistence.save(post);
 		}
 		return post.getUpVote();
@@ -139,10 +139,10 @@ public class PostService implements IBackendlessService{
 	
 	public int addDownVote(String postId, String userId){
 		Post post = Backendless.Persistence.of(Post.class).findById(postId);
-		if (!post.getDownVoteList().contains(userId)){
+		if (!post.getVotedList().contains(userId)){
 			// The user has not already upVoted
 			post.addDownVote();
-			post.setDownVoteList(post.getDownVoteList() + userId +",");
+			post.setVotedList(post.getVotedList() + userId +",");
 			Backendless.Persistence.save(post);
 		}
 		//int changedDownVote = post.getUpVote() + 1;

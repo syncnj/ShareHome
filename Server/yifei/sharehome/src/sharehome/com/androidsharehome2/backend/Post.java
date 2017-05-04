@@ -12,9 +12,11 @@ public class Post {
 	private String userId;
 	private String groupId;
 	private boolean anonymous;
-	private String upVoteList;
-	private String downVoteList;
+	private String votedList;
 	
+	public String getVotedList(){
+		return this.votedList;
+	}
 	public String getGroupId(){
 		return this.groupId;
 	}
@@ -41,15 +43,13 @@ public class Post {
 //	}
 
 
-	public String getUpVoteList(){return this.upVoteList;}
-	public String getDownVoteList() {return this.downVoteList;}
 
-	public void setUpVoteList(String newList){this.upVoteList = newList;}
-	public void setDownVoteList(String newList) {this.downVoteList = newList;}
-	
 	
 	public String getContent(){
 		return this.content;
+	}
+	public void setVotedList(String votedList){
+		this.votedList = votedList;
 	}
 	public void setPostTitle(String newPostName){
 		this.postTitle = newPostName;
