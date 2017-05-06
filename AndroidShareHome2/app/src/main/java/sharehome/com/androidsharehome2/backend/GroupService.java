@@ -10,11 +10,11 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import java.util.*;
 
-import sharehome.com.androidsharehome2.backend.Post;
 import sharehome.com.androidsharehome2.backend.Grocery;
-import sharehome.com.androidsharehome2.backend.Group;
 import sharehome.com.androidsharehome2.backend.Task;
 import sharehome.com.androidsharehome2.backend.Transaction;
+import sharehome.com.androidsharehome2.backend.Group;
+import sharehome.com.androidsharehome2.backend.Post;
 
 public class GroupService
 {
@@ -45,64 +45,16 @@ public class GroupService
 
 
     
-    public boolean addMemberbyEmail(java.lang.String email, java.lang.String groupId)
+    public void createNewGroup(java.lang.String groupName, java.lang.String leaderId)
     {
-        Object[] args = new Object[]{email, groupId};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addMemberbyEmail", args, boolean.class );
+        Object[] args = new Object[]{groupName, leaderId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewGroup", args );
     }
     
-    public void addMemberbyEmailAsync(java.lang.String email, java.lang.String groupId, AsyncCallback<Boolean> callback)
+    public void createNewGroupAsync(java.lang.String groupName, java.lang.String leaderId, AsyncCallback<Object> callback)
     {
-        Object[] args = new Object[]{email, groupId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addMemberbyEmail", args, Boolean.class, callback);
-    }
-    
-    public java.lang.String getMemberList(java.lang.String groupId)
-    {
-        Object[] args = new Object[]{groupId};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getMemberList", args, java.lang.String.class );
-    }
-    
-    public void getMemberListAsync(java.lang.String groupId, AsyncCallback<java.lang.String> callback)
-    {
-        Object[] args = new Object[]{groupId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getMemberList", args, java.lang.String.class, callback);
-    }
-    
-    public boolean deleteMember(java.lang.String groupId, java.lang.String memberId)
-    {
-        Object[] args = new Object[]{groupId, memberId};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deleteMember", args, boolean.class );
-    }
-    
-    public void deleteMemberAsync(java.lang.String groupId, java.lang.String memberId, AsyncCallback<Boolean> callback)
-    {
-        Object[] args = new Object[]{groupId, memberId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deleteMember", args, Boolean.class, callback);
-    }
-    
-    public java.util.List<sharehome.com.androidsharehome2.backend.Post> getAllPost(java.lang.String groupId)
-    {
-        Object[] args = new Object[]{groupId};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllPost", args, java.util.List.class );
-    }
-    
-    public void getAllPostAsync(java.lang.String groupId, AsyncCallback<java.util.List<sharehome.com.androidsharehome2.backend.Post>> callback)
-    {
-        Object[] args = new Object[]{groupId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllPost", args, java.util.List.class, callback);
-    }
-    
-    public java.util.List<sharehome.com.androidsharehome2.backend.Grocery> getAllGrocery(java.lang.String groupId)
-    {
-        Object[] args = new Object[]{groupId};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllGrocery", args, java.util.List.class );
-    }
-    
-    public void getAllGroceryAsync(java.lang.String groupId, AsyncCallback<java.util.List<sharehome.com.androidsharehome2.backend.Grocery>> callback)
-    {
-        Object[] args = new Object[]{groupId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllGrocery", args, java.util.List.class, callback);
+        Object[] args = new Object[]{groupName, leaderId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewGroup", args, Object.class, callback);
     }
     
     public boolean addMember(java.lang.String newGroupMemberId, java.lang.String groupId)
@@ -117,28 +69,16 @@ public class GroupService
         Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addMember", args, Boolean.class, callback);
     }
     
-    public sharehome.com.androidsharehome2.backend.Group getGroupById(java.lang.String groupId)
+    public java.util.List<sharehome.com.androidsharehome2.backend.Grocery> getAllGrocery(java.lang.String groupId)
     {
         Object[] args = new Object[]{groupId};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getGroupById", args, sharehome.com.androidsharehome2.backend.Group.class );
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllGrocery", args, java.util.List.class );
     }
     
-    public void getGroupByIdAsync(java.lang.String groupId, AsyncCallback<sharehome.com.androidsharehome2.backend.Group> callback)
+    public void getAllGroceryAsync(java.lang.String groupId, AsyncCallback<java.util.List<sharehome.com.androidsharehome2.backend.Grocery>> callback)
     {
         Object[] args = new Object[]{groupId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getGroupById", args, sharehome.com.androidsharehome2.backend.Group.class, callback);
-    }
-    
-    public void createNewGroup(java.lang.String groupName, java.lang.String leaderId)
-    {
-        Object[] args = new Object[]{groupName, leaderId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewGroup", args );
-    }
-    
-    public void createNewGroupAsync(java.lang.String groupName, java.lang.String leaderId, AsyncCallback<Object> callback)
-    {
-        Object[] args = new Object[]{groupName, leaderId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewGroup", args, Object.class, callback);
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllGrocery", args, java.util.List.class, callback);
     }
     
     public java.util.List<sharehome.com.androidsharehome2.backend.Task> getAllTask(java.lang.String groupId)
@@ -163,6 +103,66 @@ public class GroupService
     {
         Object[] args = new Object[]{groupId};
         Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllTransaction", args, java.util.List.class, callback);
+    }
+    
+    public sharehome.com.androidsharehome2.backend.Group getGroupById(java.lang.String groupId)
+    {
+        Object[] args = new Object[]{groupId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getGroupById", args, sharehome.com.androidsharehome2.backend.Group.class );
+    }
+    
+    public void getGroupByIdAsync(java.lang.String groupId, AsyncCallback<sharehome.com.androidsharehome2.backend.Group> callback)
+    {
+        Object[] args = new Object[]{groupId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getGroupById", args, sharehome.com.androidsharehome2.backend.Group.class, callback);
+    }
+    
+    public java.lang.String getMemberList(java.lang.String groupId)
+    {
+        Object[] args = new Object[]{groupId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getMemberList", args, java.lang.String.class );
+    }
+    
+    public void getMemberListAsync(java.lang.String groupId, AsyncCallback<java.lang.String> callback)
+    {
+        Object[] args = new Object[]{groupId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getMemberList", args, java.lang.String.class, callback);
+    }
+    
+    public java.util.List<sharehome.com.androidsharehome2.backend.Post> getAllPost(java.lang.String groupId)
+    {
+        Object[] args = new Object[]{groupId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllPost", args, java.util.List.class );
+    }
+    
+    public void getAllPostAsync(java.lang.String groupId, AsyncCallback<java.util.List<sharehome.com.androidsharehome2.backend.Post>> callback)
+    {
+        Object[] args = new Object[]{groupId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getAllPost", args, java.util.List.class, callback);
+    }
+    
+    public boolean addMemberbyEmail(java.lang.String email, java.lang.String groupId)
+    {
+        Object[] args = new Object[]{email, groupId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addMemberbyEmail", args, boolean.class );
+    }
+    
+    public void addMemberbyEmailAsync(java.lang.String email, java.lang.String groupId, AsyncCallback<Boolean> callback)
+    {
+        Object[] args = new Object[]{email, groupId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addMemberbyEmail", args, Boolean.class, callback);
+    }
+    
+    public boolean deleteMember(java.lang.String groupId, java.lang.String memberId)
+    {
+        Object[] args = new Object[]{groupId, memberId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deleteMember", args, boolean.class );
+    }
+    
+    public void deleteMemberAsync(java.lang.String groupId, java.lang.String memberId, AsyncCallback<Boolean> callback)
+    {
+        Object[] args = new Object[]{groupId, memberId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deleteMember", args, Boolean.class, callback);
     }
     
 }

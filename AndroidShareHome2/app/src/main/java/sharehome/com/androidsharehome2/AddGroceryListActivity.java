@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,16 +15,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.backendless.Backendless;
+import com.backendless.UserService;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 import com.facebook.login.LoginManager;
+
+import sharehome.com.androidsharehome2.backend.GroceryService;
 
 public class AddGroceryListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private LoginManager loginManager;
-    private Button oneTimePurchase;
-    private Button dailyPurchase;
+
+    EditText GroceryNameInput;
+    Spinner StatusSpinner;
+    int     groceryStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +43,11 @@ public class AddGroceryListActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        loginManager = LoginManager.getInstance();
+//        loginManager = LoginManager.getInstance();
+        StatusSpinner=(Spinner) findViewById(R.id.spinner_groceryStatus);
 
-        oneTimePurchase = (Button) findViewById(R.id.oneTimeButton);
-        dailyPurchase = (Button) findViewById(R.id.dailyGroceryButton);
+        GroceryNameInput = (EditText)findViewById(R.id.input_GroceryName);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -45,6 +57,42 @@ public class AddGroceryListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    //implemtation on functions that submit new grocery to backend.
+
+
+
+
+    }
+
+    public void SubmitGroceryToServer(View v){
+        String StatusString = StatusSpinner.getSelectedItem().toString();
+        if(StatusString.equals("full")){
+            groceryStatus =3;
+        }
+        else if (StatusString.equals("running low")){
+            groceryStatus = 2;
+        }
+        else {
+            groceryStatus = 1;
+        }
+        GroceryService.getInstance().createNewGroceryAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), GroceryNameInput.getText().toString(),groceryStatus, new AsyncCallback<String>() {
+            @Override
+            public void handleResponse(String response) {
+                System.out.println("Success in adding new grocery");
+                String m = "Successfully added " + GroceryNameInput.getText().toString();
+                Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
+                Log.i("Success", "successfully add new grocery to groupId"+Backendless.UserService.CurrentUser().getProperty("groupId").toString());
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                String m = "Adding " + GroceryNameInput.getText().toString()+" failed.\n" + fault.getMessage();
+
+                Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
+                Log.i("Error","Server reported an error when createing a grocery for " +GroceryNameInput.getText().toString()+ fault.getMessage() );
+
+            }
+        });
     }
 
     @Override
@@ -109,9 +157,9 @@ public class AddGroceryListActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), TasksActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_new) {
-
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_main) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
             // TODO: This doesn't exit the app
@@ -127,6 +175,7 @@ public class AddGroceryListActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    //Deleted the associate default button
     public void oneTimePurchaseHandler (View view){
         Toast.makeText(getApplicationContext(),"need to be added into grocery list with onetime property",Toast.LENGTH_SHORT).show();
     }

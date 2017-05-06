@@ -13,4 +13,13 @@
     tools:context="sharehome.com.androidsharehome2.TransactionActivity"
     tools:showIn="@layout/app_bar_transaction">
 
+    <TextView
+        android:id="@+id/TransactionContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Functionality coming soon!" />
+
 </RelativeLayout>

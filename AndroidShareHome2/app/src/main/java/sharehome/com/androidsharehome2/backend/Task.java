@@ -10,6 +10,7 @@ public class Task
     private int duration;
     private java.lang.String groupId;
     private java.lang.String membersIdList;
+    private java.lang.String nextUserNameOnDuty;
     private java.lang.String objectId;
     private java.lang.String ownerId;
     private java.util.Date startTime;
@@ -26,6 +27,10 @@ public class Task
     public void setMembersIdList(java.lang.String membersIdList)
     {
       this.membersIdList = membersIdList;
+    }
+    public void setNextUserNameOnDuty(java.lang.String nextUserNameOnDuty)
+    {
+      this.nextUserNameOnDuty = nextUserNameOnDuty;
     }
     public void setObjectId(java.lang.String objectId)
     {
@@ -58,6 +63,10 @@ public class Task
     public java.lang.String getMembersIdList( )
     {
       return membersIdList;
+    }
+    public java.lang.String getNextUserNameOnDuty( )
+    {
+      return nextUserNameOnDuty;
     }
     public java.lang.String getObjectId( )
     {

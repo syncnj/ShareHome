@@ -54,61 +54,84 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         //initialize Backendless server
         String appVersion = "v1";
-        Backendless.initApp( this, "19E73C32-D357-313A-FF64-12612084E000", "19F8B6BD-34A1-655C-FF3E-9BD31F1B0C00",appVersion);
-        //create new user
-//        user = new BackendlessUser();
-//
-//        user.setPassword("Gerald");
-
-
         callbackManager = CallbackManager.Factory.create();
-        loginManager = LoginManager.getInstance();
+        Backendless.initApp( this, "19E73C32-D357-313A-FF64-12612084E000", "19F8B6BD-34A1-655C-FF3E-9BD31F1B0C00",appVersion);
 
+        if(Backendless.UserService.CurrentUser() == null) {
 
-// login with facebook
-        Backendless.UserService.loginWithFacebookSdk( MainActivity.this,
-                callbackManager,
-                new AsyncCallback<BackendlessUser>()
-                {
-                    @Override
-                    public void handleResponse( BackendlessUser loggedInUser )
-                    {
-                        // user logged in successfully
+            loginManager = LoginManager.getInstance();
 
-                        user = loggedInUser;
+            // login with facebook
+            Backendless.UserService.loginWithFacebookSdk(MainActivity.this,
+                    callbackManager,
+                    new AsyncCallback<BackendlessUser>() {
+                        @Override
+                        public void handleResponse(BackendlessUser loggedInUser) {
+                            // user logged in successfully
 
-                        // Create Display of everything!
+                            user = loggedInUser;
 
-                        try {
-                            g = GroupService.getInstance();
-                        }
-                        catch(Exception e){
-                            System.out.println("It unsuccessfully found a group");
-                        }
-                        g.getAllPostAsync(user.getProperty("groupId").toString(), new AsyncCallback<List<Post>>() {
-                            @Override
-                            public void handleResponse(List<Post> response) {
-                                Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
-                                System.out.println(response);
-                                ListView postListView = (ListView) findViewById(R.id.post_list);
-                                PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
-                                postListView.setAdapter(adapter);
-                                System.out.print("Successfully retrieved posts");
+                            if (user.getProperty("groupId") == null) {
+                                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                                startActivity(intent);
+                                return;
                             }
 
-                            @Override
-                            public void handleFault(BackendlessFault fault) {
-                                System.out.println("Failed to get all posts");
-                            }
-                        });
-                    }
+                            // Create Display of everything!
 
-                    @Override
-                    public void handleFault( BackendlessFault fault )
-                    {
-                        // failed to log in
-                    }
-                } );
+                            try {
+                                g = GroupService.getInstance();
+                            } catch (Exception e) {
+                                System.out.println("It unsuccessfully found a group");
+                            }
+                            g.getAllPostAsync(user.getProperty("groupId").toString(), new AsyncCallback<List<Post>>() {
+                                @Override
+                                public void handleResponse(List<Post> response) {
+                                    // To show data, uncomment
+                                    // Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                                    // System.out.println(response);
+                                    ListView postListView = (ListView) findViewById(R.id.post_list);
+                                    PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
+                                    postListView.setAdapter(adapter);
+                                }
+
+                                @Override
+                                public void handleFault(BackendlessFault fault) {
+                                    System.out.println("Failed to get all posts");
+                                    Toast.makeText(getApplicationContext(), "Something happened :(\nUnable to retrieve posts", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault fault) {
+                            // failed to log in
+                        }
+                    });
+        } else {
+            user = Backendless.UserService.CurrentUser();
+            try {
+                g = GroupService.getInstance();
+            } catch (Exception e) {
+                System.out.println("It unsuccessfully found a group");
+            }
+            g.getAllPostAsync(user.getProperty("groupId").toString(), new AsyncCallback<List<Post>>() {
+                @Override
+                public void handleResponse(List<Post> response) {
+                    System.out.println(response);
+                    ListView postListView = (ListView) findViewById(R.id.post_list);
+                    PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
+                    postListView.setAdapter(adapter);
+                    System.out.print("Successfully retrieved posts");
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+                    System.out.println("Failed to get all posts");
+                }
+            });
+        }
+
 
         // System.out.println("userid = " + user.getObjectId().toString());
 
@@ -197,7 +220,6 @@ public class MainActivity extends AppCompatActivity
             g.getAllPostAsync(user.getProperty("groupId").toString(), new AsyncCallback<List<Post>>() {
                 @Override
                 public void handleResponse(List<Post> response) {
-                    Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
                     System.out.println(response);
                     ListView postListView = (ListView) findViewById(R.id.post_list);
                     PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
@@ -231,10 +253,15 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        if(user == null){
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
+
         if (id == R.id.nav_profile) {
-            // Handle the camera action
             Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
+
         } else if (id == R.id.nav_transactions) {
             Intent intent = new Intent(getApplicationContext(), TransactionActivity.class);
             startActivity(intent);
@@ -247,9 +274,9 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), TasksActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_new) {
-
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_main) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
             try {

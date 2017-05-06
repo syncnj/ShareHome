@@ -60,5 +60,6 @@
         android:layout_alignBottom="@+id/openRoommateList"
         android:layout_toEndOf="@+id/spinner_scheduling"
         android:layout_toRightOf="@+id/spinner_scheduling"
-        android:onClick="submitMessageHandler"/>
+        android:onClick="submitMessageHandler"
+        android:visibility="invisible"/>
 </RelativeLayout>

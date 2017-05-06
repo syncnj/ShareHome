@@ -1,9 +1,12 @@
 package sharehome.com.androidsharehome2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,8 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
@@ -22,9 +27,14 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.facebook.login.LoginManager;
 
+import org.w3c.dom.Text;
+
 import java.util.InputMismatchException;
 
+import sharehome.com.androidsharehome2.backend.Group;
 import sharehome.com.androidsharehome2.backend.GroupService;
+
+import static android.R.attr.id;
 
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,8 +42,10 @@ public class ProfileActivity extends AppCompatActivity
     private LoginManager loginManager;
     private EditText AddMeber_Email;
     private EditText CreateGroup_Name;
-     String AddMeber_EmailString;
+     String AddMember_EmailString;
      String CreateGroup_NameString;
+    TextView GroupName;
+    TextView Instruction;
     Button AddMemberViaEmail;
 
 
@@ -43,10 +55,34 @@ public class ProfileActivity extends AppCompatActivity
         setContentView(R.layout.activity_profile);
 
         AddMeber_Email = (EditText)findViewById(R.id.findMember_email);
-        CreateGroup_Name = (EditText)findViewById(R.id.group_name_input) ;
-
+        CreateGroup_Name = (EditText)findViewById(R.id.group_name_input);
         CreateGroup_NameString = CreateGroup_Name.getText().toString();
+        GroupName = (TextView) findViewById(R.id.currentGroupName);
+        AddMemberViaEmail = (Button) findViewById(R.id.addMember);
 
+        if(Backendless.UserService.CurrentUser().getProperty("groupId") == null) {
+            GroupName.setText("Not in group.");
+            Instruction = (TextView) findViewById(R.id.textView6);
+            Instruction.setText("You are not in any GROUP yet.\n\nPlease join or create a group first.");
+            Instruction.setGravity(Gravity.CENTER);
+            AddMeber_Email.setVisibility(EditText.INVISIBLE);
+            AddMemberViaEmail.setVisibility(Button.INVISIBLE);
+        } else {
+//            GroupName.setText(Backendless.UserService.CurrentUser().getProperty("groupId").toString());
+//            Log.i("Error", Backendless.UserService.CurrentUser().getProperty("groupId").toString());
+//            System.out.println("Error when "+Backendless.UserService.CurrentUser().getProperty("groupId").toString());
+            GroupService.getInstance().getGroupByIdAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<Group>() {
+                        @Override
+                        public void handleResponse(Group response) {
+                            GroupName.setText(response.getGroupName());
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault fault) {
+
+                        }
+                    });
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,6 +101,9 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        if(Backendless.UserService.CurrentUser().getProperty("groupId") == null){
+            return;
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -107,7 +146,23 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
         int id = item.getItemId();
+
+         if (id == R.id.nav_logout) {
+            loginManager.logOut();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("EXIT", true);
+            startActivity(intent);
+            finish();
+        }
+
+        if(Backendless.UserService.CurrentUser().getProperty("groupId") == null){
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return false;
+        }
 
         if (id == R.id.nav_profile) {
             // Handle the camera action
@@ -125,18 +180,9 @@ public class ProfileActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), TasksActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_new) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_logout) {
-            // TODO: This doesn't exit the app
-            loginManager.logOut();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("EXIT", true);
+        } else if (id == R.id.nav_main) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
-            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -153,7 +199,14 @@ public class ProfileActivity extends AppCompatActivity
             String m = "For whatever reason, group not created.";
             Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
         }
+        // Hides keyboard since button has been clicked
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+        // cleans edit text
         groupName.setText("");
+        // Notifies user
         String m = "Group " + newGroupName + " created!";
         Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
     }
@@ -182,13 +235,13 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     public void AddMember(View v){
-        AddMeber_EmailString = AddMeber_Email.getText().toString();
+        AddMember_EmailString = AddMeber_Email.getText().toString();
         GroupService g = GroupService.getInstance();
-        g.addMemberbyEmailAsync(AddMeber_EmailString, Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<Boolean>() {
+        g.addMemberbyEmailAsync(AddMember_EmailString, Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<Boolean>() {
             @Override
             public void handleResponse(Boolean response) {
                 AddMeber_Email.setText("");
-                Toast.makeText(ProfileActivity.this, "new member Added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, "New member added to group", Toast.LENGTH_SHORT).show();
             }
 
             @Override

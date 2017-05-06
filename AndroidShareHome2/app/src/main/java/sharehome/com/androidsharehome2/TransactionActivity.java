@@ -103,10 +103,9 @@ public class TransactionActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), TasksActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_new) {
-
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_main) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             // TODO: This doesn't exit the app
             loginManager.logOut();

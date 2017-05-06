@@ -41,16 +41,16 @@ public class GroceryService
 
 
     
-    public boolean deleteGrocery(java.lang.String groceryId, java.lang.String groupId)
+    public java.lang.String createNewGrocery(java.lang.String groupId, java.lang.String groceryName, int status)
     {
-        Object[] args = new Object[]{groceryId, groupId};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deleteGrocery", args, boolean.class );
+        Object[] args = new Object[]{groupId, groceryName, status};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewGrocery", args, java.lang.String.class );
     }
     
-    public void deleteGroceryAsync(java.lang.String groceryId, java.lang.String groupId, AsyncCallback<Boolean> callback)
+    public void createNewGroceryAsync(java.lang.String groupId, java.lang.String groceryName, int status, AsyncCallback<java.lang.String> callback)
     {
-        Object[] args = new Object[]{groceryId, groupId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deleteGrocery", args, Boolean.class, callback);
+        Object[] args = new Object[]{groupId, groceryName, status};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewGrocery", args, java.lang.String.class, callback);
     }
     
     public sharehome.com.androidsharehome2.backend.Grocery getGroceryById(java.lang.String groceryId)
@@ -65,6 +65,18 @@ public class GroceryService
         Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getGroceryById", args, sharehome.com.androidsharehome2.backend.Grocery.class, callback);
     }
     
+    public boolean deleteGrocery(java.lang.String groceryId, java.lang.String groupId)
+    {
+        Object[] args = new Object[]{groceryId, groupId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deleteGrocery", args, boolean.class );
+    }
+    
+    public void deleteGroceryAsync(java.lang.String groceryId, java.lang.String groupId, AsyncCallback<Boolean> callback)
+    {
+        Object[] args = new Object[]{groceryId, groupId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "deleteGrocery", args, Boolean.class, callback);
+    }
+    
     public int changeStatus(java.lang.String groceryId)
     {
         Object[] args = new Object[]{groceryId};
@@ -75,18 +87,6 @@ public class GroceryService
     {
         Object[] args = new Object[]{groceryId};
         Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "changeStatus", args, Integer.class, callback);
-    }
-    
-    public java.lang.String createNewGrocery(java.lang.String groupId, java.lang.String groceryName)
-    {
-        Object[] args = new Object[]{groupId, groceryName};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewGrocery", args, java.lang.String.class );
-    }
-    
-    public void createNewGroceryAsync(java.lang.String groupId, java.lang.String groceryName, AsyncCallback<java.lang.String> callback)
-    {
-        Object[] args = new Object[]{groupId, groceryName};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewGrocery", args, java.lang.String.class, callback);
     }
     
 }

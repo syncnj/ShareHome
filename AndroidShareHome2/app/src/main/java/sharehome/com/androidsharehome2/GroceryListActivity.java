@@ -36,6 +36,8 @@ public class GroceryListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private LoginManager loginManager;
+    GroupService groupService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +64,11 @@ public class GroceryListActivity extends AppCompatActivity
 
         // Create Display of everything!
 
-        GroupService groupService = GroupService.getInstance();
-        groupService.getAllGroceryAsync("96080834-07E4-BE91-FFDD-F5CA082EFC00", new AsyncCallback<List<Grocery>>() {
+        groupService = GroupService.getInstance();
+        groupService.getAllGroceryAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<List<Grocery>>() {
             @Override
             public void handleResponse(List<Grocery> response){
-                Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
                 System.out.println(response);
                 ListView groceryListView = (ListView) findViewById(R.id.grocery_list);
                 GroceryAdapter adapter = new GroceryAdapter(getApplicationContext(), response);
@@ -110,6 +112,22 @@ public class GroceryListActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
+            groupService = GroupService.getInstance();
+            groupService.getAllGroceryAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<List<Grocery>>() {
+                @Override
+                public void handleResponse(List<Grocery> response){
+                    ListView groceryListView = (ListView) findViewById(R.id.grocery_list);
+                    GroceryAdapter adapter = new GroceryAdapter(getApplicationContext(), response);
+                    groceryListView.setAdapter(adapter);
+                }
+
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+                    System.out.println("Failed to get all posts");
+                }
+            });
+
             return true;
         } else if(id == R.id.action_logout){
             loginManager.logOut();
@@ -146,10 +164,9 @@ public class GroceryListActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), TasksActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_new) {
-
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_main) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             // TODO: This doesn't exit the app
             loginManager.logOut();

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.backendless.async.callback.AsyncCallback;
@@ -24,6 +25,9 @@ import static sharehome.com.androidsharehome2.R.id.upvotes;
  */
 
 public class GroceryAdapter extends ArrayAdapter<Grocery> {
+    //reading input
+
+
     public GroceryAdapter(Context context, List<Grocery> groceries){
         super(context, 0, groceries);
     }
@@ -36,6 +40,7 @@ public class GroceryAdapter extends ArrayAdapter<Grocery> {
         // Grocery item
         TextView nameView = (TextView) listItemView.findViewById(R.id.GroceryItem);
         nameView.setText(currentGrocery.getGroceryName());
+
 
 
         // Status button

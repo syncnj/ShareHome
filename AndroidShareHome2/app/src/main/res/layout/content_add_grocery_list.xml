@@ -61,21 +61,22 @@
             android:layout_alignParentStart="true"
             android:layout_marginLeft="19dp"
             android:layout_marginStart="19dp"
-            android:onClick="oneTimePurchaseHandler"/>
+           />
 
 
         <Button
             android:id="@+id/dailyGroceryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Daily grocery"
+            android:text="Submit item"
             android:layout_alignBaseline="@+id/oneTimeButton"
             android:layout_alignBottom="@+id/oneTimeButton"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="14dp"
             android:layout_marginEnd="14dp"
-            android:onClick="dailyPurchaseHandler"/>
+            android:onClick="SubmitGroceryToServer"
+           />
 
 
     </RelativeLayout>

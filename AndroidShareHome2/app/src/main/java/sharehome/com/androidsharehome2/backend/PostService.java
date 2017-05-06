@@ -41,42 +41,6 @@ public class PostService
 
 
     
-    public int addUpVote(java.lang.String postId, java.lang.String userId)
-    {
-        Object[] args = new Object[]{postId, userId};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addUpVote", args, int.class );
-    }
-    
-    public void addUpVoteAsync(java.lang.String postId, java.lang.String userId, AsyncCallback<Integer> callback)
-    {
-        Object[] args = new Object[]{postId, userId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addUpVote", args, Integer.class, callback);
-    }
-    
-    public int addDownVote(java.lang.String postId, java.lang.String userId)
-    {
-        Object[] args = new Object[]{postId, userId};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addDownVote", args, int.class );
-    }
-    
-    public void addDownVoteAsync(java.lang.String postId, java.lang.String userId, AsyncCallback<Integer> callback)
-    {
-        Object[] args = new Object[]{postId, userId};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addDownVote", args, Integer.class, callback);
-    }
-    
-    public java.lang.String createNewPost(java.lang.String userId, java.lang.String groupId, java.lang.String postTitle, java.lang.String postContent)
-    {
-        Object[] args = new Object[]{userId, groupId, postTitle, postContent};
-        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewPost", args, java.lang.String.class );
-    }
-    
-    public void createNewPostAsync(java.lang.String userId, java.lang.String groupId, java.lang.String postTitle, java.lang.String postContent, AsyncCallback<java.lang.String> callback)
-    {
-        Object[] args = new Object[]{userId, groupId, postTitle, postContent};
-        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewPost", args, java.lang.String.class, callback);
-    }
-    
     public boolean deletePost(java.lang.String postId, java.lang.String userId)
     {
         Object[] args = new Object[]{postId, userId};
@@ -99,6 +63,42 @@ public class PostService
     {
         Object[] args = new Object[]{postId};
         Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "getPostById", args, sharehome.com.androidsharehome2.backend.Post.class, callback);
+    }
+    
+    public java.lang.String createNewPost(java.lang.String userId, java.lang.String groupId, java.lang.String postTitle, java.lang.String postContent)
+    {
+        Object[] args = new Object[]{userId, groupId, postTitle, postContent};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewPost", args, java.lang.String.class );
+    }
+    
+    public void createNewPostAsync(java.lang.String userId, java.lang.String groupId, java.lang.String postTitle, java.lang.String postContent, AsyncCallback<java.lang.String> callback)
+    {
+        Object[] args = new Object[]{userId, groupId, postTitle, postContent};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "createNewPost", args, java.lang.String.class, callback);
+    }
+    
+    public int addUpVote(java.lang.String postId, java.lang.String userId)
+    {
+        Object[] args = new Object[]{postId, userId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addUpVote", args, int.class );
+    }
+    
+    public void addUpVoteAsync(java.lang.String postId, java.lang.String userId, AsyncCallback<Integer> callback)
+    {
+        Object[] args = new Object[]{postId, userId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addUpVote", args, Integer.class, callback);
+    }
+    
+    public int addDownVote(java.lang.String postId, java.lang.String userId)
+    {
+        Object[] args = new Object[]{postId, userId};
+        return Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addDownVote", args, int.class );
+    }
+    
+    public void addDownVoteAsync(java.lang.String postId, java.lang.String userId, AsyncCallback<Integer> callback)
+    {
+        Object[] args = new Object[]{postId, userId};
+        Backendless.CustomService.invoke( SERVICE_NAME, SERVICE_VERSION_NAME, "addDownVote", args, Integer.class, callback);
     }
     
 }

@@ -16,14 +16,14 @@
     <string-array name="spinnerItems_scheduling">
         <item>Day</item>
         <item>Week</item>
-        <item>month</item>
-        <item>year</item>
+        <item>Month</item>
+        <item>Year</item>
     </string-array>
 
     <string-array name="spinnerItems_groceryStatus">
-        <item>full</item>
-        <item>running low</item>
-        <item>restock needed</item>
+        <item>Full</item>
+        <item>Running low</item>
+        <item>Restock needed</item>
     </string-array>
 
     <string name="title_activity_add_transaction">AddTransactionActivity</string>

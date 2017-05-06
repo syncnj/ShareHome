@@ -22,6 +22,4 @@
 
     <include layout="@layout/content_add_grocery_list" />
 
-
-
 </android.support.design.widget.CoordinatorLayout>

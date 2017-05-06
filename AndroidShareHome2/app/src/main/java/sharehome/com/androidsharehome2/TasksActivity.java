@@ -20,6 +20,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -31,14 +32,19 @@ import com.facebook.login.LoginManager;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import sharehome.com.androidsharehome2.backend.GroupService;
+import sharehome.com.androidsharehome2.backend.Task;
 
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private LoginManager loginManager;
             GroupService groupService;
+            Task header = new Task();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,20 +62,23 @@ public class TasksActivity extends AppCompatActivity
                    FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
                    fos.write(response.getBytes());
                    fos.close();
-                   Toast.makeText(TasksActivity.this, response, Toast.LENGTH_LONG).show();
                }catch(Exception e){
-                   System.out.println("EXCEPTION");
+                   System.out.println("TasksActivity EXCEPTION when writing members to file");
                }
 
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-
+                System.out.println("members not retrieved");
             }
         });
 
-
+        // Prepare header for display
+        header.setTaskName("Task Name");
+        header.setUserOnDuty("Person in Charge");
+        header.setStartTime(new Date(0L));
+        header.setNextUserNameOnDuty("");
 
         //local mocks for new user
 
@@ -81,18 +90,6 @@ public class TasksActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        //    This is completed in the xml with launchAddTaskActivity
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////               Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-////                       .setAction("Action", null).show();
-////                startActivity(new Intent(TasksActivity.this, AddTaskActivity.class));
-//            }
-//        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -101,6 +98,23 @@ public class TasksActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        groupService = GroupService.getInstance();
+        groupService.getAllTaskAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<List<Task>>() {
+            @Override
+            public void handleResponse(List<Task> response) {
+                ListView taskListView = (ListView) findViewById(R.id.task_list);
+                response.add(0, header);
+                TaskAdapter adapter = new TaskAdapter(getApplicationContext(), response);
+                taskListView.setAdapter(adapter);
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+
+            }
+        });
+
     }
     public void onScheduleBaseSelected(AdapterView<?> parent, View view,
                                          int pos, long id){
@@ -135,6 +149,22 @@ public class TasksActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
+            groupService = GroupService.getInstance();
+            groupService.getAllTaskAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<List<Task>>() {
+                @Override
+                public void handleResponse(List<Task> response) {
+                    ListView taskListView = (ListView) findViewById(R.id.task_list);
+                    response.add(0, header);
+                    TaskAdapter adapter = new TaskAdapter(getApplicationContext(), response);
+                    taskListView.setAdapter(adapter);
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+
+                }
+            });
+
             return true;
         } else if(id == R.id.action_logout){
             loginManager.logOut();
@@ -171,10 +201,9 @@ public class TasksActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), TasksActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_new) {
-
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_main) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             // TODO: This doesn't exit the app
             loginManager.logOut();

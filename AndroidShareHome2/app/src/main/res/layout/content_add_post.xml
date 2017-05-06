@@ -17,7 +17,7 @@
         android:id="@+id/submitPost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="Post!"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="292dp"
         android:onClick="SubmitPostToServer"

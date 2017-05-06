@@ -1,5 +1,6 @@
 package sharehome.com.androidsharehome2;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,14 +35,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
+import java.util.TimeZone;
 
 import sharehome.com.androidsharehome2.backend.GroupService;
+import sharehome.com.androidsharehome2.backend.TaskService;
 
 public class AddTaskActivityNAV extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private LoginManager loginManager;
     String[] Roommates = {};
+    String[] RoommatesName;
 
     AlertDialog ad;
     Button openRoommateList;
@@ -51,6 +61,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
     String TaskNameString;
     GroupService groupService;
     boolean[] checkedItems;
+    int TimetoHour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,26 +72,36 @@ public class AddTaskActivityNAV extends AppCompatActivity
         byte[] b = {};
         String members = "";
         try {
-            File file = new File("members");
+            // This code gets the user objectIds of the members of the CurrentUser's group, this is written to the file in TasksActivity
             BufferedReader reader = new BufferedReader(new InputStreamReader(openFileInput("members")));
             members = reader.readLine();
-//            FileInputStream fis = openFileInput("members");
-//            fis.read(b);
-////            System.out.println(b.toString() + "HELLO");
-//            members = b.toString();
         }catch(Exception e){
-            System.out.println("EXCEPTION");
+            System.out.println("AddTaskActivityNAV EXCEPTION when reading members");
         }
-        Toast.makeText(AddTaskActivityNAV.this, "AddTasks Activity Toast", Toast.LENGTH_LONG).show();
         System.out.println("\n Members: " + members.toString());
         Roommates = members.split(",");
+        //Todo: create a list with all groupmembers name from its groupId.
+        RoommatesName = new String[Roommates.length];
+        for(int j =0; j<Roommates.length;j++) {
+            final int a = j;
+            Backendless.UserService.findById(Roommates[j], new AsyncCallback<BackendlessUser>() {
+                @Override
+                public void handleResponse(BackendlessUser response) {
+
+                    RoommatesName[a] = response.getProperty("name").toString();
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+
+                }
+            });
+
+        }
+
+        Log.i("roommateId List", Roommates.toString());
         System.out.println(Roommates.length);
-       checkedItems = new boolean[Roommates.length];
-//        // System.out.println("Members after split: " + Roommates.toString());
-//        for(int i = 0; i < Roommates.length; i++){
-//            Roommates[i] = "55555";
-//            System.out.println("Member: " + Roommates[i]);
-//        }
+        checkedItems = new boolean[Roommates.length];
 
         loginManager = LoginManager.getInstance();
 
@@ -103,12 +124,9 @@ public class AddTaskActivityNAV extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         submitTask = (Button) findViewById(R.id.submitTask);
-
         openRoommateList = (Button)findViewById(R.id.openRoommateList);
-
         DailyBaseSpinner = (Spinner)findViewById(R.id.spinner_scheduling);
         TaskNameInput = (EditText)findViewById(R.id.input_task_name) ;
-
         openRoommateList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,7 +141,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(getApplicationContext(),"Canceled roommate selection",Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(),"Canceled roommate selection",Toast.LENGTH_SHORT).show();
             }
         });
         builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
@@ -131,17 +149,45 @@ public class AddTaskActivityNAV extends AppCompatActivity
             public void onClick(DialogInterface dialogInterface, int i) {
                 //get user input on task name and time period
                 TimePeriod= DailyBaseSpinner.getSelectedItem().toString();
+                if (TimePeriod.equals("Day")){
+                    TimetoHour = 24;
+                }
+                else if(TimePeriod.equals("Week")){
+                    TimetoHour = 7*24;
+                }
+                else if(TimePeriod.equals("Month")){
+                    TimetoHour = 30*24;
+                }
+                else if(TimePeriod.equals("Year")){
+                    TimetoHour = 365*24;
+                }
+                else {
+                    System.out.println("The spinner has broken");
+                }
                 TaskNameString = TaskNameInput.getText().toString();
-                Toast.makeText(getApplicationContext(),findCheckedRoommates(Roommates,checkedItems)+ " will  work base on " + TimePeriod + " doing "+TaskNameString,Toast.LENGTH_SHORT).show();
+                TaskService.getInstance().createNewTaskAsync(TaskNameInput.getText().toString(),
+                        findCheckedRoommates(Roommates, checkedItems),
+                        Backendless.UserService.CurrentUser().getProperty("groupId").toString(), TimetoHour, new Date(System.currentTimeMillis()), new AsyncCallback<String>() {
+                            @Override
+                            public void handleResponse(String response) {
+                                Toast.makeText(getApplicationContext(), "Successfully created "+ TaskNameString, Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void handleFault(BackendlessFault fault) {
+                                Toast.makeText(getApplicationContext(), "Please select roommates", Toast.LENGTH_LONG).show();
+                            }
+                        })
+
+            ;
+//                Toast.makeText(getApplicationContext(),findCheckedRoommates(Roommates,checkedItems)+ " will  work base on " + TimePeriod + " doing "+TaskNameString,Toast.LENGTH_SHORT).show();
             }
         });
 
-
-        builder.setMultiChoiceItems(Roommates, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+        builder.setMultiChoiceItems(RoommatesName, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which, boolean isChecked) {
 
-                Toast.makeText(getApplicationContext(), Roommates[which], Toast.LENGTH_SHORT).show();
             }
         });
         ad = builder.create();
@@ -210,10 +256,9 @@ public class AddTaskActivityNAV extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), TasksActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_new) {
-
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_main) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             // TODO: This doesn't exit the app
             loginManager.logOut();
@@ -231,9 +276,12 @@ public class AddTaskActivityNAV extends AppCompatActivity
 
     public String findCheckedRoommates(String[] allRoommates, boolean[] checkedRoommates){
         String returnNames = "";
-        for(int j =0; j<allRoommates.length;j++){
-            if(checkedRoommates[j]==true){
-                returnNames = returnNames + " " +allRoommates[j];
+        if(checkedRoommates[0]){
+            returnNames += allRoommates[0];
+        }
+        for(int j =1; j<allRoommates.length;j++){
+            if(checkedRoommates[j]){
+                returnNames += "," + allRoommates[j];
             }
         }
         return returnNames;

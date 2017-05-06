@@ -56,13 +56,10 @@ public class AddPostActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+    // Eliminate this method, directly call createPost
     public void SubmitPostToServer(View v){
         createPost(PostNameInput.getText().toString(), PostContentInput.getText().toString());
-        String m = "Post successfully";
-        Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
         System.out.println(Backendless.UserService.CurrentUser().getObjectId().toString() +Backendless.UserService.CurrentUser().getProperty("groupId").toString() + "userid");
-        PostNameInput.setText("");
-        PostContentInput.setText("");
     }
 
     public String createPost(final String postTitle, final String postContent){
@@ -71,12 +68,16 @@ public class AddPostActivity extends AppCompatActivity
                 Backendless.UserService.CurrentUser().getProperty("groupId").toString(), postTitle, postContent, new AsyncCallback<String>() {
             @Override
             public void handleResponse(String response) {
-                System.out.println("Success in creating post");
+                String m = "Posted successfully.";
+                Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
+                PostNameInput.setText("");
+                PostContentInput.setText("");
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-
+                String m = "Check internet connection and try again.";//  + fault.getMessage();
+                Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
             }
         });
         return "Hi";
@@ -158,9 +159,9 @@ public class AddPostActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), TasksActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_new) {
-
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_main) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
             loginManager.logOut();
