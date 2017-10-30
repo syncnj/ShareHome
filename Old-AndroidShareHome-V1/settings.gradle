@@ -1,0 +1,1 @@
+include ':app', ':hostedservice_ShoppingCartService_1.0.0_android'

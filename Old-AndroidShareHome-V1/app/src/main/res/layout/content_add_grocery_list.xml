@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="sharehome.com.androidsharehome2.AddGroceryListActivity"
+    tools:showIn="@layout/app_bar_add_grocery_list">
+    <RelativeLayout
+        android:layout_width="368dp"
+        android:layout_height="551dp"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
+
+        <TextView
+            android:id="@+id/groceryList_intro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/oneTimeButton"
+            android:layout_alignStart="@+id/oneTimeButton"
+            android:text="Name of new grocery you want to add into grocery list"
+            />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/input_GroceryName"
+            android:layout_below="@id/groceryList_intro"
+            android:layout_alignLeft="@+id/oneTimeButton"
+            android:layout_alignStart="@+id/oneTimeButton"
+            android:layout_marginTop="14dp"
+            android:inputType="text"
+            android:ems="5"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="current status of new grocery:"
+            android:id="@+id/textView2"
+            android:layout_below="@+id/input_GroceryName"
+            android:layout_alignLeft="@+id/spinner_groceryStatus"
+            android:layout_alignStart="@+id/spinner_groceryStatus"
+            android:layout_marginTop="30dp" />
+        <Spinner
+            android:layout_width="192dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="51dp"
+            android:id="@+id/spinner_groceryStatus"
+            android:entries="@array/spinnerItems_groceryStatus"
+            android:layout_below="@+id/textView2"
+            android:layout_alignLeft="@+id/input_GroceryName"
+            android:layout_alignStart="@+id/input_GroceryName"></Spinner>
+        <Button
+            android:id="@+id/oneTimeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="181dp"
+            android:text="One time purchase"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="19dp"
+            android:layout_marginStart="19dp"
+           />
+
+
+        <Button
+            android:id="@+id/dailyGroceryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit item"
+            android:layout_alignBaseline="@+id/oneTimeButton"
+            android:layout_alignBottom="@+id/oneTimeButton"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="14dp"
+            android:layout_marginEnd="14dp"
+            android:onClick="SubmitGroceryToServer"
+           />
+
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

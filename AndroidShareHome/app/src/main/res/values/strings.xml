@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">ShareHome</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_logout">Logout</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="title_activity_profile">Your Profile</string>
+    <string name="title_activity_transaction">Transactions</string>
+    <string name="title_activity_grocery_list">Grocery List</string>
+    <string name="title_activity_tasks">Tasks</string>
+    <string name="title_activity_add_task_nav_drawer">AddTaskNavDrawerActivity</string>
+    <string name="title_activity_add_grocery_list">AddGroceryListActivity</string>
+    <string name="login">Login with Facebook</string>
+    <string-array name="spinnerItems_scheduling">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+        <item>Year</item>
+    </string-array>
+
+    <string-array name="spinnerItems_groceryStatus">
+        <item>Full</item>
+        <item>Running low</item>
+        <item>Restock needed</item>
+    </string-array>
+
+    <string name="title_activity_add_transaction">AddTransactionActivity</string>
+
+    <string name="facebook_app_id">1890462441172221</string>
+    <string name="title_activity_add_post">AddPostActivity</string>
+    <string name="title_activity_add_task_nav">AddTaskActivityNAV</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <!-- Strings related to login -->
+
+</resources>
