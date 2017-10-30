@@ -18,6 +18,11 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
+import com.amazonaws.mobileconnectors.cognito.Dataset;
+import com.amazonaws.mobileconnectors.cognito.DefaultSyncCallback;
+import com.amazonaws.regions.Regions;
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
@@ -51,8 +56,28 @@ public class MainActivity extends AppCompatActivity
             finish();
             return;
         }
-
+        // Initialize the Amazon Cognito credentials provider
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "us-east-1:a64bd04e-ca82-401e-918f-74fef106fcfb", // Identity pool ID
+                Regions.US_EAST_1 // Region
+        );
         setContentView(R.layout.activity_main);
+        // Initialize the Cognito Sync client
+        CognitoSyncManager syncClient = new CognitoSyncManager(
+                getApplicationContext(),
+                Regions.US_EAST_1, // Region
+                credentialsProvider);
+        // Create a record in a dataset and synchronize with the server
+        Dataset dataset = syncClient.openOrCreateDataset("myDataset");
+        dataset.put("myKey", "myValue");
+        dataset.synchronize(new DefaultSyncCallback() {
+            @Override
+            public void onSuccess(Dataset dataset, List newRecords) {
+                //Your handler code here
+                Toast.makeText(getBaseContext(), "success!!!!!!", Toast.LENGTH_LONG).show();
+            }
+        });
         //initialize Backendless server
         String appVersion = "v1";
         callbackManager = CallbackManager.Factory.create();

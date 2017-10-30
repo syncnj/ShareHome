@@ -41,6 +41,13 @@ dependencies {
     compile 'com.backendless:android:3.0.25'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.jakewharton:butterknife:8.8.1'
+    compile 'com.amazonaws:aws-android-sdk-core:2.2.+'
+    compile 'com.amazonaws:aws-android-sdk-s3:2.2.+'
+    compile 'com.amazonaws:aws-android-sdk-ddb:2.2.+'
+    compile 'com.amazonaws:aws-android-sdk-cognito:2.2.+'
+    compile 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.2.+'
+    compile 'com.amazonaws:aws-android-sdk-lambda:2.2.+'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
     testCompile 'junit:junit:4.12'
 }
