@@ -1,2 +1,0 @@
-we use pycharm this ide to create a django project. The app's name is called 'sh'. Template setting is directly in /sharehome/teamplates.
-test.py is inside sh app folder(/sh/test.py)
