@@ -4,19 +4,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_account"
             android:title="Profile" />
         <item
             android:id="@+id/nav_main"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_post"
             android:title="Posts" />
         <item
             android:id="@+id/nav_tasks"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_task"
             android:title="Tasks" />
         <item
             android:id="@+id/nav_groceries"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_grocery"
             android:title="Grocery List" />
         <item
             android:id="@+id/nav_transactions"
@@ -24,18 +24,18 @@
             android:title="Transactions" />
 
         <!--<item-->
-            <!--android:id="@+id/nav_new"-->
-            <!--android:icon="@drawable/ic_menu_manage"-->
-            <!--android:title="Unimplemented" />-->
+        <!--android:id="@+id/nav_new"-->
+        <!--android:icon="@drawable/ic_menu_manage"-->
+        <!--android:title="Unimplemented" />-->
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/ic_menu_logout"
             android:title="Logout" />
     </group>
 
     <!--<item android:title="Communicate">-->
-        <!--<menu>-->
-        <!--</menu>-->
+    <!--<menu>-->
+    <!--</menu>-->
     <!--</item>-->
 
 </menu>
