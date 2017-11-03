@@ -3,10 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidShareHome.iml" filepath="$PROJECT_DIR$/AndroidShareHome.iml" />
-      <module fileurl="file://$PROJECT_DIR$/AndroidShareHome.iml" filepath="$PROJECT_DIR$/AndroidShareHome.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/hostedservice_ShoppingCartService_1.0.0_android/hostedservice_ShoppingCartService_1.0.0_android.iml" filepath="$PROJECT_DIR$/hostedservice_ShoppingCartService_1.0.0_android/hostedservice_ShoppingCartService_1.0.0_android.iml" />
       <module fileurl="file://$PROJECT_DIR$/hostedservice_ShoppingCartService_1.0.0_android/hostedservice_ShoppingCartService_1.0.0_android.iml" filepath="$PROJECT_DIR$/hostedservice_ShoppingCartService_1.0.0_android/hostedservice_ShoppingCartService_1.0.0_android.iml" />
     </modules>
   </component>

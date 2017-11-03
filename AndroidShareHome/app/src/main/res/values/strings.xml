@@ -13,6 +13,7 @@
     <string name="title_activity_add_task_nav_drawer">AddTaskNavDrawerActivity</string>
     <string name="title_activity_add_grocery_list">AddGroceryListActivity</string>
     <string name="login">Login with Facebook</string>
+
     <string-array name="spinnerItems_scheduling">
         <item>Day</item>
         <item>Week</item>
