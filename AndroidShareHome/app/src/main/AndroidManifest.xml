@@ -73,8 +73,10 @@
         <activity
             android:name=".SignupActivity"
             android:theme="@style/AppTheme.Dark" />
-
-
+        <activity
+            android:name=".AddDifferentPostActivity"
+            android:label="@string/title_activity_add_different_post"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

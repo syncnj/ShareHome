@@ -33,6 +33,12 @@
     <string name="title_activity_add_post">AddPostActivity</string>
     <string name="title_activity_add_task_nav">AddTaskActivityNAV</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_add_different_post">AddDifferentPostActivity</string>
+    <string name="tab_text_1">Message</string>
+    <string name="tab_text_2">Reminder</string>
+    <string name="tab_text_3">Poll</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
     <!-- Strings related to login -->
 
