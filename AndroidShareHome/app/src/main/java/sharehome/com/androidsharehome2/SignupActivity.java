@@ -25,6 +25,11 @@ public class SignupActivity extends AppCompatActivity {
     @BindView(R.id.btn_signup) Button _signupButton;
     @BindView(R.id.link_login) TextView _loginLink;
 
+    private String username;
+    private String userEmail;
+    private String password;
+    private String reEnterPassword;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,10 +71,10 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
-        String reEnterPassword = _reEnterPasswordText.getText().toString();
+        username = _nameText.getText().toString();
+        userEmail = _emailText.getText().toString();
+        password = _passwordText.getText().toString();
+        reEnterPassword = _reEnterPasswordText.getText().toString();
 
         // TODO: Implement signup logic here.
 
@@ -89,6 +94,15 @@ public class SignupActivity extends AppCompatActivity {
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
+        exit();
+    }
+
+    private void exit () {
+        Intent intent = new Intent();
+        if(username == null)
+            username = "";
+        intent.putExtra("name",username);
+        setResult(RESULT_OK, intent);
         finish();
     }
 

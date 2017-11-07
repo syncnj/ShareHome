@@ -34,6 +34,7 @@ import butterknife.BindView;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
+    private static final int LOGIN = 4;
 
     @BindView(R.id.input_username) EditText _usernameText;
     @BindView(R.id.input_password) EditText _passwordText;
@@ -50,6 +51,10 @@ public class LoginActivity extends AppCompatActivity {
     private String password;
     private ProgressDialog progressDialog;
     private AlertDialog userDialog;
+
+//    // authenticationHandler
+//    protected AuthenticationHandler authHandler;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Start the Signup activity
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
                 startActivityForResult(intent, REQUEST_SIGNUP);
-                finish();
+//                finish();
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
         });
@@ -90,16 +95,16 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        _loginButton.setEnabled(false);
+        username = _usernameText.getText().toString();
+        password = _passwordText.getText().toString();
 
+        _loginButton.setEnabled(false);
         progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        username = _usernameText.getText().toString();
-        password = _passwordText.getText().toString();
 
         // TODO: Implement authentication logic here.
         AppHelper.setUser(username);
@@ -113,16 +118,6 @@ public class LoginActivity extends AppCompatActivity {
 //                        progressDialog.dismiss();
 //                    }
 //                }, 3000);
-    }
-
-    private void findCurrent() {
-        CognitoUser user = AppHelper.getPool().getCurrentUser();
-        username = user.getUserId();
-        if(username != null) {
-            AppHelper.setUser(username);
-            _usernameText.setText(user.getUserId());
-            user.getSessionInBackground(authenticationHandler);
-        }
     }
 
     private void showDialogMessage(String title, String body) {
@@ -152,13 +147,43 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
-
+//        if (requestCode == REQUEST_SIGNUP) {
+//            if (resultCode == RESULT_OK) {
+//
+//                // TODO: Implement successful signup logic here
+//                // By default we just finish the Activity and log them in automatically
+//                this.finish();
+//            }
+//        }
+        super.onActivityResult( requestCode, resultCode, data );
+        switch (requestCode) {
+            case REQUEST_SIGNUP:
+                // Register user
                 // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
-                this.finish();
-            }
+                if(resultCode == RESULT_OK) {
+                    String name = data.getStringExtra("username");
+                    if (!name.isEmpty()) {
+                        _usernameText.setText(name);
+                        _passwordText.setText("");
+                        _passwordText.requestFocus();
+                    }
+                    String userPasswd = data.getStringExtra("password");
+                    if (!userPasswd.isEmpty()) {
+                        _passwordText.setText(userPasswd);
+                    }
+                    if (!name.isEmpty() && !userPasswd.isEmpty()) {
+                        // We have the user details, so sign in!
+                        username = name;
+                        password = userPasswd;
+                        AppHelper.getPool().getUser(username).getSessionInBackground(authenticationHandler);
+                    }
+                }
+                break;
+            case LOGIN:
+                if(resultCode == RESULT_OK){
+                    clearInput();
+                }
+                break;
         }
     }
 
@@ -171,12 +196,13 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         Toast.makeText(getBaseContext(), "Login Successful!", Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
-        finish();
     }
 
     public void onLoginFailed() {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
+        TextView label = (TextView) findViewById(R.id.input_PasswordMessage);
+        label.setText("");
     }
 
     public boolean validate() {
@@ -187,6 +213,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if (username.isEmpty()) {
             _usernameText.setError("enter a valid username");
+            TextView label = (TextView) findViewById(R.id.input_UsernameMessage);
+            label.setText("enter username");
             valid = false;
         } else {
             _usernameText.setError(null);
@@ -195,6 +223,8 @@ public class LoginActivity extends AppCompatActivity {
         if (password.isEmpty() || password.length() < 1 || password.length() > 10) {
             _passwordText.setError("between 1 and 10 alphanumeric characters");
             valid = false;
+            TextView label = (TextView) findViewById(R.id.input_PasswordMessage);
+            label.setText("enter password");
         } else {
             _passwordText.setError(null);
         }
@@ -212,20 +242,14 @@ public class LoginActivity extends AppCompatActivity {
             closeWaitDialog();
             onLoginSuccess();
             /*pass username and password info to main activity task*/
-            exit();
-
+            launchUser();
         }
 
         @Override
         public void getAuthenticationDetails(AuthenticationContinuation continuation, String username) {
-            closeWaitDialog();
+//            closeWaitDialog();
             Locale.setDefault(Locale.US);
-//            getUserAuthentication(authenticationContinuation, username);
-            if (validate()){
-                AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
-                continuation.setAuthenticationDetails(authenticationDetails);
-                continuation.continueTask();
-            }
+            getUserAuthentication(continuation, username);
         }
 
         @Override
@@ -265,6 +289,22 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
+    private void launchUser() {
+        Intent userActivity = new Intent(this, UserActivity.class);
+        userActivity.putExtra("username", username);
+        startActivityForResult(userActivity, LOGIN);
+    }
+
+    private void findCurrent() {
+        CognitoUser user = AppHelper.getPool().getCurrentUser();
+        username = user.getUserId();
+        if(username != null) {
+            AppHelper.setUser(username);
+            _usernameText.setText(user.getUserId());
+            user.getSessionInBackground(authenticationHandler);
+        }
+    }
+
     private void mfaAuth(MultiFactorAuthenticationContinuation continuation) {
         multiFactorAuthenticationContinuation = continuation;
         Intent mfaActivity = new Intent(this, MFAActivity.class);
@@ -272,20 +312,43 @@ public class LoginActivity extends AppCompatActivity {
         startActivityForResult(mfaActivity, 5);
     }
 
-    private void exit() {
-        Intent intent = new Intent(this, MainActivity.class);
-        /*pass in username and password info to MainActivity*/
-        if (username == null) {
-            username = "";
+    private void clearInput() {
+        if(_usernameText == null) {
+            _usernameText = (EditText) findViewById(R.id.input_username);
         }
-        if (password == null) {
-            password = "";
+
+        if(_passwordText == null) {
+            _passwordText = (EditText) findViewById(R.id.input_password);
         }
-        intent.putExtra("username", username);
-        intent.putExtra("password", password);
-        setResult(RESULT_OK, intent);
-        finish();
+
+        _usernameText.setText("");
+        _usernameText.requestFocus();
+//        _usernameText.setBackground(getDrawable(R.drawable.text_border_selector));
+        _passwordText.setText("");
+//        _passwordText.setBackground(getDrawable(R.drawable.text_border_selector));
     }
 
+    private void getUserAuthentication(AuthenticationContinuation continuation, String username) {
+        if(username != null) {
+            this.username = username;
+            AppHelper.setUser(username);
+        }
+        if(this.password == null) {
+            _usernameText.setText(username);
+            password = _passwordText.getText().toString();
+            if(password == null || password.length() < 1) {
+                TextView label = (TextView) findViewById(R.id.input_PasswordMessage);
+                label.setText("enter password");
+//                inPassword.setBackground(getDrawable(R.drawable.text_border_error));
+                return;
+            }
+
+        }
+        if (validate()){
+            AuthenticationDetails authenticationDetails = new AuthenticationDetails(username, password, null);
+            continuation.setAuthenticationDetails(authenticationDetails);
+            continuation.continueTask();
+        }
+    }
 }
 

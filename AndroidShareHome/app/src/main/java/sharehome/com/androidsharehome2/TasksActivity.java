@@ -168,7 +168,7 @@ public class TasksActivity extends AppCompatActivity
             return true;
         } else if(id == R.id.action_logout){
             loginManager.logOut();
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
             startActivity(intent);
@@ -202,12 +202,12 @@ public class TasksActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_main) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), UserActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             // TODO: This doesn't exit the app
             loginManager.logOut();
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
             startActivity(intent);
