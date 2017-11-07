@@ -29,6 +29,16 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:hint="username" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="@dimen/activity_text_padding"
+                android:text=" "
+                android:textColor="@color/alert"
+                android:id="@+id/input_UsernameMessage"
+                android:layout_below="@+id/input_username"
+                android:layout_centerHorizontal="true" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
@@ -42,6 +52,16 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="Password"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="@dimen/activity_text_padding"
+                android:text=" "
+                android:textColor="@color/alert"
+                android:id="@+id/input_PasswordMessage"
+                android:layout_below="@+id/input_password"
+                android:layout_centerHorizontal="true" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
