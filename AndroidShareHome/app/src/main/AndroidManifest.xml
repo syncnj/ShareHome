@@ -22,6 +22,7 @@
             android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -41,10 +42,10 @@
             android:name=".TasksActivity"
             android:label="@string/title_activity_tasks"
             android:theme="@style/AppTheme.NoActionBar" />
-        <!--<activity-->
-            <!--android:name=".AddTaskNavDrawerActivity"-->
-            <!--android:label="@string/title_activity_add_task_nav_drawer" />-->
-        <!--<activity android:name=".AddTaskActivity" />-->
+        <!-- <activity -->
+        <!-- android:name=".AddTaskNavDrawerActivity" -->
+        <!-- android:label="@string/title_activity_add_task_nav_drawer" /> -->
+        <!-- <activity android:name=".AddTaskActivity" /> -->
         <activity
             android:name=".AddGroceryListActivity"
             android:label="@string/title_activity_add_grocery_list"
@@ -76,6 +77,7 @@
             android:name=".AddDifferentPostActivity"
             android:label="@string/title_activity_add_different_post"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ConfirmActivity"></activity>
     </application>
 
 </manifest>
