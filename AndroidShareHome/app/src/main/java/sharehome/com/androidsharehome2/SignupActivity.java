@@ -82,16 +82,6 @@ public class SignupActivity extends AppCompatActivity {
         waitDialog.show();
         // TODO: Implement signup logic here.
 
-//        new android.os.Handler().postDelayed(
-//                new Runnable() {
-//                    public void run() {
-//                        // On complete call either onSignupSuccess or onSignupFailed
-//                        // depending on success
-//                        onSignupSuccess();
-//                        // onSignupFailed();
-//                        progressDialog.dismiss();
-//                    }
-//                }, 3000);
         // Read user data and register
         CognitoUserAttributes userAttributes = new CognitoUserAttributes();
 //        userAttributes.addAttribute(AppHelper.getSignUpFieldsC2O().get(_usernameText.getHint()).toString(), username);
@@ -107,17 +97,15 @@ public class SignupActivity extends AppCompatActivity {
             // Check signUpConfirmationState to see if the user is already confirmed
             closeWaitDialog();
             Boolean regState = signUpConfirmationState;
-//            if (signUpConfirmationState) {
-//                // User is already confirmed
-//                showDialogMessage("Sign up successful!",usernameInput+" has been Confirmed", true);
-//            }
-//            else {
-//                // User is not confirmed
-//                confirmSignUp(cognitoUserCodeDeliveryDetails);
-//            }
-//            showDialogMessage("Sign up successful!",usernameInput+" has been Confirmed", true);
-            showDialogMessage("Sign up successful!", "needs second authentication", true);
-            onSignupSuccess();
+            if (signUpConfirmationState) {
+                // User is already confirmed
+                onSignupSuccess();
+                showDialogMessage("Sign up successful!",username+" has been Confirmed", true);
+            }
+            else {
+                // User is not confirmed
+                confirmSignUp(cognitoUserCodeDeliveryDetails);
+            }
         }
 
         @Override
@@ -128,6 +116,30 @@ public class SignupActivity extends AppCompatActivity {
             showDialogMessage("Sign up failed",AppHelper.formatException(exception),false);
         }
     };
+
+    private void confirmSignUp(CognitoUserCodeDeliveryDetails cognitoUserCodeDeliveryDetails) {
+        Intent intent = new Intent(this, ConfirmActivity.class);
+        intent.putExtra("source","signup");
+        intent.putExtra("username", username);
+        intent.putExtra("destination", cognitoUserCodeDeliveryDetails.getDestination());
+        intent.putExtra("deliveryMed", cognitoUserCodeDeliveryDetails.getDeliveryMedium());
+        intent.putExtra("attribute", cognitoUserCodeDeliveryDetails.getAttributeName());
+        startActivityForResult(intent, 10);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10) {
+            if(resultCode == RESULT_OK){
+                String name = null;
+                if(data.hasExtra("username")) {
+                    name = data.getStringExtra("username");
+                }
+                exit();
+            }
+        }
+    }
+
 
     private void showWaitDialog(String message) {
         closeWaitDialog();
@@ -168,11 +180,11 @@ public class SignupActivity extends AppCompatActivity {
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
-        exit();
+//        exit();
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "Sign up failed", Toast.LENGTH_LONG).show();
         _signupButton.setEnabled(true);
     }
 

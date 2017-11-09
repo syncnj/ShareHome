@@ -77,7 +77,9 @@
             android:name=".AddDifferentPostActivity"
             android:label="@string/title_activity_add_different_post"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ConfirmActivity"></activity>
+
+        <activity android:name=".ConfirmActivity"
+            android:theme="@style/AppTheme.Dark"/>
     </application>
 
 </manifest>

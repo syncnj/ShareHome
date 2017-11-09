@@ -59,8 +59,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = new Intent(this, ConfirmActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, ConfirmActivity.class);
+//        startActivity(intent);
 
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
