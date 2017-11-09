@@ -197,28 +197,28 @@ public class SignupActivity extends AppCompatActivity {
         reEnterPassword = _reEnterPasswordText.getText().toString();
 
         if (username.isEmpty() || username.length() < 3) {
-            _usernameText.setError("at least 3 characters");
+            _usernameText.setError("At least 3 characters");
             valid = false;
         } else {
             _usernameText.setError(null);
         }
 
         if (userEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-            _emailText.setError("enter a valid email address");
+            _emailText.setError("Enter a valid email address");
             valid = false;
         } else {
             _emailText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            _passwordText.setError("Between 4 and 10 alphanumeric characters");
             valid = false;
         } else {
             _passwordText.setError(null);
         }
 
         if (reEnterPassword.isEmpty() || reEnterPassword.length() < 4 || reEnterPassword.length() > 10 || !(reEnterPassword.equals(password))) {
-            _reEnterPasswordText.setError("Password Do not match");
+            _reEnterPasswordText.setError("Password does not match");
             valid = false;
         } else {
             _reEnterPasswordText.setError(null);

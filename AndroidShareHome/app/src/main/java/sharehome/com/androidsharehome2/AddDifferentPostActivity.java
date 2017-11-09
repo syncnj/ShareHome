@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import butterknife.BindView;
+
 public class AddDifferentPostActivity extends AppCompatActivity {
 
     private static final String TAG = "AddDifferentPost";
@@ -27,7 +29,6 @@ public class AddDifferentPostActivity extends AppCompatActivity {
     private SectionsPageAdapter mSectionsPageAdapter;
 
     private ViewPager mViewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

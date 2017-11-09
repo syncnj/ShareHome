@@ -8,15 +8,14 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="sharehome.com.androidsharehome2.AddPostActivity"
-    tools:showIn="@layout/app_bar_add_post">
+    tools:context="sharehome.com.androidsharehome2.AddPostActivity">
 
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Post Title"
+        android:text="Poll Title"
         android:layout_marginLeft="16dp"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="16dp" />
@@ -61,12 +60,21 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="34dp" />
 
+    <Switch
+        android:id="@+id/switchUrgent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="200dp"
+        android:layout_alignBaseline="@id/textView4"
+        android:text="Urgent  "
+        android:textOff="No"
+        android:textColor="@color/monsoon"
+        android:shadowColor="#222222"/>
+
     <Button
         android:id="@+id/submitPost"
         android:layout_height="wrap_content"
         android:text="Post!"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="292dp"
         android:onClick="SubmitPostToServer"
         android:layout_alignTop="@+id/PostContentInput"
         android:layout_alignParentLeft="true"
@@ -74,5 +82,14 @@
         android:backgroundTint="#80CBC4"
         android:layout_width="fill_parent"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="112dp" />
+        android:layout_marginTop="80dp" />
+
+    <TextView android:id="@+id/goback"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/submitPost"
+        android:layout_marginTop="15dp"
+        android:text="Cancel"
+        android:gravity="center"
+        android:textSize="16dp"/>
 </RelativeLayout>

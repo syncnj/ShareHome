@@ -59,8 +59,13 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+<<<<<<< Updated upstream
 //        Intent intent = new Intent(this, ConfirmActivity.class);
 //        startActivity(intent);
+=======
+        Intent intent = new Intent(this, AddDifferentPostActivity.class);
+        startActivity(intent);
+>>>>>>> Stashed changes
 
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
@@ -216,19 +221,17 @@ public class LoginActivity extends AppCompatActivity {
 //        password = _passwordText.getText().toString();
 
         if (username.isEmpty()) {
-            _usernameText.setError("enter a valid username");
+            _usernameText.setError("Enter a valid username");
             TextView label = (TextView) findViewById(R.id.input_UsernameMessage);
-            label.setText("enter username");
             valid = false;
         } else {
             _usernameText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 1 || password.length() > 10) {
-            _passwordText.setError("between 1 and 10 alphanumeric characters");
+            _passwordText.setError("Between 1 and 10 alphanumeric characters");
             valid = false;
             TextView label = (TextView) findViewById(R.id.input_PasswordMessage);
-            label.setText("enter password");
         } else {
             _passwordText.setError(null);
         }
@@ -342,7 +345,6 @@ public class LoginActivity extends AppCompatActivity {
             password = _passwordText.getText().toString();
             if(password == null || password.length() < 1) {
                 TextView label = (TextView) findViewById(R.id.input_PasswordMessage);
-                label.setText("enter password");
 //                inPassword.setBackground(getDrawable(R.drawable.text_border_error));
                 return;
             }
