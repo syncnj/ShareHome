@@ -59,13 +59,13 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-<<<<<<< Updated upstream
+
 //        Intent intent = new Intent(this, ConfirmActivity.class);
 //        startActivity(intent);
-=======
+
         Intent intent = new Intent(this, AddDifferentPostActivity.class);
         startActivity(intent);
->>>>>>> Stashed changes
+
 
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
