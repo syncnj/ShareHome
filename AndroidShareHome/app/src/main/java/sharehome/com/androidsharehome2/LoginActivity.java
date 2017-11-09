@@ -59,8 +59,13 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        Intent intent = new Intent(this, AddPostActivity.class);
+
+//        Intent intent = new Intent(this, ConfirmActivity.class);
 //        startActivity(intent);
+
+        //Intent intent = new Intent(this, AddDifferentPostActivity.class);
+        //startActivity(intent);
+
 
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
@@ -110,7 +115,6 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.show();
 
 
-        // TODO: Implement authentication logic here.
         AppHelper.setUser(username);
         AppHelper.getPool().getUser(username).getSessionInBackground(authenticationHandler);
 //        new android.os.Handler().postDelayed(
@@ -175,12 +179,12 @@ public class LoginActivity extends AppCompatActivity {
                     if (!userPasswd.isEmpty()) {
                         _passwordText.setText(userPasswd);
                     }
-                    if (!name.isEmpty() && !userPasswd.isEmpty()) {
-                        // We have the user details, so sign in!
-                        username = name;
-                        password = userPasswd;
-                        AppHelper.getPool().getUser(username).getSessionInBackground(authenticationHandler);
-                    }
+//                    if (!name.isEmpty() && !userPasswd.isEmpty()) {
+//                        // We have the user details, so sign in!
+//                        username = name;
+//                        password = userPasswd;
+//                        AppHelper.getPool().getUser(username).getSessionInBackground(authenticationHandler);
+//                    }
                 }
                 break;
             case LOGIN:
@@ -203,7 +207,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+
         _loginButton.setEnabled(true);
         TextView label = (TextView) findViewById(R.id.input_PasswordMessage);
         label.setText("");
@@ -216,19 +221,17 @@ public class LoginActivity extends AppCompatActivity {
 //        password = _passwordText.getText().toString();
 
         if (username.isEmpty()) {
-            _usernameText.setError("enter a valid username");
+            _usernameText.setError("Enter a valid username");
             TextView label = (TextView) findViewById(R.id.input_UsernameMessage);
-            label.setText("enter username");
             valid = false;
         } else {
             _usernameText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 1 || password.length() > 10) {
-            _passwordText.setError("between 1 and 10 alphanumeric characters");
+            _passwordText.setError("Between 1 and 10 alphanumeric characters");
             valid = false;
             TextView label = (TextView) findViewById(R.id.input_PasswordMessage);
-            label.setText("enter password");
         } else {
             _passwordText.setError(null);
         }
@@ -272,8 +275,8 @@ public class LoginActivity extends AppCompatActivity {
 //            label = (TextView) findViewById(R.id.textViewUserIdMessage);
 //            label.setText("Sign-in failed");
 //            _usernameText.setBackground(getDrawable(R.drawable.text_border_error));
+            showDialogMessage("Login failed", AppHelper.formatException(e));
             onLoginFailed();
-//            showDialogMessage("Sign-in failed", AppHelper.formatException(e));
         }
 
         @Override
@@ -342,7 +345,6 @@ public class LoginActivity extends AppCompatActivity {
             password = _passwordText.getText().toString();
             if(password == null || password.length() < 1) {
                 TextView label = (TextView) findViewById(R.id.input_PasswordMessage);
-                label.setText("enter password");
 //                inPassword.setBackground(getDrawable(R.drawable.text_border_error));
                 return;
             }
@@ -354,5 +356,7 @@ public class LoginActivity extends AppCompatActivity {
             continuation.continueTask();
         }
     }
+
+
 }
 
