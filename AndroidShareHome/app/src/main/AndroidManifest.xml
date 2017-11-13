@@ -80,7 +80,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".ConfirmActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.Dark"/>
     </application>
 
 </manifest>
