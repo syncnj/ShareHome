@@ -29,7 +29,8 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        app:srcCompat="@android:drawable/ic_menu_add"
+        app:backgroundTint="@color/primary"
+        app:srcCompat="@android:drawable/ic_menu_edit"
         android:onClick="launchAddPostActivity"/>
 
 </android.support.design.widget.CoordinatorLayout>
