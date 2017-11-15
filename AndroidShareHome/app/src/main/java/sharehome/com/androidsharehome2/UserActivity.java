@@ -179,7 +179,7 @@ public class UserActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AddDifferentPostActivity.class);
                 startActivity(intent);
             }
         });
@@ -320,7 +320,7 @@ public class UserActivity extends AppCompatActivity
         startActivity(intent);
     }
     public void launchAddPostActivity(View view) {
-        Intent intent = new Intent(getApplicationContext(), AddPostActivity.class);
+        Intent intent = new Intent(getApplicationContext(), AddDifferentPostActivity.class);
         startActivity(intent);
     }
     public void LogoutFromFacebook(View v){

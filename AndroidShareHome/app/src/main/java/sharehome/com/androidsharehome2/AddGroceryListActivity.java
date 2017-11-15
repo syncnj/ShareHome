@@ -59,9 +59,6 @@ public class AddGroceryListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     //implemtation on functions that submit new grocery to backend.
 
-
-
-
     }
 
     public void SubmitGroceryToServer(View v){
@@ -174,14 +171,5 @@ public class AddGroceryListActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-    //Deleted the associate default button
-    public void oneTimePurchaseHandler (View view){
-        Toast.makeText(getApplicationContext(),"need to be added into grocery list with onetime property",Toast.LENGTH_SHORT).show();
-    }
-
-    public void dailyPurchaseHandler(View view){
-
-        Toast.makeText(getApplicationContext(),"need to be added into grocery list with daily purchase property",Toast.LENGTH_SHORT).show();
     }
 }
