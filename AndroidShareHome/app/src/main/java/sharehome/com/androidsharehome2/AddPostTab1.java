@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
+
+import sharehome.com.androidsharehome2.model.TaskList;
 
 public class AddPostTab1 extends Fragment {
     private static final String TAG = "AddPostTab1";
@@ -34,14 +37,14 @@ public class AddPostTab1 extends Fragment {
                         final AwscodestarsharehomelambdaClient client =
                                 factory.build(AwscodestarsharehomelambdaClient.class);
 
-                        client.taskGet("addTask", "sampleLambdagroup");
-
-
+                       TaskList taskList = client.taskGet("addTask", "sampleLambdagroup");
+                        Toast.makeText(getActivity(), taskList.get(0).getGroupName(), Toast.LENGTH_LONG).show();
+                        Log.d(TAG,taskList.get(0).getGroupName());
                     }
                 }).start();
 
 
-                Toast.makeText(getActivity(), "adsfjsfsfasd"+ urgentSwitch.isChecked(),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "adsfjsfsfasd"+ urgentSwitch.isChecked(),Toast.LENGTH_SHORT).show();
             }
         });
         goBack.setOnClickListener(new View.OnClickListener() {
