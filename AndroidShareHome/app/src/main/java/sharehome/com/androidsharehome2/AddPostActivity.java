@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-
+import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 
 import static sharehome.com.androidsharehome2.R.id.fab;
 
@@ -41,6 +41,16 @@ public class AddPostActivity extends AppCompatActivity
         PostNameInput = (EditText)findViewById(R.id.PostNameInput) ;
         PostContentInput = (EditText)findViewById(R.id.PostContentInput) ;
 
+        SubmitPost.setOnClickListener(
+                (new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        SubmitPostToServer(v);
+                    }
+                }
+
+        ));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -58,6 +68,12 @@ public class AddPostActivity extends AppCompatActivity
     }
 
     public String createPost(final String postTitle, final String postContent){
+        ApiClientFactory factory = new ApiClientFactory();
+        final AwscodestarsharehomelambdaClient client =
+                factory.build(AwscodestarsharehomelambdaClient.class);
+
+        client.taskGet("addTask", "sampleLambdagroup");
+        Toast.makeText(getBaseContext(), "post !!!!!", Toast.LENGTH_LONG).show();
 
 
         return "Hi";

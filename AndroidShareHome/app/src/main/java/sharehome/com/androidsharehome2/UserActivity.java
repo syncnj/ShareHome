@@ -17,9 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-//import com.amazonaws.mobileconnectors.apigateway.*;
+import com.amazonaws.mobileconnectors.apigateway.*;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
+
+import sharehome.com.androidsharehome2.model.Pets;
+import sharehome.com.androidsharehome2.model.Task;
 
 
 
@@ -71,6 +74,11 @@ public class UserActivity extends AppCompatActivity
 
 //        call api
 //        ApiClientFactory factory = new ApiClientFactory();
+//        final AwscodestarsharehomelambdaClient client =
+//                factory.build(AwscodestarsharehomelambdaClient.class);
+//
+//        client.taskGet("addTask", "sampleLambdagroup");
+//
     }
 
 

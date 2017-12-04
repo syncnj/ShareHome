@@ -140,7 +140,7 @@ public class ProfileActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         }
-        
+
 
         if (id == R.id.nav_profile) {
             // Handle the camera action

@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
+
 public class AddPostTab1 extends Fragment {
     private static final String TAG = "AddPostTab1";
     private Button btnTEST;
@@ -26,7 +28,20 @@ public class AddPostTab1 extends Fragment {
         btnTEST.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "TESTING BUTTON CLICK 1"+ urgentSwitch.isChecked(),Toast.LENGTH_SHORT).show();
+                new Thread(new Runnable() {
+                    public void run() {
+                        ApiClientFactory factory = new ApiClientFactory();
+                        final AwscodestarsharehomelambdaClient client =
+                                factory.build(AwscodestarsharehomelambdaClient.class);
+
+                        client.taskGet("addTask", "sampleLambdagroup");
+
+
+                    }
+                }).start();
+
+
+                Toast.makeText(getActivity(), "adsfjsfsfasd"+ urgentSwitch.isChecked(),Toast.LENGTH_SHORT).show();
             }
         });
         goBack.setOnClickListener(new View.OnClickListener() {
