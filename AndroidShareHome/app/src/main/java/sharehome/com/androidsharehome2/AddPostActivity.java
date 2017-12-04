@@ -17,12 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.backendless.Backendless;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
 
-import sharehome.com.androidsharehome2.backend.PostService;
-import com.facebook.login.LoginManager;
+
 
 import static sharehome.com.androidsharehome2.R.id.fab;
 
@@ -32,7 +28,6 @@ public class AddPostActivity extends AppCompatActivity
     private Button SubmitPost;
     private EditText PostNameInput;
     private EditText PostContentInput;
-    private LoginManager loginManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +35,7 @@ public class AddPostActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        loginManager = LoginManager.getInstance();
+      //  loginManager = LoginManager.getInstance();
 
         SubmitPost = (Button)findViewById(R.id.submitPost);
         PostNameInput = (EditText)findViewById(R.id.PostNameInput) ;
@@ -59,27 +54,12 @@ public class AddPostActivity extends AppCompatActivity
     // Eliminate this method, directly call createPost
     public void SubmitPostToServer(View v){
         createPost(PostNameInput.getText().toString(), PostContentInput.getText().toString());
-        System.out.println(Backendless.UserService.CurrentUser().getObjectId().toString() +Backendless.UserService.CurrentUser().getProperty("groupId").toString() + "userid");
+        //System.out.println(Backendless.UserService.CurrentUser().getObjectId().toString() +Backendless.UserService.CurrentUser().getProperty("groupId").toString() + "userid");
     }
 
     public String createPost(final String postTitle, final String postContent){
 
-        PostService.getInstance().createNewPostAsync(Backendless.UserService.CurrentUser().getObjectId(),
-                Backendless.UserService.CurrentUser().getProperty("groupId").toString(), postTitle, postContent, new AsyncCallback<String>() {
-            @Override
-            public void handleResponse(String response) {
-                String m = "Posted successfully.";
-                Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
-                PostNameInput.setText("");
-                PostContentInput.setText("");
-            }
 
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                String m = "Check internet connection and try again.";//  + fault.getMessage();
-                Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
-            }
-        });
         return "Hi";
 
 //        final PostService postService = PostService.getInstance();
@@ -125,7 +105,7 @@ public class AddPostActivity extends AppCompatActivity
         if (id == R.id.action_refresh) {
             return true;
         } else if(id == R.id.action_logout){
-            loginManager.logOut();
+            //loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
@@ -164,7 +144,7 @@ public class AddPostActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
-            loginManager.logOut();
+           // loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);

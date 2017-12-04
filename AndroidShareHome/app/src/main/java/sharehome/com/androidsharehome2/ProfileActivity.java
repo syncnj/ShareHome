@@ -3,9 +3,6 @@ package sharehome.com.androidsharehome2;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -22,24 +19,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.backendless.Backendless;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
-import com.facebook.login.LoginManager;
-
-import org.w3c.dom.Text;
-
-import java.util.InputMismatchException;
-
-import sharehome.com.androidsharehome2.backend.Group;
-import sharehome.com.androidsharehome2.backend.GroupService;
-
-import static android.R.attr.id;
-
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private LoginManager loginManager;
+//    private LoginManager loginManager;
     private EditText AddMeber_Email;
     private EditText CreateGroup_Name;
     String AddMember_EmailString;
@@ -60,34 +43,34 @@ public class ProfileActivity extends AppCompatActivity
         GroupName = (TextView) findViewById(R.id.currentGroupName);
         AddMemberViaEmail = (Button) findViewById(R.id.addMember);
 
-        if(Backendless.UserService.CurrentUser().getProperty("groupId") == null) {
-            GroupName.setText("Not in group.");
-            Instruction = (TextView) findViewById(R.id.textView6);
-            Instruction.setText("You are not in any GROUP yet.\n\nPlease join or create a group first.");
-            Instruction.setGravity(Gravity.CENTER);
-            AddMeber_Email.setVisibility(EditText.INVISIBLE);
-            AddMemberViaEmail.setVisibility(Button.INVISIBLE);
-        } else {
-//            GroupName.setText(Backendless.UserService.CurrentUser().getProperty("groupId").toString());
-//            Log.i("Error", Backendless.UserService.CurrentUser().getProperty("groupId").toString());
-//            System.out.println("Error when "+Backendless.UserService.CurrentUser().getProperty("groupId").toString());
-            GroupService.getInstance().getGroupByIdAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<Group>() {
-                        @Override
-                        public void handleResponse(Group response) {
-                            GroupName.setText(response.getGroupName());
-                        }
-
-                        @Override
-                        public void handleFault(BackendlessFault fault) {
-
-                        }
-                    });
-        }
+//        if(Backendless.UserService.CurrentUser().getProperty("groupId") == null) {
+//            GroupName.setText("Not in group.");
+//            Instruction = (TextView) findViewById(R.id.textView6);
+//            Instruction.setText("You are not in any GROUP yet.\n\nPlease join or create a group first.");
+//            Instruction.setGravity(Gravity.CENTER);
+//            AddMeber_Email.setVisibility(EditText.INVISIBLE);
+//            AddMemberViaEmail.setVisibility(Button.INVISIBLE);
+//        } else {
+////            GroupName.setText(Backendless.UserService.CurrentUser().getProperty("groupId").toString());
+////            Log.i("Error", Backendless.UserService.CurrentUser().getProperty("groupId").toString());
+////            System.out.println("Error when "+Backendless.UserService.CurrentUser().getProperty("groupId").toString());
+//            GroupService.getInstance().getGroupByIdAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<Group>() {
+//                        @Override
+//                        public void handleResponse(Group response) {
+//                            GroupName.setText(response.getGroupName());
+//                        }
+//
+//                        @Override
+//                        public void handleFault(BackendlessFault fault) {
+//
+//                        }
+//                    });
+//        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        loginManager = LoginManager.getInstance();
+//        loginManager = LoginManager.getInstance();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -101,15 +84,15 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if(Backendless.UserService.CurrentUser().getProperty("groupId") == null){
-            return;
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+//        if(Backendless.UserService.CurrentUser().getProperty("groupId") == null){
+//            return;
+//        }
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
     }
 
     @Override
@@ -130,7 +113,7 @@ public class ProfileActivity extends AppCompatActivity
         if (id == R.id.action_refresh) {
             return true;
         } else if(id == R.id.action_logout){
-            loginManager.logOut();
+          //  loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
@@ -150,19 +133,14 @@ public class ProfileActivity extends AppCompatActivity
         int id = item.getItemId();
 
          if (id == R.id.nav_logout) {
-            loginManager.logOut();
+//            loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
             startActivity(intent);
             finish();
         }
-
-        if(Backendless.UserService.CurrentUser().getProperty("groupId") == null){
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            return false;
-        }
+        
 
         if (id == R.id.nav_profile) {
             // Handle the camera action
@@ -193,12 +171,12 @@ public class ProfileActivity extends AppCompatActivity
     public void onCreateGroup (View v){
         EditText groupName = ((EditText)findViewById(R.id.group_name_input));
         String newGroupName = groupName.getText().toString();
-        try {
-            createGroup(newGroupName, Backendless.UserService.CurrentUser().getObjectId());
-        } catch (Exception e) {
-            String m = "For whatever reason, group not created.";
-            Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
-        }
+//        try {
+//            createGroup(newGroupName, Backendless.UserService.CurrentUser().getObjectId());
+//        } catch (Exception e) {
+//            String m = "For whatever reason, group not created.";
+//            Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
+//        }
         // Hides keyboard since button has been clicked
         InputMethodManager inputManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -212,21 +190,21 @@ public class ProfileActivity extends AppCompatActivity
     }
     public String createGroup(final String name, final String userId){
 
-        final GroupService group1 = GroupService.getInstance();
+//        final GroupService group1 = GroupService.getInstance();
 
         new Thread(new Runnable() {
             public void run() {
 
                 // synchronous backendless API call here:
 
-                //String groupID;
-                try {
-                    //System.out.println(""  + "entered ");
-                    group1.createNewGroup( name, userId);//Backendless.UserService.CurrentUser().getObjectId());
-                }
-                catch (Exception ex){
-                    System.out.println("" + ex + "exception find here");
-                }
+//                //String groupID;
+//                try {
+//                    //System.out.println(""  + "entered ");
+//                    group1.createNewGroup( name, userId);//Backendless.UserService.CurrentUser().getObjectId());
+//                }
+//                catch (Exception ex){
+//                    System.out.println("" + ex + "exception find here");
+//                }
 
             }
         }).start();
@@ -236,18 +214,18 @@ public class ProfileActivity extends AppCompatActivity
 
     public void AddMember(View v){
         AddMember_EmailString = AddMeber_Email.getText().toString();
-        GroupService g = GroupService.getInstance();
-        g.addMemberbyEmailAsync(AddMember_EmailString, Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<Boolean>() {
-            @Override
-            public void handleResponse(Boolean response) {
-                AddMeber_Email.setText("");
-                Toast.makeText(ProfileActivity.this, "New member added to group", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                Toast.makeText(ProfileActivity.this, fault.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+//        GroupService g = GroupService.getInstance();
+//        g.addMemberbyEmailAsync(AddMember_EmailString, Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<Boolean>() {
+//            @Override
+//            public void handleResponse(Boolean response) {
+//                AddMeber_Email.setText("");
+//                Toast.makeText(ProfileActivity.this, "New member added to group", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void handleFault(BackendlessFault fault) {
+//                Toast.makeText(ProfileActivity.this, fault.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 }

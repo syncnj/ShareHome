@@ -15,12 +15,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.facebook.login.LoginManager;
+//import com.facebook.login.LoginManager;
 
 public class TransactionActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private LoginManager loginManager;
+//    private LoginManager loginManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class TransactionActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        loginManager = LoginManager.getInstance();
+//        loginManager = LoginManager.getInstance();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -70,7 +70,7 @@ public class TransactionActivity extends AppCompatActivity
         if (id == R.id.action_refresh) {
             return true;
         } else if(id == R.id.action_logout){
-            loginManager.logOut();
+//            loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
@@ -109,7 +109,7 @@ public class TransactionActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             // TODO: This doesn't exit the app
-            loginManager.logOut();
+//            loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
@@ -121,8 +121,8 @@ public class TransactionActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public void launchAddTransactionActivity (View view){
-        Intent intent = new Intent(TransactionActivity.this, AddTransactionActivity.class);
-        startActivity(intent);
-    }
+//    public void launchAddTransactionActivity (View view){
+//        Intent intent = new Intent(TransactionActivity.this, AddTransactionActivity.class);
+//        startActivity(intent);
+//    }
 }

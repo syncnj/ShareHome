@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -18,41 +17,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.amazonaws.mobileconnectors.apigateway.*;
-import android.widget.ListView;
-import android.widget.Toast;
+//import com.amazonaws.mobileconnectors.apigateway.*;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
-import com.amazonaws.mobileconnectors.cognito.Dataset;
-import com.amazonaws.mobileconnectors.cognito.DefaultSyncCallback;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserDetails;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GetDetailsHandler;
-import com.amazonaws.regions.Regions;
-import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
 
-import com.facebook.CallbackManager;
-import com.facebook.login.LoginManager;
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import sharehome.com.androidsharehome2.backend.GroupService;
-import sharehome.com.androidsharehome2.backend.Post;
 
 
 public class UserActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "UserActivity";
 
-    private CallbackManager callbackManager;
-    private LoginManager loginManager;
-    private GroupService g = null;
+//    private CallbackManager callbackManager;
+//    private LoginManager loginManager;
+//    private GroupService g = null;
     private CognitoUser user_aws;
     private String username;
     private ProgressDialog waitDialog;
@@ -93,7 +70,7 @@ public class UserActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 //        call api
-        ApiClientFactory factory = new ApiClientFactory();
+//        ApiClientFactory factory = new ApiClientFactory();
     }
 
 

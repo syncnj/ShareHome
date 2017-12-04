@@ -1,12 +1,8 @@
 package sharehome.com.androidsharehome2;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,69 +12,58 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.backendless.Backendless;
-import com.backendless.BackendlessUser;
-import com.backendless.async.callback.AsyncCallback;
-import com.backendless.exceptions.BackendlessFault;
-import com.facebook.login.LoginManager;
+
 
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import sharehome.com.androidsharehome2.backend.GroupService;
-import sharehome.com.androidsharehome2.backend.Task;
+
 
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private LoginManager loginManager;
-            GroupService groupService;
-            Task header = new Task();
+//    private LoginManager loginManager;
+//            GroupService groupService;
+//            Task header = new Task();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
 
-        loginManager = LoginManager.getInstance();
+//        loginManager = LoginManager.getInstance();
 
-        groupService = GroupService.getInstance();
-        groupService.getMemberListAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<String>() {
-            @Override
-            public void handleResponse(String response) {
-                String FILENAME = "members";
+//        groupService = GroupService.getInstance();
+//        groupService.getMemberListAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<String>() {
+//            @Override
+//            public void handleResponse(String response) {
+//                String FILENAME = "members";
+//
+//               try {
+//                   FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+//                   fos.write(response.getBytes());
+//                   fos.close();
+//               }catch(Exception e){
+//                   System.out.println("TasksActivity EXCEPTION when writing members to file");
+//               }
+//
+//            }
 
-               try {
-                   FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-                   fos.write(response.getBytes());
-                   fos.close();
-               }catch(Exception e){
-                   System.out.println("TasksActivity EXCEPTION when writing members to file");
-               }
-
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                System.out.println("members not retrieved");
-            }
-        });
+//            @Override
+//            public void handleFault(BackendlessFault fault) {
+//                System.out.println("members not retrieved");
+//            }
+//        });
 
         // Prepare header for display
-        header.setTaskName("Task Name");
-        header.setUserOnDuty("Person in Charge");
-        header.setStartTime(new Date(0L));
-        header.setNextUserNameOnDuty("");
+//        header.setTaskName("Task Name");
+//        header.setUserOnDuty("Person in Charge");
+//        header.setStartTime(new Date(0L));
+//        header.setNextUserNameOnDuty("");
 
         //local mocks for new user
 
@@ -98,22 +83,22 @@ public class TasksActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        groupService = GroupService.getInstance();
-        groupService.getAllTaskAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<List<Task>>() {
-            @Override
-            public void handleResponse(List<Task> response) {
-                ListView taskListView = (ListView) findViewById(R.id.task_list);
-                response.add(0, header);
-                TaskAdapter adapter = new TaskAdapter(getApplicationContext(), response);
-                taskListView.setAdapter(adapter);
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-
-            }
-        });
+//
+//        groupService = GroupService.getInstance();
+//        groupService.getAllTaskAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<List<Task>>() {
+//            @Override
+//            public void handleResponse(List<Task> response) {
+//                ListView taskListView = (ListView) findViewById(R.id.task_list);
+//                response.add(0, header);
+//                TaskAdapter adapter = new TaskAdapter(getApplicationContext(), response);
+//                taskListView.setAdapter(adapter);
+//            }
+//
+//            @Override
+//            public void handleFault(BackendlessFault fault) {
+//
+//            }
+//        });
 
     }
     public void onScheduleBaseSelected(AdapterView<?> parent, View view,
@@ -149,25 +134,25 @@ public class TasksActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            groupService = GroupService.getInstance();
-            groupService.getAllTaskAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<List<Task>>() {
-                @Override
-                public void handleResponse(List<Task> response) {
-                    ListView taskListView = (ListView) findViewById(R.id.task_list);
-                    response.add(0, header);
-                    TaskAdapter adapter = new TaskAdapter(getApplicationContext(), response);
-                    taskListView.setAdapter(adapter);
-                }
-
-                @Override
-                public void handleFault(BackendlessFault fault) {
-
-                }
-            });
+//            groupService = GroupService.getInstance();
+//            groupService.getAllTaskAsync(Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<List<Task>>() {
+//                @Override
+//                public void handleResponse(List<Task> response) {
+//                    ListView taskListView = (ListView) findViewById(R.id.task_list);
+//                    response.add(0, header);
+//                    TaskAdapter adapter = new TaskAdapter(getApplicationContext(), response);
+//                    taskListView.setAdapter(adapter);
+//                }
+//
+//                @Override
+//                public void handleFault(BackendlessFault fault) {
+//
+//                }
+//            });
 
             return true;
         } else if(id == R.id.action_logout){
-            loginManager.logOut();
+//            loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
@@ -206,7 +191,7 @@ public class TasksActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             // TODO: This doesn't exit the app
-            loginManager.logOut();
+//            loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
@@ -223,10 +208,10 @@ public class TasksActivity extends AppCompatActivity
      *
      * @param view The view of the button which called this method
      */
-    public void launchAddTaskActivity(View view) {
-        Intent intent = new Intent(getApplicationContext(), AddTaskActivityNAV.class);
-        startActivity(intent);
-    }
+//    public void launchAddTaskActivity(View view) {
+//        Intent intent = new Intent(getApplicationContext(), AddTaskActivityNAV.class);
+//        startActivity(intent);
+//    }
 
 
 }
