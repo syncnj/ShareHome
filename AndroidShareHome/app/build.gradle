@@ -60,4 +60,8 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     testCompile 'junit:junit:4.12'
+    //notifaction
+    compile 	'com.amazonaws:aws-android-sdk-pinpoint:2.3.5'
+    compile 'com.google.firebase:firebase-messaging:9.6.0'
 }
+apply plugin: 'com.google.gms.google-services'

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "824984416620",
+    "firebase_url": "https://sharehome2.firebaseio.com",
+    "project_id": "sharehome2",
+    "storage_bucket": "sharehome2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824984416620:android:888a03e4d89f5aee",
+        "android_client_info": {
+          "package_name": "sharehome.com.androidsharehome2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824984416620-v8crsjt8l4ilko7g28aph53nt6j8fhjh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuu4zzjnsIeZglKKH7i0jNJaGL-kXyiRE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
