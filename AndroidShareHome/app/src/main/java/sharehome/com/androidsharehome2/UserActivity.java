@@ -17,14 +17,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.*;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 
 import sharehome.com.androidsharehome2.model.Pets;
 import sharehome.com.androidsharehome2.model.Task;
-
-
+import com.amazonaws.mobileconnectors.pinpoint.*;
+import com.amazonaws.regions.Regions;
 
 public class UserActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,6 +51,15 @@ public class UserActivity extends AppCompatActivity
             return;
         }
         init();
+
+        //initialize amazon pinpoint
+//       CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(context,"IDENTITY_POOL_ID",Regions.US_EAST_1);
+//
+//        PinpointConfiguration config = new PinpointConfiguration(context, "APP_ID", Regions.US_EAST_1, cognitoCachingCredentialsProvider);
+//
+//        this.pinpointManager = new PinpointManager(config);
+
+
          /* get login info*/
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
