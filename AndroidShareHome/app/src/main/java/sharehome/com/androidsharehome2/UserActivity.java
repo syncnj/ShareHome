@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.amazonaws.mobileconnectors.apigateway.*;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.backendless.exceptions.BackendlessFault;
 
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,6 @@ public class UserActivity extends AppCompatActivity
     private CallbackManager callbackManager;
     private LoginManager loginManager;
     private GroupService g = null;
-    private BackendlessUser user;
     private CognitoUser user_aws;
     private String username;
     private ProgressDialog waitDialog;
@@ -61,6 +62,7 @@ public class UserActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         // Exit if coming from different activity logging out
         if(getIntent().getBooleanExtra("EXIT", false)){
             finish();
@@ -69,109 +71,6 @@ public class UserActivity extends AppCompatActivity
         init();
          /* get login info*/
         setContentView(R.layout.activity_main);
-//        //initialize Backendless server
-//        String appVersion = "v1";
-//        callbackManager = CallbackManager.Factory.create();
-//        Backendless.initApp( this, "19E73C32-D357-313A-FF64-12612084E000", "19F8B6BD-34A1-655C-FF3E-9BD31F1B0C00",appVersion);
-//
-//        if(Backendless.UserService.CurrentUser() == null) {
-//
-//            loginManager = LoginManager.getInstance();
-//
-//            // login with facebook
-//            Backendless.UserService.loginWithFacebookSdk(MainActivity.this,
-//                    callbackManager,
-//                    new AsyncCallback<BackendlessUser>() {
-//                        @Override
-//                        public void handleResponse(BackendlessUser loggedInUser) {
-//                            // user logged in successfully
-//
-//                            user = loggedInUser;
-//
-//                            if (user.getProperty("groupId") == null) {
-//                                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-//                                startActivity(intent);
-//                                return;
-//                            }
-//
-//                            // Create Display of everything!
-//
-//                            try {
-//                                g = GroupService.getInstance();
-//                            } catch (Exception e) {
-//                                System.out.println("It unsuccessfully found a group");
-//                            }
-//                            g.getAllPostAsync(user.getProperty("groupId").toString(), new AsyncCallback<List<Post>>() {
-//                                @Override
-//                                public void handleResponse(List<Post> response) {
-//                                    // To show data, uncomment
-//                                    // Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
-//                                    // System.out.println(response);
-//                                    ListView postListView = (ListView) findViewById(R.id.post_list);
-//                                    PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
-//                                    postListView.setAdapter(adapter);
-//                                }
-//
-//                                @Override
-//                                public void handleFault(BackendlessFault fault) {
-//                                    System.out.println("Failed to get all posts");
-//                                    Toast.makeText(getApplicationContext(), "Something happened :(\nUnable to retrieve posts", Toast.LENGTH_LONG).show();
-//                                }
-//                            });
-//                        }
-//
-//                        @Override
-//                        public void handleFault(BackendlessFault fault) {
-//                            // failed to log in
-//                        }
-//                    });
-//        } else {
-//            user = Backendless.UserService.CurrentUser();
-//            try {
-//                g = GroupService.getInstance();
-//            } catch (Exception e) {
-//                System.out.println("It unsuccessfully found a group");
-//            }
-//            g.getAllPostAsync(user.getProperty("groupId").toString(), new AsyncCallback<List<Post>>() {
-//                @Override
-//                public void handleResponse(List<Post> response) {
-//                    System.out.println(response);
-//                    ListView postListView = (ListView) findViewById(R.id.post_list);
-//                    PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
-//                    postListView.setAdapter(adapter);
-//                    System.out.print("Successfully retrieved posts");
-//                }
-//
-//                @Override
-//                public void handleFault(BackendlessFault fault) {
-//                    System.out.println("Failed to get all posts");
-//                }
-//            });
-//        }
-
-
-        // System.out.println("userid = " + user.getObjectId().toString());
-
-
-//        Backendless.UserService.register( user, new AsyncCallback<BackendlessUser>()
-//        {
-//            @Override
-//            public void handleResponse( BackendlessUser backendlessUser )
-//            {
-//                Log.i( "Registration", backendlessUser.getEmail() + " successfully registered" );
-//
-//            }
-//            public void handleFault( BackendlessFault fault )
-//            {
-//                // user update failed, to get the error code call fault.getCode()
-//                System.out.print("register failed");
-//            }
-//        } );
-
-
-
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -192,7 +91,11 @@ public class UserActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+//        call api
+        ApiClientFactory factory = new ApiClientFactory();
     }
+
 
 
     @Override
@@ -228,28 +131,13 @@ public class UserActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh && user != null) {// Create Display of everything!
+        if (id == R.id.action_refresh && false) {// Create Display of everything!
 
             try {
-                g = GroupService.getInstance();
+
             } catch (Exception e) {
                 System.out.println("It unsuccessfully found a group");
             }
-            g.getAllPostAsync(user.getProperty("groupId").toString(), new AsyncCallback<List<Post>>() {
-                @Override
-                public void handleResponse(List<Post> response) {
-                    System.out.println(response);
-                    ListView postListView = (ListView) findViewById(R.id.post_list);
-                    PostAdapter adapter = new PostAdapter(getApplicationContext(), response);
-                    postListView.setAdapter(adapter);
-                    System.out.print("Successfully retrieved posts");
-                }
-
-                @Override
-                public void handleFault(BackendlessFault fault) {
-                    System.out.println("Failed to get all posts");
-                }
-            });
 
             return true;
         } else if(id == R.id.action_logout){
@@ -261,7 +149,6 @@ public class UserActivity extends AppCompatActivity
             }
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -271,7 +158,7 @@ public class UserActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if(user == null){
+        if(user_aws == null){
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }
@@ -333,27 +220,8 @@ public class UserActivity extends AppCompatActivity
         Bundle extras = getIntent().getExtras();
         username = AppHelper.getCurrUser();
         user_aws = AppHelper.getPool().getUser(username);
-        // Get user details from CIP service
-//            AppHelper.getPool().getUser(username).getDetailsInBackground(detailsHandler);
-    }
 
-//    GetDetailsHandler detailsHandler = new GetDetailsHandler() {
-//        @Override
-//        public void onSuccess(CognitoUserDetails cognitoUserDetails) {
-//            closeWaitDialog();
-//            // Store details in the AppHandler
-//            AppHelper.setUserDetails(cognitoUserDetails);
-//            showAttributes();
-//            // Trusted devices?
-//            handleTrustedDevice();
-//        }
-//
-//        @Override
-//        public void onFailure(Exception exception) {
-//            closeWaitDialog();
-//            showDialogMessage("Could not fetch user details!", AppHelper.formatException(exception), true);
-//        }
-//    };
+    }
 
     private void showWaitDialog(String message) {
         closeWaitDialog();
@@ -399,7 +267,6 @@ public class UserActivity extends AppCompatActivity
         if (username == null) {
             username = "";
         }
-
         intent.putExtra("username", username);
         setResult(RESULT_OK, intent);
         finish();

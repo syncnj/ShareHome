@@ -42,8 +42,8 @@ public class ProfileActivity extends AppCompatActivity
     private LoginManager loginManager;
     private EditText AddMeber_Email;
     private EditText CreateGroup_Name;
-     String AddMember_EmailString;
-     String CreateGroup_NameString;
+    String AddMember_EmailString;
+    String CreateGroup_NameString;
     TextView GroupName;
     TextView Instruction;
     Button AddMemberViaEmail;
