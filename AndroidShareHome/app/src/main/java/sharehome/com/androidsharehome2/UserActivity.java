@@ -180,7 +180,7 @@ public class UserActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_main) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            Intent intent = new Intent(getApplicationContext(), UserActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
