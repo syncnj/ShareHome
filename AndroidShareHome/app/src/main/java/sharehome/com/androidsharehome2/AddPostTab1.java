@@ -38,8 +38,6 @@ public class AddPostTab1 extends Fragment {
                                 factory.build(AwscodestarsharehomelambdaClient.class);
 
                        TaskList taskList = client.taskGet("addTask", "sampleLambdagroup");
-                        Toast.makeText(getActivity(), taskList.get(0).getGroupName(), Toast.LENGTH_LONG).show();
-                        Log.d(TAG,taskList.get(0).getGroupName());
                     }
                 }).start();
 
