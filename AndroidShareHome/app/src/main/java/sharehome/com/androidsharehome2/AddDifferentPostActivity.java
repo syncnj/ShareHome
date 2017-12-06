@@ -49,7 +49,6 @@ public class AddDifferentPostActivity extends AppCompatActivity {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new AddPostTab1(), "Message");
         adapter.addFragment(new AddPostTab2(), "Reminder");
-        adapter.addFragment(new AddPostTab3(), "Poll");
         viewPager.setAdapter(adapter);
     }
 

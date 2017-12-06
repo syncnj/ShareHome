@@ -9,6 +9,7 @@
         android:layout_height="match_parent"
         tools:showIn="@layout/content_add_task_activity_nav">
 
+
         <ImageView
             android:id="@+id/taskPic"
             android:layout_width="120dp"
@@ -16,8 +17,7 @@
             android:layout_alignParentTop="true"
             android:scaleType="centerInside"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/sweep_the_floor" />
-
+            android:src="@drawable/do_laundry" />
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -25,7 +25,7 @@
             android:layout_below="@+id/taskPic"
             android:maxLines="3"
             android:layout_marginBottom="12dp"
-            android:text="Sweep floor"
+            android:text="Do laundry"
             android:layout_centerHorizontal="true"
             android:textColor="#222"
             android:textStyle="bold"

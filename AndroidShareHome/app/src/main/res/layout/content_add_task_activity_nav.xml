@@ -1,86 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_add_task_activity_nav"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="sharehome.com.androidsharehome2.AddTaskActivityNAV"
-    tools:showIn="@layout/app_bar_add_task_activity_nav">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/content_add_task_activity_nav"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="sharehome.com.androidsharehome2.AddTaskActivityNAV"
+        tools:showIn="@layout/app_bar_add_task_activity_nav">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textColor="#1E1E35"
-        android:textStyle="bold"
-        android:textSize="25dp"
-        android:id="@+id/task_start"
-        android:text="Select from these"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textColor="#1E1E35"
-        android:textStyle="bold"
-        android:textSize="25dp"
-        android:layout_below="@id/task_start"
-        android:id="@+id/task_start2"
-        android:text="popular tasks"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="#1E1E35"
+            android:textStyle="bold"
+            android:layout_marginTop="50dp"
+            android:textSize="24dp"
+            android:id="@+id/task_start"
+            android:text="Select from these"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="#1E1E35"
+            android:textStyle="bold"
+            android:textSize="24dp"
+            android:layout_below="@id/task_start"
+            android:id="@+id/task_start2"
+            android:text="popular tasks"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/task_start2"
-        android:id="@+id/task_name_intro"
-        android:text="New Task Name is"/>
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:id="@+id/input_task_name"
-        android:ems="5"
-        android:layout_below="@id/task_name_intro"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="schedule your task base on"
-        android:id="@+id/text_task"
-        android:layout_below="@id/input_task_name"/>
-    <Spinner
-        android:id="@+id/spinner_scheduling"
-        android:layout_width="192dp"
-        android:layout_height="36dp"
-        android:entries="@array/spinnerItems_scheduling"
-        android:layout_below="@+id/text_task"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <View
+            android:id="@+id/dummy"
+            android:layout_width="10dp"
+            android:layout_height="1dp"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"/>
 
-    <Button
-        android:id="@+id/openRoommateList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/spinner_scheduling"
-        android:layout_marginTop="22dp"
-        android:text="open Roommate List" />
+        <include layout="@layout/task_cardview_sweep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/task_start2"
+            android:layout_marginTop="10dp"
+            android:id="@+id/card1"
+            android:layout_toLeftOf="@id/dummy"/>
 
-    <Button
-        android:id="@+id/submitTask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit Task"
-        android:layout_alignBaseline="@+id/openRoommateList"
-        android:layout_alignBottom="@+id/openRoommateList"
-        android:layout_toEndOf="@+id/spinner_scheduling"
-        android:layout_toRightOf="@+id/spinner_scheduling"
-        android:onClick="submitMessageHandler"
-        android:visibility="invisible"/>
-</RelativeLayout>
+        <include layout="@layout/task_cardview_wash_dishes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/task_start2"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/dummy"
+            android:id="@+id/card2"/>
+        <include layout="@layout/task_cardview_throw_trash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card1"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/dummy"
+            android:id="@+id/card3"/>
+
+        <include layout="@layout/task_cardview_clean_table"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card2"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/dummy"
+            android:id="@+id/card4"/>
+
+        <include layout="@layout/task_cardview_wipe_window"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card3"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/dummy"
+            android:id="@+id/card5"/>
+
+        <include layout="@layout/task_cardview_do_laundry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card4"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/dummy"
+            android:id="@+id/card6"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="schedule your task recurrence"
+            android:layout_marginTop="10dp"
+            android:id="@+id/text_task"
+            android:layout_below="@id/card5"/>
+
+        <Spinner
+            android:id="@+id/spinner_scheduling"
+            android:layout_width="192dp"
+            android:layout_height="36dp"
+            android:entries="@array/spinnerItems_scheduling"
+            android:layout_below="@+id/text_task"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/openRoommateList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_toRightOf="@+id/spinner_scheduling"
+            android:layout_marginLeft="10dp"
+            android:backgroundTint="#80CBC4"
+            android:layout_below="@id/card6"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/round_button"
+            android:text="Roommate list" />
+
+        <Button
+            android:id="@+id/submitTask"
+            android:layout_height="wrap_content"
+            android:text="Add!"
+            android:layout_alignTop="@+id/PostContentInput"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:backgroundTint="#80CBC4"
+            android:layout_width="fill_parent"
+            android:textColor="#FFFFFF"
+            android:layout_below="@id/openRoommateList"
+            android:layout_marginTop="10dp" />
+
+        <TextView android:id="@+id/custom"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/submitTask"
+            android:layout_marginTop="10dp"
+            android:text="Or create custom tasks!"
+            android:gravity="center"
+            android:textSize="16dp"/>
+
+    </RelativeLayout>
+</ScrollView>

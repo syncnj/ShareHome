@@ -3,6 +3,7 @@ package sharehome.com.androidsharehome2;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -99,6 +100,14 @@ public class TasksActivity extends AppCompatActivity
 //
 //            }
 //        });
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddTaskActivityNAV.class);
+                startActivity(intent);
+            }
+        });
 
     }
     public void onScheduleBaseSelected(AdapterView<?> parent, View view,

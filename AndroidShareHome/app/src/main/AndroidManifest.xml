@@ -55,7 +55,6 @@
             android:name=".AddPostActivity"
             android:label="@string/title_activity_add_post"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".UserActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -66,9 +65,17 @@
             android:name=".AddDifferentPostActivity"
             android:label="@string/title_activity_add_different_post"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".ConfirmActivity"
-            android:theme="@style/AppTheme.Dark"/>
+        <activity
+            android:name=".ConfirmActivity"
+            android:theme="@style/AppTheme.Dark" />
+        <activity
+            android:name=".AddTaskAcitivityNAV"
+            android:label="@string/title_activity_add_task_acitivity_nav"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddCustomTaskActivityNAV"
+            android:label="@string/title_activity_add_custom_task_nav"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
