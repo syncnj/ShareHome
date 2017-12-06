@@ -66,6 +66,5 @@
             android:backgroundTint="#80CBC4"
             android:textColor="#FFFFFF"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:onClick="SubmitGroceryToServer" />
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
