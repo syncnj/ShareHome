@@ -57,6 +57,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UserActivity"
+            android:label="Posts"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SignupActivity"
@@ -69,13 +70,17 @@
             android:name=".ConfirmActivity"
             android:theme="@style/AppTheme.Dark" />
         <activity
-            android:name=".AddTaskAcitivityNAV"
+            android:name=".AddTaskActivityNAV"
             android:label="@string/title_activity_add_task_acitivity_nav"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddCustomTaskActivityNAV"
             android:label="@string/title_activity_add_custom_task_nav"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddGroceryListActivity"
+            android:label="@string/title_activity_add_grocery_list"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

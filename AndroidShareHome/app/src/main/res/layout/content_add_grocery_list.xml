@@ -25,7 +25,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
-            android:text="Enter the new item into your grocery list" />
+            android:text="Enter the new item name" />
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,7 +65,6 @@
             android:text="Submit"
             android:backgroundTint="#80CBC4"
             android:textColor="#FFFFFF"
-            android:background="@drawable/round_button"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:onClick="SubmitGroceryToServer" />

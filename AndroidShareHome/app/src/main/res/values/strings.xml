@@ -11,7 +11,7 @@
     <string name="title_activity_grocery_list">Grocery List</string>
     <string name="title_activity_tasks">Tasks</string>
     <string name="title_activity_add_task_nav_drawer">AddTaskNavDrawerActivity</string>
-    <string name="title_activity_add_grocery_list">AddGroceryListActivity</string>
+    <string name="title_activity_add_grocery_list">Add an item!</string>
     <string name="login">Login with Facebook</string>
     <string name="Menu">Menu</string>
     <string-array name="spinnerItems_scheduling">
@@ -35,11 +35,12 @@
     <string name="title_activity_add_different_post">Add a post!</string>
     <string name="tab_text_1">Message</string>
     <string name="tab_text_2">Reminder</string>
-    <string name="tab_text_3">Reminder</string>
+    <string name="tab_text_3">Poll</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_add_task_acitivity_nav">Add a task!</string>
     <string name="title_activity_add_custom_task_nav">Add a task!</string>
+    <string name="title_activity_add_post_tab3">AddPostTab3</string>
 
     <!-- Strings related to login -->
 
