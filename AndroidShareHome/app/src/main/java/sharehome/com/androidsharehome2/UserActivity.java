@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.apigateway.*;
 
@@ -30,12 +31,11 @@ import sharehome.com.androidsharehome2.model.TaskList;
 import sharehome.com.androidsharehome2.model.TaskListItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class UserActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "UserActivity";
-
-
     private CognitoUser user_aws;
     private String username;
     private ProgressDialog waitDialog;
@@ -43,19 +43,16 @@ public class UserActivity extends AppCompatActivity
     private ArrayAdapter<String> adapter;
     private ArrayList<String> tasks;
     taskHandler taskHandler;
-
+    private ListView tasklistView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         // Exit if coming from different activity logging out
         if(getIntent().getBooleanExtra("EXIT", false)){
             finish();
             return;
         }
         init();
-
 
         //initialize amazon pinpoint
 //       CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(context,"IDENTITY_POOL_ID",Regions.US_EAST_1);
@@ -64,20 +61,15 @@ public class UserActivity extends AppCompatActivity
 //
 //        this.pinpointManager = new PinpointManager(config);
 
-
          /* get login info*/
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        tasks = new ArrayList<>();
-        getTaskResponseFromLambda();
+        tasks = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, tasks);
-
-//        bind with listView in UserActivity
-        ListView listView = (ListView) findViewById(R.id.post_list);
-        listView.setAdapter(adapter);
-
+        tasklistView = (ListView) findViewById(R.id.post_list);
+        getTaskResponseFromLambda();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -100,29 +92,26 @@ public class UserActivity extends AppCompatActivity
     }
 
     private void getTaskResponseFromLambda() {
+        tasklistView = (ListView) findViewById(R.id.post_list);
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 ApiClientFactory factory = new ApiClientFactory();
                 final AwscodestarsharehomelambdaClient client =
                         factory.build(AwscodestarsharehomelambdaClient.class);
-//                Task newTask = new Task();
-//                newTask.setGroupName("testGroupName");
-//                newTask.setTaskTitle("test");
-//                newTask.setTaskContent("sjdlfsaldk");
-//                newTask.setTaskDuration(502);
-//                newTask.setTaskUser(null);
-//                newTask.setTaskSolved(false);
-//                PostResponse response = client.taskPost(newTask, "add");
                 TaskList tasklist = client.taskGet("apitest");
-                tasks = new ArrayList<String>();
+                tasks.clear();
                 for (TaskListItem task : tasklist){
                     tasks.add(task.getTaskTitle());
                 }
-
+                 UserActivity.this.runOnUiThread(new Runnable() {
+                     @Override
+                     public void run() {
+                         tasklistView.setAdapter(adapter);
+                     }
+                 });
             }
         });
 
-        taskHandler = new taskHandler(taskThread.get);
         taskThread.start();
 
     }
@@ -158,10 +147,10 @@ public class UserActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh && false) {// Create Display of everything!
-
+        if (id == R.id.action_refresh ) {// Create Display of everything!
             try {
-
+                getTaskResponseFromLambda();
+                Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 System.out.println("It unsuccessfully found a group");
             }
