@@ -48,7 +48,6 @@ public class AddPostTab1 extends Fragment {
                 final ProgressDialog  progressDialog = new ProgressDialog(getContext(),
                             R.style.AppTheme_Dark_Dialog);
                     progressDialog.setIndeterminate(true);
-
                 progressDialog.setMessage("Posting tasks...");
                 progressDialog.show();
                 new Thread(new Runnable() {
@@ -60,9 +59,12 @@ public class AddPostTab1 extends Fragment {
                         Task newTask = new Task();
                         newTask.setGroupName("testGroupName3");
                         String title = _titleEditText.getText().toString();
-                        newTask.setTaskTitle("nihao");
+                        Log.d(TAG, "title: " + title);
+
+                        newTask.setTaskTitle(title);
                         String content = _contextEditText.getText().toString();
-                        newTask.setTaskContent("hello");
+                        Log.d(TAG, "content: " + content);
+                        newTask.setTaskContent(content);
                         newTask.setTaskDuration(502);
                         newTask.setTaskUser(AppHelper.getCurrUser());
                         newTask.setTaskSolved(false);
