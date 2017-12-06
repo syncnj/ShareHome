@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:ems="5"
         android:layout_marginLeft="16dp"
-        android:id="@+id/PostNameInput"
+        android:id="@+id/PostTitleInput"
         android:layout_below="@+id/textView4"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:text="Post content"
         android:layout_marginLeft="16dp"
-        android:layout_below="@+id/PostNameInput"
+        android:layout_below="@+id/PostTitleInput"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="53dp" />

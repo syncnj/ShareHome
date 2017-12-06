@@ -98,7 +98,7 @@ public class UserActivity extends AppCompatActivity
                 ApiClientFactory factory = new ApiClientFactory();
                 final AwscodestarsharehomelambdaClient client =
                         factory.build(AwscodestarsharehomelambdaClient.class);
-                TaskList tasklist = client.taskGet("apitest");
+                TaskList tasklist = client.taskGet("testGroupName3");
                 tasks.clear();
                 for (TaskListItem task : tasklist){
                     tasks.add(task.getTaskTitle());
@@ -150,9 +150,9 @@ public class UserActivity extends AppCompatActivity
         if (id == R.id.action_refresh ) {// Create Display of everything!
             try {
                 getTaskResponseFromLambda();
-                Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "refresh successful", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
-                System.out.println("It unsuccessfully found a group");
+                System.out.println("cannot found a group");
             }
 
             return true;

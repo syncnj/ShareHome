@@ -2,8 +2,6 @@ package sharehome.com.androidsharehome2;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,12 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-
-import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
-
-import static sharehome.com.androidsharehome2.R.id.fab;
 
 public class AddPostActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,7 +30,7 @@ public class AddPostActivity extends AppCompatActivity
       //  loginManager = LoginManager.getInstance();
 
         SubmitPost = (Button)findViewById(R.id.submitPost);
-        PostNameInput = (EditText)findViewById(R.id.PostNameInput) ;
+        PostNameInput = (EditText)findViewById(R.id.PostTitleInput) ;
         PostContentInput = (EditText)findViewById(R.id.PostContentInput) ;
 
         SubmitPost.setOnClickListener(
