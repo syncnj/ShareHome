@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 
+import sharehome.com.androidsharehome2.model.PostResponse;
+import sharehome.com.androidsharehome2.model.Task;
 import sharehome.com.androidsharehome2.model.TaskList;
 
 public class AddPostTab1 extends Fragment {
@@ -36,8 +38,16 @@ public class AddPostTab1 extends Fragment {
                         ApiClientFactory factory = new ApiClientFactory();
                         final AwscodestarsharehomelambdaClient client =
                                 factory.build(AwscodestarsharehomelambdaClient.class);
-
-                       TaskList taskList = client.taskGet("addTask", "sampleLambdagroup");
+                        Task newTask = new Task();
+                        newTask.setGroupName("testGroupName");
+                        newTask.setTaskTitle("test");
+                        newTask.setTaskContent("sjdlfsaldk");
+                        newTask.setTaskDuration(502);
+                        newTask.setTaskUser(null);
+                        newTask.setTaskSolved(false);
+                        PostResponse response = client.taskPost(newTask, "add");
+                        Log.d(TAG, response.getTaskID().toString());
+                        //Toast.makeText(getActivity(), response.getTaskID(),Toast.LENGTH_SHORT).show();
                     }
                 }).start();
 

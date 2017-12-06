@@ -17,8 +17,8 @@ package sharehome.com.androidsharehome2.model;
 
 import java.util.ArrayList;
 import java.util.*;
-import sharehome.com.androidsharehome2.model.PetsItem;
+import sharehome.com.androidsharehome2.model.TaskListItem;
 
-public class Pets extends ArrayList<PetsItem>{
+public class TaskList extends ArrayList<TaskListItem>{
 
 }

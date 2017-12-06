@@ -16,7 +16,7 @@
 package sharehome.com.androidsharehome2.model;
 
 
-public class Task {
+public class TaskListItem {
     /**
      * An explanation about the purpose of this instance.
      */

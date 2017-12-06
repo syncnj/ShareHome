@@ -17,28 +17,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.*;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 
-import sharehome.com.androidsharehome2.model.Pets;
+import sharehome.com.androidsharehome2.model.PostResponse;
 import sharehome.com.androidsharehome2.model.Task;
-import com.amazonaws.mobileconnectors.pinpoint.*;
-import com.amazonaws.regions.Regions;
+import sharehome.com.androidsharehome2.model.TaskList;
+import sharehome.com.androidsharehome2.model.TaskListItem;
+
+import java.util.ArrayList;
 
 public class UserActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "UserActivity";
 
-//    private CallbackManager callbackManager;
-//    private LoginManager loginManager;
-//    private GroupService g = null;
+
     private CognitoUser user_aws;
     private String username;
     private ProgressDialog waitDialog;
     private AlertDialog userDialog;
+    private ArrayAdapter<String> adapter;
+    private ArrayList<String> tasks;
+    taskHandler taskHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,7 @@ public class UserActivity extends AppCompatActivity
         }
         init();
 
+
         //initialize amazon pinpoint
 //       CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(context,"IDENTITY_POOL_ID",Regions.US_EAST_1);
 //
@@ -64,6 +69,15 @@ public class UserActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        tasks = new ArrayList<>();
+        getTaskResponseFromLambda();
+        adapter = new ArrayAdapter<String>(this,
+                R.layout.task_item, tasks);
+
+//        bind with listView in UserActivity
+        ListView listView = (ListView) findViewById(R.id.post_list);
+        listView.setAdapter(adapter);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -83,23 +97,40 @@ public class UserActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        call api
-//        ApiClientFactory factory = new ApiClientFactory();
-//        final AwscodestarsharehomelambdaClient client =
-//                factory.build(AwscodestarsharehomelambdaClient.class);
-//
-//        client.taskGet("addTask", "sampleLambdagroup");
-//
+    }
+
+    private void getTaskResponseFromLambda() {
+        Thread taskThread = new Thread(new Runnable() {
+            public void run() {
+                ApiClientFactory factory = new ApiClientFactory();
+                final AwscodestarsharehomelambdaClient client =
+                        factory.build(AwscodestarsharehomelambdaClient.class);
+//                Task newTask = new Task();
+//                newTask.setGroupName("testGroupName");
+//                newTask.setTaskTitle("test");
+//                newTask.setTaskContent("sjdlfsaldk");
+//                newTask.setTaskDuration(502);
+//                newTask.setTaskUser(null);
+//                newTask.setTaskSolved(false);
+//                PostResponse response = client.taskPost(newTask, "add");
+                TaskList tasklist = client.taskGet("apitest");
+                tasks = new ArrayList<String>();
+                for (TaskListItem task : tasklist){
+                    tasks.add(task.getTaskTitle());
+                }
+
+            }
+        });
+
+        taskHandler = new taskHandler(taskThread.get);
+        taskThread.start();
+
     }
 
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-    @Override
-    public void onActivityResult( int requestCode, int resultCode, Intent data )
-    {
         super.onActivityResult( requestCode, resultCode, data );
-//        callbackManager.onActivityResult( requestCode, resultCode, data );
-
     }
 
     @Override
@@ -267,4 +298,5 @@ public class UserActivity extends AppCompatActivity
         setResult(RESULT_OK, intent);
         finish();
     }
+
 }

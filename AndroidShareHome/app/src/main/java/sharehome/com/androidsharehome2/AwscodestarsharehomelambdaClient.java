@@ -19,6 +19,7 @@ import java.util.*;
 
 import sharehome.com.androidsharehome2.model.Task;
 import sharehome.com.androidsharehome2.model.TaskList;
+import sharehome.com.androidsharehome2.model.PostResponse;
 
 
 @com.amazonaws.mobileconnectors.apigateway.annotation.Service(endpoint = "https://5wyfvovh46.execute-api.us-east-1.amazonaws.com/Prod")
@@ -74,29 +75,23 @@ public interface AwscodestarsharehomelambdaClient {
      * 
      * 
      * @param groupName 
-     * @param operation 
      * @return TaskList
      */
     @com.amazonaws.mobileconnectors.apigateway.annotation.Operation(path = "/task", method = "GET")
     TaskList taskGet(
             @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "groupName", location = "query")
-            String groupName,
-            @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "operation", location = "query")
-            String operation);
+            String groupName);
     
     /**
      * 
      * 
      * @param body 
-     * @param groupName 
      * @param operation 
-     * @return Task
+     * @return PostResponse
      */
     @com.amazonaws.mobileconnectors.apigateway.annotation.Operation(path = "/task", method = "POST")
-    Task taskPost(
+    PostResponse taskPost(
             Task body,
-            @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "groupName", location = "query")
-            String groupName,
             @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "operation", location = "query")
             String operation);
     

@@ -68,12 +68,6 @@ public class AddPostActivity extends AppCompatActivity
     }
 
     public String createPost(final String postTitle, final String postContent){
-        ApiClientFactory factory = new ApiClientFactory();
-        final AwscodestarsharehomelambdaClient client =
-                factory.build(AwscodestarsharehomelambdaClient.class);
-
-        client.taskGet("addTask", "sampleLambdagroup");
-        Toast.makeText(getBaseContext(), "post !!!!!", Toast.LENGTH_LONG).show();
 
 
         return "Hi";
