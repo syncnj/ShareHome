@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.*;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
@@ -30,8 +31,15 @@ import sharehome.com.androidsharehome2.model.Task;
 import sharehome.com.androidsharehome2.model.TaskList;
 import sharehome.com.androidsharehome2.model.TaskListItem;
 
+import com.amazonaws.mobileconnectors.pinpoint.*;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+
+
+
 
 public class UserActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,6 +50,7 @@ public class UserActivity extends AppCompatActivity
     private AlertDialog userDialog;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> tasks;
+    private PinpointManager pinpointManager;
     taskHandler taskHandler;
     private ListView tasklistView;
     @Override
@@ -55,11 +64,11 @@ public class UserActivity extends AppCompatActivity
         init();
 
         //initialize amazon pinpoint
-//       CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(context,"IDENTITY_POOL_ID",Regions.US_EAST_1);
+       CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(this,"IDENTITY_POOL_ID", Regions.US_EAST_1);
 //
-//        PinpointConfiguration config = new PinpointConfiguration(context, "APP_ID", Regions.US_EAST_1, cognitoCachingCredentialsProvider);
+        PinpointConfiguration config = new PinpointConfiguration(this, "APP_ID", Regions.US_EAST_1, cognitoCachingCredentialsProvider);
 //
-//        this.pinpointManager = new PinpointManager(config);
+        this.pinpointManager = new PinpointManager(config);
 
          /* get login info*/
         setContentView(R.layout.activity_main);
