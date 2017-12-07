@@ -120,9 +120,7 @@ public class UserActivity extends AppCompatActivity
                  });
             }
         });
-
         taskThread.start();
-
     }
 
        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
