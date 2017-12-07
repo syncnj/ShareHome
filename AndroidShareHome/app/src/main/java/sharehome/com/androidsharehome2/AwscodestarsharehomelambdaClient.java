@@ -18,6 +18,7 @@ package sharehome.com.androidsharehome2;
 import java.util.*;
 
 import sharehome.com.androidsharehome2.model.Task;
+import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.ResultStringResponse;
 import sharehome.com.androidsharehome2.model.TaskList;
 import sharehome.com.androidsharehome2.model.PostResponse;
@@ -60,12 +61,15 @@ public interface AwscodestarsharehomelambdaClient {
      * 
      * 
      * @param userName 
-     * @return ResultStringResponse
+     * @param operation 
+     * @return ListOfString
      */
     @com.amazonaws.mobileconnectors.apigateway.annotation.Operation(path = "/group", method = "GET")
-    ResultStringResponse groupGet(
+    ListOfString groupGet(
             @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "userName", location = "query")
-            String userName);
+            String userName,
+            @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "operation", location = "query")
+            String operation);
     
     /**
      * 
@@ -73,10 +77,10 @@ public interface AwscodestarsharehomelambdaClient {
      * @param userName 
      * @param groupName 
      * @param operation 
-     * @return void
+     * @return ResultStringResponse
      */
     @com.amazonaws.mobileconnectors.apigateway.annotation.Operation(path = "/group", method = "POST")
-    void groupPost(
+    ResultStringResponse groupPost(
             @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "userName", location = "query")
             String userName,
             @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "groupName", location = "query")

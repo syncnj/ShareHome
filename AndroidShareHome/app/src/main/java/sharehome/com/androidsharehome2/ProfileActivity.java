@@ -16,13 +16,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.Response;
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
+
+import java.util.ArrayList;
 
 import sharehome.com.androidsharehome2.model.TaskList;
 import sharehome.com.androidsharehome2.model.TaskListItem;
@@ -31,7 +35,7 @@ import sharehome.com.androidsharehome2.model.*;
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-//    private LoginManager loginManager;
+    //    private LoginManager loginManager;
     private EditText _findUserName;
     private EditText CreateGroup_Name;
     String AddUserName;
@@ -39,20 +43,27 @@ public class ProfileActivity extends AppCompatActivity
     TextView GroupName;
     TextView Instruction;
     Button AddMember;
-
+    Button _createGroup;
+    private ArrayAdapter<String> adapter;
+    private ArrayList<String> groupMemberNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        _findUserName = (EditText)findViewById(R.id.findUserName);
-        CreateGroup_Name = (EditText)findViewById(R.id.group_name_input);
+        _findUserName = (EditText) findViewById(R.id.findUserName);
+        CreateGroup_Name = (EditText) findViewById(R.id.group_name_input);
+        CreateGroup_Name.setEnabled(true);
         CreateGroup_NameString = CreateGroup_Name.getText().toString();
         GroupName = (TextView) findViewById(R.id.currentGroupName);
         findCurrentGroupName();
+        groupMemberNames = new ArrayList<String>();
+        adapter = new ArrayAdapter<String>(this,
+                R.layout.task_item, groupMemberNames);
         AddMember = (Button) findViewById(R.id.addMember);
-
+        _createGroup = (Button) findViewById(R.id.createGroupButton);
+        //listGroupMembers();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -66,6 +77,30 @@ public class ProfileActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+//    private void listGroupMembers() {
+//        final ListView groupMemberListView = (ListView) findViewById(R.id.group_member_names);
+//        Thread getMemberNameThread = new Thread(new Runnable() {
+//            public void run() {
+//                ApiClientFactory factory = new ApiClientFactory();
+//                final AwscodestarsharehomelambdaClient client =
+//                        factory.build(AwscodestarsharehomelambdaClient.class);
+//                ListOfString memberNames = client.groupGet(AppHelper.getCurrUser(), "listMembers");
+//                groupMemberNames.clear();
+//
+//                for (String memberName : memberNames){
+//                    groupMemberNames.add(memberName);
+//                }
+//               ProfileActivity.this.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        groupMemberListView.setAdapter(adapter);
+//                    }
+//                });
+//            }
+//        });
+//        getMemberNameThread.start();
+//    }
+
     private void findCurrentGroupName() {
         final ProgressDialog progressDialog = new ProgressDialog(this,
                 R.style.AppTheme_Dark_Dialog);
@@ -77,12 +112,11 @@ public class ProfileActivity extends AppCompatActivity
                 ApiClientFactory factory = new ApiClientFactory();
                 final AwscodestarsharehomelambdaClient client =
                         factory.build(AwscodestarsharehomelambdaClient.class);
-                final ResultStringResponse response = client.groupGet(AppHelper.getCurrUser());
-
+                final ListOfString response = client.groupGet(AppHelper.getCurrUser(), "getGroupName");
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        GroupName.setText(response.getResult());
+                        GroupName.setText(response.get(0));
                     }
                 });
             }
@@ -92,6 +126,12 @@ public class ProfileActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -110,9 +150,10 @@ public class ProfileActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
+            findCurrentGroupName();
             return true;
-        } else if(id == R.id.action_logout){
-          //  loginManager.logOut();
+        } else if (id == R.id.action_logout) {
+            //  loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
@@ -131,7 +172,7 @@ public class ProfileActivity extends AppCompatActivity
 
         int id = item.getItemId();
 
-         if (id == R.id.nav_logout) {
+        if (id == R.id.nav_logout) {
 //            loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -167,8 +208,8 @@ public class ProfileActivity extends AppCompatActivity
         return true;
     }
 
-    public void onCreateGroup (View v){
-        EditText groupName = ((EditText)findViewById(R.id.group_name_input));
+    public void onCreateGroup(View v) {
+        EditText groupName = ((EditText) findViewById(R.id.group_name_input));
         final String newGroupName = groupName.getText().toString();
 
         // Hides keyboard since button has been clicked
@@ -181,7 +222,8 @@ public class ProfileActivity extends AppCompatActivity
         createGroup(newGroupName);
 
     }
-    public void createGroup(final String newGroupName){
+
+    public void createGroup(final String newGroupName) {
         final ProgressDialog progressDialog = new ProgressDialog(this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -193,7 +235,7 @@ public class ProfileActivity extends AppCompatActivity
                 ApiClientFactory factory = new ApiClientFactory();
                 final AwscodestarsharehomelambdaClient client =
                         factory.build(AwscodestarsharehomelambdaClient.class);
-                client.groupPost
+                ResultStringResponse response = client.groupPost
                         (AppHelper.getCurrUser(), newGroupName, "create");
                 handler.post(new Runnable() {
                     @Override
@@ -206,9 +248,10 @@ public class ProfileActivity extends AppCompatActivity
                 });
             }
         });
+        taskThread.start();
     }
 
-//        GroupService g = GroupService.getInstance();
+    //        GroupService g = GroupService.getInstance();
 //        g.addMemberbyEmailAsync(AddMember_EmailString, Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<Boolean>() {
 //            @Override
 //            public void handleResponse(Boolean response) {
@@ -221,34 +264,44 @@ public class ProfileActivity extends AppCompatActivity
 //                Toast.makeText(ProfileActivity.this, fault.getMessage(), Toast.LENGTH_LONG).show();
 //            }
 //        });
-public void AddMember(View v){
-    final ProgressDialog progressDialog = new ProgressDialog(this,
-            R.style.AppTheme_Dark_Dialog);
-    progressDialog.setIndeterminate(true);
-    progressDialog.setMessage("Inviting user into the current group...");
-    progressDialog.show();
-    AddUserName = _findUserName.getText().toString();
-    final Runnable UI_Update = new Runnable() {
-        @Override
-        public void run() {
-            progressDialog.dismiss();
-            // Notifies user
-            String msg = "Add " + AddUserName + " Sccuessfully!";
-            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-        }
-    };
+    public void AddMember(View v) {
+        final ProgressDialog progressDialog = new ProgressDialog(this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Inviting user into the current group...");
+        progressDialog.show();
+        AddUserName = _findUserName.getText().toString();
+//    final Runnable UI_Update = new Runnable() {
+//        @Override
+//        public void run() {
+//            progressDialog.dismiss();
+//            // Notifies user
+//            String msg = "Add " + AddUserName + " Sccuessfully!";
+//            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+//        }
+//    };
 
-    Thread taskThread = new Thread(new Runnable() {
-        public void run() {
-            Handler handler = new taskSubmitHandler(getMainLooper());
-            ApiClientFactory factory = new ApiClientFactory();
-            final AwscodestarsharehomelambdaClient client =
-                    factory.build(AwscodestarsharehomelambdaClient.class);
-            client.groupPost
-                    (AppHelper.getCurrUser(), AddUserName, "add");
-            handler.post(UI_Update);
+      new Thread(new Runnable() {
+            public void run() {
+                TextView groupName = ((TextView) findViewById(R.id.currentGroupName));
+                final String GroupName = groupName.getText().toString();
+                Handler handler = new Handler(getMainLooper());
+                ApiClientFactory factory = new ApiClientFactory();
+                final AwscodestarsharehomelambdaClient client =
+                        factory.build(AwscodestarsharehomelambdaClient.class);
+                String userName = AppHelper.getCurrUser().toString();
+                ResultStringResponse response = client.groupPost
+                        (userName, GroupName, "add");
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+//                      // Notifies user
+                        String msg = "Add " + AddUserName + " Sccuessfully!";
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                    }
+                });
             }
-        });
-    taskThread.start();
+        }).start();
     }
 }

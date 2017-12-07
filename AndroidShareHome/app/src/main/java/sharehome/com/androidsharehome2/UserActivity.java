@@ -51,7 +51,6 @@ public class UserActivity extends AppCompatActivity
     private ArrayAdapter<String> adapter;
     private ArrayList<String> tasks;
     private PinpointManager pinpointManager;
-    taskHandler taskHandler;
     private ListView tasklistView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +63,7 @@ public class UserActivity extends AppCompatActivity
         init();
 
         //initialize amazon pinpoint
-       CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(this,"IDENTITY_POOL_ID", Regions.US_EAST_1);
+        CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(this,"IDENTITY_POOL_ID", Regions.US_EAST_1);
 //
         PinpointConfiguration config = new PinpointConfiguration(this, "APP_ID", Regions.US_EAST_1, cognitoCachingCredentialsProvider);
 //
