@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -34,11 +33,24 @@ import sharehome.com.androidsharehome2.model.TaskListItem;
 import com.amazonaws.mobileconnectors.pinpoint.*;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.auth.userpools.*;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
 
 
 public class UserActivity extends AppCompatActivity
@@ -50,8 +62,42 @@ public class UserActivity extends AppCompatActivity
     private AlertDialog userDialog;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> tasks;
-    private PinpointManager pinpointManager;
+    public static PinpointManager pinpointManager;
     private ListView tasklistView;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // unregister notification receiver
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register notification receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver,
+                new IntentFilter(ShareHomePushListenerService.ACTION_PUSH_NOTIFICATION));
+    }
+
+    private final BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "Received notification from local broadcast. Display it in a dialog.");
+
+            Bundle data = intent.getBundleExtra(ShareHomePushListenerService.INTENT_SNS_NOTIFICATION_DATA);
+            String message = ShareHomePushListenerService.getMessage(data);
+
+            new android.app.AlertDialog.Builder(UserActivity.this)
+                    .setTitle("Push notification")
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,13 +107,14 @@ public class UserActivity extends AppCompatActivity
             return;
         }
         init();
-
+        AWSMobileClient.getInstance().initialize(this).execute();
+        initializeAWSPinpoint();
         //initialize amazon pinpoint
-        CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(this,"IDENTITY_POOL_ID", Regions.US_EAST_1);
-//
-        PinpointConfiguration config = new PinpointConfiguration(this, "APP_ID", Regions.US_EAST_1, cognitoCachingCredentialsProvider);
-//
-        this.pinpointManager = new PinpointManager(config);
+//        CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(this,"IDENTITY_POOL_ID", Regions.US_EAST_1);
+////
+//        PinpointConfiguration config = new PinpointConfiguration(this, "APP_ID", Regions.US_EAST_1, cognitoCachingCredentialsProvider);
+////
+//        this.pinpointManager = new PinpointManager(config);
 
          /* get login info*/
         setContentView(R.layout.activity_main);
@@ -99,7 +146,37 @@ public class UserActivity extends AppCompatActivity
 
     }
 
-    private void getTaskResponseFromLambda() {
+    private void initializeAWSPinpoint() {
+
+        if (pinpointManager == null) {
+            PinpointConfiguration pinpointConfig = new PinpointConfiguration(
+                    getApplicationContext(),
+                    AWSMobileClient.getInstance().getCredentialsProvider(),
+                    AWSMobileClient.getInstance().getConfiguration());
+
+            pinpointManager = new PinpointManager(pinpointConfig);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String deviceToken =
+                                InstanceID.getInstance(UserActivity.this).getToken(
+                                        "824984416620",
+                                        GoogleCloudMessaging.INSTANCE_ID_SCOPE);
+                        Log.e("NotError", deviceToken);
+                        pinpointManager.getNotificationClient()
+                                .registerGCMDeviceToken(deviceToken);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+
+    }
+
+    private void  getTaskResponseFromLambda() {
         tasklistView = (ListView) findViewById(R.id.post_list);
         Thread taskThread = new Thread(new Runnable() {
             public void run() {

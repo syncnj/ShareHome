@@ -13,10 +13,18 @@
 
     //notification
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <!--<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />-->
     <permission android:name="sharehome.com.androidsharehome2.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="sharehome.com.androidsharehome2.permission.C2D_MESSAGE" />
+
+    <!--<uses-permission android:name="android.permission.WAKE_LOCK"/>-->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <!--<permission android:name="com.mysampleapp.permission.C2D_MESSAGE"-->
+    <!--<uses-permission android:name="sharehome.com.androidsharehome2.permission.C2D_MESSAGE"-->
+        <!--android:protectionLevel="signature" />-->
+    <!--<uses-permission android:name="com.mysampleapp.permission.C2D_MESSAGE" />-->
+
 
     <application
         android:allowBackup="true"
@@ -24,20 +32,41 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!--<receiver-->
+            <!--android:name="com.amazonaws.mobileconnectors.pinpoint.targeting.notification.PinpointNotificationReceiver"-->
+            <!--android:exported="false" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.amazonaws.intent.fcm.NOTIFICATION_OPEN" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+        <!--<service-->
+            <!--android:name=".ShareHomePushListenerService"-->
+            <!--android:exported="false" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
+
+        <!--Add these to your Application declaration
+to filter for the notification intent-->
         <receiver
-            android:name="com.amazonaws.mobileconnectors.pinpoint.targeting.notification.PinpointNotificationReceiver"
-            android:exported="false" >
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
-                <action android:name="com.amazonaws.intent.fcm.NOTIFICATION_OPEN" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="sharehome.com.androidsharehome2" />
             </intent-filter>
         </receiver>
+
         <service
-            android:name=".PushListenerService"
+            android:name=".ShareHomePushListenerService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
