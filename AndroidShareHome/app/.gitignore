@@ -1,4 +1,5 @@
 /build
 /libs/*
 !/libs/aws-android-sdk-apigateway-core-2.6.9.jar
-src/main/java/sharehome/com/amazonaws
+/src/main/java/sharehome/com/amazonaws
+!/src/main/res/raw/*
