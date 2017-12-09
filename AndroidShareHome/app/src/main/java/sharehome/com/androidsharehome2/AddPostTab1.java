@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
@@ -19,10 +18,8 @@ import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 
-import butterknife.BindView;
-import sharehome.com.androidsharehome2.model.PostResponse;
-import sharehome.com.androidsharehome2.model.Task;
-import sharehome.com.androidsharehome2.model.TaskList;
+import sharehome.com.androidsharehome2.model.Post;
+import sharehome.com.androidsharehome2.model.ResultStringResponse;
 
 public class AddPostTab1 extends Fragment {
     private static final String TAG = "AddPostTab1";
@@ -51,26 +48,30 @@ public class AddPostTab1 extends Fragment {
                 progressDialog.setMessage("Posting tasks...");
                 progressDialog.show();
                 new Thread(new Runnable() {
-                    taskSubmitHandler handler = new taskSubmitHandler(getActivity().getMainLooper());
+                    postSubmitHanlder handler = new postSubmitHanlder(getActivity().getMainLooper());
                     public void run() {
+                        if (AppHelper.getCurrgroupName() == null){
+                            return;
+                        }
                         ApiClientFactory factory = new ApiClientFactory();
                         final AwscodestarsharehomelambdaClient client =
                                 factory.build(AwscodestarsharehomelambdaClient.class);
-                        Task newTask = new Task();
-                        newTask.setGroupName("testGroupName3");
+                        Post newPost = new Post();
+                        newPost.setGroupName(AppHelper.getCurrgroupName());
                         String title = _titleEditText.getText().toString();
                         Log.d(TAG, "title: " + title);
+                        Log.d(TAG, "postUrgent: " + urgentSwitch.getShowText());
 
-                        newTask.setTaskTitle(title);
+                        newPost.setPostTitle(title);
                         String content = _contextEditText.getText().toString();
                         Log.d(TAG, "content: " + content);
-                        newTask.setTaskContent(content);
-                        newTask.setTaskDuration(502);
-                        newTask.setTaskUser(AppHelper.getCurrUser());
-                        newTask.setTaskSolved(false);
-                       final PostResponse response = client.taskPost(newTask, "add");
-                        newTaskID = response.getTaskID();
-                        Log.d(TAG, "new Task ID: " + newTaskID.toString());
+                        newPost.setPostContent(content);
+                        boolean isUrgent = urgentSwitch.getShowText();
+                        newPost.setPostUrgent(isUrgent);
+
+                        final ResultStringResponse response = client.postPost(newPost, "add");
+                        String newPostID = response.getResult();
+                        Log.d(TAG, "new Post ID: " + newPostID.toString());
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -96,8 +97,8 @@ public class AddPostTab1 extends Fragment {
         return newTaskID;
     }
 }
-class taskSubmitHandler extends Handler {
-    public taskSubmitHandler(Looper myLooper) {
+class postSubmitHanlder extends Handler {
+    public postSubmitHanlder(Looper myLooper) {
         super(myLooper);
     }
 }

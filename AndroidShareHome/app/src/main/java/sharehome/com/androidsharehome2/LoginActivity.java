@@ -52,20 +52,9 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private AlertDialog userDialog;
 
-//    // authenticationHandler
-//    protected AuthenticationHandler authHandler;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-//        Intent intent = new Intent(this, ConfirmActivity.class);
-//        startActivity(intent);
-
-        //Intent intent = new Intent(this, AddDifferentPostActivity.class);
-        //startActivity(intent);
-
 
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
@@ -117,15 +106,7 @@ public class LoginActivity extends AppCompatActivity {
 
         AppHelper.setUser(username);
         AppHelper.getPool().getUser(username).getSessionInBackground(authenticationHandler);
-//        new android.os.Handler().postDelayed(
-//                new Runnable() {
-//                    public void run() {
-//                        // On complete call either onLoginSuccess or onLoginFailed
-//                        onLoginSuccess();
-//                        // onLoginFailed();
-//                        progressDialog.dismiss();
-//                    }
-//                }, 3000);
+
     }
 
     private void showDialogMessage(String title, String body) {
@@ -155,14 +136,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == REQUEST_SIGNUP) {
-//            if (resultCode == RESULT_OK) {
-//
-//                // TODO: Implement successful signup logic here
-//                // By default we just finish the Activity and log them in automatically
-//                this.finish();
-//            }
-//        }
+
         super.onActivityResult( requestCode, resultCode, data );
         switch (requestCode) {
             case REQUEST_SIGNUP:
@@ -179,12 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (!userPasswd.isEmpty()) {
                         _passwordText.setText(userPasswd);
                     }
-//                    if (!name.isEmpty() && !userPasswd.isEmpty()) {
-//                        // We have the user details, so sign in!
-//                        username = name;
-//                        password = userPasswd;
-//                        AppHelper.getPool().getUser(username).getSessionInBackground(authenticationHandler);
-//                    }
+
                 }
                 break;
             case LOGIN:

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Contacts;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,17 +18,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.Response;
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 
 import java.util.ArrayList;
 
-import sharehome.com.androidsharehome2.model.TaskList;
-import sharehome.com.androidsharehome2.model.TaskListItem;
 import sharehome.com.androidsharehome2.model.*;
 
 public class ProfileActivity extends AppCompatActivity
@@ -41,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity
     String AddUserName;
     String CreateGroup_NameString;
     TextView GroupName;
-    TextView Instruction;
+    TextView groupPrompt;
     Button AddMember;
     Button _createGroup;
     private ArrayAdapter<String> adapter;
@@ -57,7 +52,15 @@ public class ProfileActivity extends AppCompatActivity
         CreateGroup_Name.setEnabled(true);
         CreateGroup_NameString = CreateGroup_Name.getText().toString();
         GroupName = (TextView) findViewById(R.id.currentGroupName);
-        findCurrentGroupName();
+        groupPrompt = (TextView) findViewById(R.id.groupPrompt);
+        //findCurrentGroupName();
+        if (AppHelper.getCurrgroupName() == null){
+            groupPrompt.setText("You are currently not in a group");
+        }
+        else {
+            GroupName.setText(AppHelper.getCurrgroupName());
+        }
+
         groupMemberNames = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, groupMemberNames);
@@ -104,11 +107,10 @@ public class ProfileActivity extends AppCompatActivity
     private void findCurrentGroupName() {
         final ProgressDialog progressDialog = new ProgressDialog(this,
                 R.style.AppTheme_Dark_Dialog);
-        AddUserName = _findUserName.getText().toString();
 
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
-                Handler handler = new taskSubmitHandler(getMainLooper());
+                Handler handler = new postSubmitHanlder(getMainLooper());
                 ApiClientFactory factory = new ApiClientFactory();
                 final AwscodestarsharehomelambdaClient client =
                         factory.build(AwscodestarsharehomelambdaClient.class);
@@ -231,7 +233,7 @@ public class ProfileActivity extends AppCompatActivity
         progressDialog.show();
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
-                Handler handler = new taskSubmitHandler(getMainLooper());
+                Handler handler = new postSubmitHanlder(getMainLooper());
                 ApiClientFactory factory = new ApiClientFactory();
                 final AwscodestarsharehomelambdaClient client =
                         factory.build(AwscodestarsharehomelambdaClient.class);

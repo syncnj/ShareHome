@@ -20,6 +20,8 @@ import java.util.*;
 import sharehome.com.androidsharehome2.model.Task;
 import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.ResultStringResponse;
+import sharehome.com.androidsharehome2.model.PostList;
+import sharehome.com.androidsharehome2.model.Post;
 import sharehome.com.androidsharehome2.model.TaskList;
 import sharehome.com.androidsharehome2.model.PostResponse;
 
@@ -91,10 +93,26 @@ public interface AwscodestarsharehomelambdaClient {
     /**
      * 
      * 
-     * @return void
+     * @param groupName 
+     * @return PostList
+     */
+    @com.amazonaws.mobileconnectors.apigateway.annotation.Operation(path = "/post", method = "GET")
+    PostList postGet(
+            @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "groupName", location = "query")
+            String groupName);
+    
+    /**
+     * 
+     * 
+     * @param body 
+     * @param operation 
+     * @return ResultStringResponse
      */
     @com.amazonaws.mobileconnectors.apigateway.annotation.Operation(path = "/post", method = "POST")
-    void postPost();
+    ResultStringResponse postPost(
+            Post body,
+            @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "operation", location = "query")
+            String operation);
     
     /**
      * 

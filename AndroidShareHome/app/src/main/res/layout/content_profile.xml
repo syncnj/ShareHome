@@ -60,7 +60,7 @@
         android:onClick="AddMember"/>
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/groupPrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -76,8 +76,8 @@
         android:textColor="#80CBC4"
         android:textStyle="bold"
         android:textSize="16dp"
-        android:layout_toRightOf="@id/textView7"
-        android:layout_alignBaseline="@+id/textView7"
+        android:layout_toRightOf="@id/groupPrompt"
+        android:layout_alignBaseline="@+id/groupPrompt"
         android:layout_marginLeft="10dp"
         android:text="" />
     <EditText

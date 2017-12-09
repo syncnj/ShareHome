@@ -51,6 +51,7 @@ public class AppHelper {
     private static AppHelper appHelper;
     private static CognitoUserPool userPool;
     private static String user;
+    public volatile static String groupName;
     private static CognitoDevice newDevice;
 
     private static CognitoUserAttributes attributesChanged;
@@ -188,9 +189,14 @@ public class AppHelper {
     public static String getCurrUser() {
         return user;
     }
+    public static String getCurrgroupName() {return groupName;}
+
 
     public static void setUser(String newUser) {
         user = newUser;
+    }
+    public static void setGroupName(String newGroupName) {
+        groupName = newGroupName;
     }
 
     public static boolean isPhoneVerified() {

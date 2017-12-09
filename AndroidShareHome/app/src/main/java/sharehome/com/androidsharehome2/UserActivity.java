@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -20,37 +21,26 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.*;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 
-import sharehome.com.androidsharehome2.model.PostResponse;
-import sharehome.com.androidsharehome2.model.Task;
-import sharehome.com.androidsharehome2.model.TaskList;
-import sharehome.com.androidsharehome2.model.TaskListItem;
+import sharehome.com.androidsharehome2.model.ListOfString;
+import sharehome.com.androidsharehome2.model.PostList;
+import sharehome.com.androidsharehome2.model.PostListItem;
 
 import com.amazonaws.mobileconnectors.pinpoint.*;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobile.auth.userpools.*;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 
 
 public class UserActivity extends AppCompatActivity
@@ -61,9 +51,9 @@ public class UserActivity extends AppCompatActivity
     private ProgressDialog waitDialog;
     private AlertDialog userDialog;
     private ArrayAdapter<String> adapter;
-    private ArrayList<String> tasks;
+    private ArrayList<String> posts;
     public static PinpointManager pinpointManager;
-    private ListView tasklistView;
+    private ListView postListView;
 
     @Override
     protected void onPause() {
@@ -109,22 +99,18 @@ public class UserActivity extends AppCompatActivity
         init();
         AWSMobileClient.getInstance().initialize(this).execute();
         initializeAWSPinpoint();
-        //initialize amazon pinpoint
-//        CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(this,"IDENTITY_POOL_ID", Regions.US_EAST_1);
-////
-//        PinpointConfiguration config = new PinpointConfiguration(this, "APP_ID", Regions.US_EAST_1, cognitoCachingCredentialsProvider);
-////
-//        this.pinpointManager = new PinpointManager(config);
 
          /* get login info*/
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        tasks = new ArrayList<String>();
+
+        getCurrentGroupName();
+        posts = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
-                R.layout.task_item, tasks);
-        tasklistView = (ListView) findViewById(R.id.post_list);
-        getTaskResponseFromLambda();
+                R.layout.task_item, posts);
+        postListView = (ListView) findViewById(R.id.post_list);
+        getPostResponseFromLambda();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +130,48 @@ public class UserActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+    }
+
+    private String getCurrentGroupName() {
+//        if (AppHelper.getCurrgroupName() == null){
+            findCurrentGroupName();
+            // blocking here to enforce we get the groupName before doing something else
+//            while(AppHelper.groupName == null){
+////                hard coded here ...
+////                return "HelloKitty";
+//            }
+//            return AppHelper.getCurrgroupName();
+//        }
+//        Log.d(TAG,AppHelper.groupName);
+        return AppHelper.getCurrgroupName();
+
+    }
+
+    private void findCurrentGroupName() {
+
+        Thread taskThread = new Thread(new Runnable() {
+            public void run() {
+                Handler handler = new postSubmitHanlder(getMainLooper());
+                ApiClientFactory factory = new ApiClientFactory();
+                final AwscodestarsharehomelambdaClient client =
+                        factory.build(AwscodestarsharehomelambdaClient.class);
+                final ListOfString response = client.groupGet(AppHelper.getCurrUser(), "getGroupName");
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppHelper.groupName = (response.get(0));
+                    }
+                });
+            }
+        });
+        taskThread.start();
+        try{
+
+            taskThread.join();
+        }
+        catch (Exception e){
+
+        }
     }
 
     private void initializeAWSPinpoint() {
@@ -176,22 +204,25 @@ public class UserActivity extends AppCompatActivity
 
     }
 
-    private void  getTaskResponseFromLambda() {
-        tasklistView = (ListView) findViewById(R.id.post_list);
+    private void getPostResponseFromLambda() {
+        postListView = (ListView) findViewById(R.id.post_list);
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
+                if(AppHelper.getCurrgroupName() == null){
+                    return;
+                }
                 ApiClientFactory factory = new ApiClientFactory();
                 final AwscodestarsharehomelambdaClient client =
                         factory.build(AwscodestarsharehomelambdaClient.class);
-                TaskList tasklist = client.taskGet("testGroupName3");
-                tasks.clear();
-                for (TaskListItem task : tasklist){
-                    tasks.add(task.getTaskTitle());
+                PostList postList = client.postGet(getCurrentGroupName());
+                posts.clear();
+                for (PostListItem post : postList){
+                    posts.add(post.getPostTitle());
                 }
                  UserActivity.this.runOnUiThread(new Runnable() {
                      @Override
                      public void run() {
-                         tasklistView.setAdapter(adapter);
+                         postListView.setAdapter(adapter);
                      }
                  });
             }
@@ -231,7 +262,7 @@ public class UserActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh ) {// Create Display of everything!
             try {
-                getTaskResponseFromLambda();
+                getPostResponseFromLambda();
                 Toast.makeText(this, "refresh successful", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 System.out.println("cannot found a group");

@@ -1,13 +1,10 @@
 package sharehome.com.androidsharehome2;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -27,21 +24,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
+
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.sql.Time;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.List;
+
+import sharehome.com.androidsharehome2.model.ListOfString;
+import sharehome.com.androidsharehome2.model.Post;
+import sharehome.com.androidsharehome2.model.ResultStringResponse;
 
 public class AddTaskActivityNAV extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    private static final String TAG = "AddTaskActivityNAV";
     String[] Roommates = {};
     String[] RoommatesName;
 
@@ -128,11 +124,47 @@ public class AddTaskActivityNAV extends AppCompatActivity
         openRoommateList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ad != null) {
-                    ad.show();
-                }
+//                if(ad != null) {
+//                    ad.show();
+//                }
+                final ProgressDialog progressDialog = new ProgressDialog(AddTaskActivityNAV.this,
+                        R.style.AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Getting your Roommates...");
+                progressDialog.show();
+                new Thread(new Runnable() {
+                    Handler handler = new Handler(AddTaskActivityNAV.this.getMainLooper());
+                    public void run() {
+                        if (AppHelper.getCurrgroupName() == null){
+                            return;
+                        }
+                        ApiClientFactory factory = new ApiClientFactory();
+                        final AwscodestarsharehomelambdaClient client =
+                                factory.build(AwscodestarsharehomelambdaClient.class);
+
+                        final ListOfString response = client.groupGet(AppHelper.getCurrUser(),
+                                "listMembers");
+
+
+                        final List<String> roommates = new ArrayList<>();
+                        for (String roommate : response){
+                            roommates.add(roommate);
+                        }
+
+                        // TODO: put results to UI here ( where roommates is a list of roommate names)
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                  progressDialog.dismiss();
+                                  Toast.makeText(AddTaskActivityNAV.this, roommates.get(0),
+                                        Toast.LENGTH_LONG);
+                            }
+                        });
+                    }
+                }).start();
             }
         });
+
         card1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

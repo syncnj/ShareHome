@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -25,13 +26,11 @@ import com.amazonaws.mobileconnectors.apigateway.*;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 
-import sharehome.com.androidsharehome2.model.PostResponse;
-import sharehome.com.androidsharehome2.model.Task;
+import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.TaskList;
 import sharehome.com.androidsharehome2.model.TaskListItem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -98,7 +97,7 @@ public class TasksActivity extends AppCompatActivity
                 ApiClientFactory factory = new ApiClientFactory();
                 final AwscodestarsharehomelambdaClient client =
                         factory.build(AwscodestarsharehomelambdaClient.class);
-                TaskList tasklist = client.taskGet("testGroupName3");
+                TaskList tasklist = client.taskGet(getCurrentGroupName());
                 tasks.clear();
                 for (TaskListItem task : tasklist){
                     tasks.add(task.getTaskTitle());
@@ -116,6 +115,54 @@ public class TasksActivity extends AppCompatActivity
 
     }
 
+    /**
+     * copy method from UserActivity
+     * @return
+     */
+    private String getCurrentGroupName() {
+//        if (AppHelper.getCurrgroupName() == null){
+            findCurrentGroupName();
+//            // blocking here to enforce we get the groupName before doing something else
+//            while(AppHelper.groupName == null){
+////                //                hard coded here ...
+////               // return "HelloKitty";
+//            }
+//            return AppHelper.getCurrgroupName();
+//        }
+        Log.d(TAG,AppHelper.groupName);
+        return AppHelper.getCurrgroupName();
+    }
+
+    /**
+     * copy method from UserActivity
+     * @return
+     */
+    private void findCurrentGroupName() {
+
+        Thread taskThread = new Thread(new Runnable() {
+            public void run() {
+                Handler handler = new postSubmitHanlder(getMainLooper());
+                ApiClientFactory factory = new ApiClientFactory();
+                final AwscodestarsharehomelambdaClient client =
+                        factory.build(AwscodestarsharehomelambdaClient.class);
+                final ListOfString response = client.groupGet(AppHelper.getCurrUser(), "getGroupName");
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppHelper.groupName = (response.get(0));
+                    }
+                });
+            }
+        });
+        taskThread.start();
+        try{
+
+            taskThread.join();
+        }
+        catch (Exception e){
+
+        }
+    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
