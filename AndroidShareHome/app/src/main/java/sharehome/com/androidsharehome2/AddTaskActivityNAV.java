@@ -504,9 +504,6 @@ public class AddTaskActivityNAV extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-//            Intent intent = new Intent(this, TasksActivity.class);
-//            startActivity(intent);
-//            finish();
             super.onBackPressed();
         }
     }
