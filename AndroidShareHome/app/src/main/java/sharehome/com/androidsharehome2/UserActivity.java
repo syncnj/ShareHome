@@ -3,12 +3,10 @@ package sharehome.com.androidsharehome2;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,9 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -62,9 +57,8 @@ public class UserActivity extends AppCompatActivity
     private AlertDialog userDialog;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> posts;
-    private ListView postListView;
-    private ImageView profileImage;
     public static PinpointManager pinpointManager;
+    private ListView postListView;
 
     @Override
     protected void onPause() {
@@ -89,12 +83,10 @@ public class UserActivity extends AppCompatActivity
             Log.d(TAG, "Received notification from local broadcast. Display it in a dialog.");
 
             Bundle data = intent.getBundleExtra(ShareHomePushListenerService.INTENT_SNS_NOTIFICATION_DATA);
-
-            String title = ShareHomePushListenerService.getTitle(data);
             String message = ShareHomePushListenerService.getMessage(data);
 
             new android.app.AlertDialog.Builder(UserActivity.this)
-                    .setTitle(title)
+                    .setTitle("Push notification")
                     .setMessage(message)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
@@ -119,13 +111,9 @@ public class UserActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        NavigationView f0 = (NavigationView)findViewById(R.id.nav_view);
-//
-//        LinearLayout f1  = (LinearLayout)findViewById(R.id.nav_header_main_layout);
-//        profileImage = (ImageView)f1.findViewById(R.id.profileImage);
-//        setImageView();
-//
+
         getCurrentGroupName();
+
         posts = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, posts);
@@ -152,17 +140,6 @@ public class UserActivity extends AppCompatActivity
 
     }
 
-    private void setImageView() {
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(UserActivity.this,
-                        "The favorite list would appear on clicking this icon",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
     private String getCurrentGroupName() {
 //        if (AppHelper.getCurrgroupName() == null){
             findCurrentGroupName();
@@ -175,9 +152,11 @@ public class UserActivity extends AppCompatActivity
 //        }
 //        Log.d(TAG,AppHelper.groupName);
         return AppHelper.getCurrgroupName();
+
     }
 
     private void findCurrentGroupName() {
+
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 Handler handler = new postSubmitHanlder(getMainLooper());
@@ -195,6 +174,13 @@ public class UserActivity extends AppCompatActivity
             }
         });
         taskThread.start();
+        try{
+
+            taskThread.join();
+        }
+        catch (Exception e){
+
+        }
     }
     private void registerEndpoint(){
 
@@ -207,7 +193,6 @@ public class UserActivity extends AppCompatActivity
             return;
         }
        pinpointManager.getTargetingClient().addAttribute("GroupName",Arrays.asList(AppHelper.getCurrgroupName()));
-        pinpointManager.getTargetingClient().addAttribute("UserName",Arrays.asList(AppHelper.getCurrUser()));
        pinpointManager.getTargetingClient().updateEndpointProfile();
     }
     private void initializeAWSPinpoint() {
