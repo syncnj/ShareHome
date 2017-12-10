@@ -183,6 +183,7 @@ public class UserActivity extends AppCompatActivity
             return;
         }
        pinpointManager.getTargetingClient().addAttribute("GroupName",Arrays.asList(AppHelper.getCurrgroupName()));
+        pinpointManager.getTargetingClient().addAttribute("UserName",Arrays.asList(AppHelper.getCurrUser()));
        pinpointManager.getTargetingClient().updateEndpointProfile();
     }
     private void initializeAWSPinpoint() {
