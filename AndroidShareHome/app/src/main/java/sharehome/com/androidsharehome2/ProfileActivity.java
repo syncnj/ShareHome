@@ -102,7 +102,7 @@ public class ProfileActivity extends AppCompatActivity
         //listGroupMembers();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        findCurrentGroupName();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -418,12 +418,13 @@ public class ProfileActivity extends AppCompatActivity
                         public void run() {
                             progressDialog.dismiss();
                             // Notifies user
-                            if (response.getResult().startsWith("succ")) {
-                                String m = "Group " + newGroupName + " created!";
-                                Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
-                            } else {
-                                showDialogMessage("Failed to create the group: ".toUpperCase(), response.getResult());
-                            }
+//                            if (response.getResult().startsWith("succ")) {
+//                                String m = "Group " + newGroupName + " created!";
+//                                Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
+//                            } else {
+                                showDialogMessage("Successfully created group: ".toUpperCase() + newGroupName
+                                        , response.getResult());
+//                            }
                         }
                     });
                 } catch (Exception e) {
@@ -489,7 +490,8 @@ public class ProfileActivity extends AppCompatActivity
     //                      // Notifies user
                             if (response.getResult().startsWith("succ") || response.getResult().startsWith("Up")) {
                                 String msg = "Add " + AddUserName + " Sccuessfully!";
-                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+//                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                                showDialogMessage(msg, response.getResult());
                             } else {
                                 String errormsg = "Failed to add user: " + AddUserName;
     //                            Toast.makeText(getApplicationContext(), errormsg, Toast.LENGTH_LONG).show();
@@ -510,7 +512,9 @@ public class ProfileActivity extends AppCompatActivity
                             public void run() {
                                 if (response.contains("does not exist!") && response.contains("User"))
                                 showDialogMessage(errormsg, String.format("User \"%s\" does not exist!",AddUserName));
+                                else showDialogMessage(errormsg, response);
                             }
+
                         });
                     } catch (JSONException e1) {
                         e1.printStackTrace();

@@ -195,7 +195,6 @@ public class UserActivity extends AppCompatActivity
                 Log.i("Data", ProfileImgFN);
                 fis.close();
                     if( !previouslyEncodedImage.equalsIgnoreCase("") ){
-                        Boolean test = AppHelper.getUploadedProfileImgs();
                         if (!AppHelper.getUploadedProfileImgs()){
                          byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
                          profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
