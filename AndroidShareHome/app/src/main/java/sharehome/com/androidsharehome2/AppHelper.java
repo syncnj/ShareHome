@@ -46,6 +46,7 @@ import java.util.Set;
 
 public class AppHelper {
     // App settings
+
     private static List<String> attributeDisplaySeq;
     private static Map<String, String> signUpFieldsC2O;
     private static Map<String, String> signUpFieldsO2C;

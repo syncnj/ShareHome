@@ -236,9 +236,6 @@ public class TasksActivity extends AppCompatActivity
         }
     }
     private void getTaskResponseFromLambda() {
-        if(getCurrentGroupName() ==null){
-            return;
-        }
         tasklistView = (ListView) findViewById(R.id.post_list);
         Thread taskThread = new Thread(new Runnable() {
             public void run() {

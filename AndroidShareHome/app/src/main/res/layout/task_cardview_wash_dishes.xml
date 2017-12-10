@@ -19,7 +19,7 @@
             android:layout_centerHorizontal="true"
             android:src="@drawable/wash_dishes" />
         <TextView
-            android:id="@+id/wash_dishes_title"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/taskPic"
