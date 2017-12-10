@@ -3,11 +3,17 @@ package sharehome.com.androidsharehome2;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -19,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,11 +39,17 @@ import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.TaskList;
 import sharehome.com.androidsharehome2.model.TaskListItem;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
+
+import static sharehome.com.androidsharehome2.AppHelper.PROFILE_IMAGE_HEIGHT;
+import static sharehome.com.androidsharehome2.AppHelper.PROFILE_IMAGE_WIDTH;
+import static sharehome.com.androidsharehome2.AppHelper.ProfileImgFN;
+import static sharehome.com.androidsharehome2.AppHelper.profile_img_bitmap;
 
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "UserActivity";
+    private static final String TAG = "TaskActivity";
     private CognitoUser user_aws;
     private String username;
     private ProgressDialog waitDialog;
@@ -45,6 +58,8 @@ public class TasksActivity extends AppCompatActivity
     private ArrayList<String> tasks;
     taskHandler taskHandler;
     private ListView tasklistView;
+    private  ImageView profileImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,14 +69,6 @@ public class TasksActivity extends AppCompatActivity
             return;
         }
         init();
-
-        //initialize amazon pinpoint
-//       CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(context,"IDENTITY_POOL_ID",Regions.US_EAST_1);
-//
-//        PinpointConfiguration config = new PinpointConfiguration(context, "APP_ID", Regions.US_EAST_1, cognitoCachingCredentialsProvider);
-//
-//        this.pinpointManager = new PinpointManager(config);
-
          /* get login info*/
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -95,7 +102,12 @@ public class TasksActivity extends AppCompatActivity
         String text = welcomeText.getText().toString() + " " +
                 AppHelper.getCurrUser();
         welcomeText.setText(text);
-
+        profileImage = (ImageView) AppHelper.layoutHeader.findViewById(R.id.profileImage);
+        ImageView appproimgs = AppHelper.profileImage;
+        Log.d(TAG, String.valueOf((AppHelper.profileImage == profileImage)));
+        if(AppHelper.getUploadedProfileImgs()) {
+            loadProfileImage();
+        }
     }
 
     private void getTaskResponseFromLambda() {
@@ -342,5 +354,49 @@ public class TasksActivity extends AppCompatActivity
         setResult(RESULT_OK, intent);
         finish();
     }
+    private void loadProfileImage() {
+//        SharedPreferences shre = PreferenceManager.getDefaultSharedPreferences(this);
+//        String previouslyEncodedImage = shre.getString("image_data", "");
+//        if( !previouslyEncodedImage.equalsIgnoreCase("") ){
+//            byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+//            profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+////            scale it to proper dimension
+//            Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+//                    PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+//            profileImage.setImageDrawable(scaled);
+//        }
+        final Handler handler = new Handler(getMainLooper());
+        Thread loadImgs = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(Environment.getExternalStorageDirectory()+ "//" +
+                            ProfileImgFN);
+                    byte[] reader = new byte[fis.available ()];
+                    while(fis.read(reader)!=-1){}
+                    String previouslyEncodedImage = (new String(reader));
+                    Log.i("Data", ProfileImgFN);
+                    fis.close();
+                    if( !previouslyEncodedImage.equalsIgnoreCase("") ){
+                        byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+                        profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+//            scale it to proper dimension
+                        final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                AppHelper.profileImage.setImageDrawable(scaled);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
+            }
+        });
+        loadImgs.start();
+    }
 }
