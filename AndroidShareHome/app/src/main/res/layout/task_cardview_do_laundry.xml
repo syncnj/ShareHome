@@ -9,7 +9,6 @@
         android:layout_height="match_parent"
         tools:showIn="@layout/content_add_task_activity_nav">
 
-
         <ImageView
             android:id="@+id/taskPic"
             android:layout_width="120dp"
@@ -19,7 +18,7 @@
             android:layout_centerHorizontal="true"
             android:src="@drawable/do_laundry" />
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/do_laundry_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/taskPic"

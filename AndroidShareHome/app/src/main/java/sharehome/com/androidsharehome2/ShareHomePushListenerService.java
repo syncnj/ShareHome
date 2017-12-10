@@ -1,12 +1,16 @@
 package sharehome.com.androidsharehome2;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.amazonaws.mobileconnectors.pinpoint.targeting.notification.NotificationClient;
 import com.google.android.gms.gcm.GcmListenerService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -28,6 +32,14 @@ public class ShareHomePushListenerService extends GcmListenerService {
             * @param data bundle
      * @return message string from push notification
      */
+    public static String getTitle(Bundle data) {
+        // If a push notification is sent as plain
+        // text, then the message appears in "default".
+        // Otherwise it's in the "title" for JSON format.
+        return data.containsKey("default") ? "Push Notification" : data.getString(
+                "title", "");
+    }
+
     public static String getMessage(Bundle data) {
         // If a push notification is sent as plain
         // text, then the message appears in "default".
@@ -62,12 +74,28 @@ public class ShareHomePushListenerService extends GcmListenerService {
             // event was recorded indicating the app was in the foreground,
             // for the demo, we will broadcast the notification to let the Useractivity
             // display it in a dialog.
+            Bundle data2 =data;
+
             if (
                     NotificationClient.CampaignPushResult.APP_IN_FOREGROUND.equals(pushResult)) {
                 // Create a message that will display the raw
                 //data of the campaign push in a dialog.
+                JSONObject jsonObject;
+                String title = "default title";
+
+                String body = "default body";
+                try {
+                    title = data.getString("pinpoint.notification.title");
+                    body = data.getString("pinpoint.notification.body");
+                } catch (Exception e) {
+                    Log.d(LOGTAG, "Exception at parsing received bundle data");
+                }
+
+                data.putString("title",
+                        String.format("%s",title));
                 data.putString("message",
-                        String.format("Received Campaign Push:\n%s", data.toString()));
+                        String.format("%s", body));
+
                 broadcast(from, data);
             }
             return;
