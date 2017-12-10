@@ -226,6 +226,9 @@ public class UserActivity extends AppCompatActivity
     }
 
     private void getPostResponseFromLambda() {
+        if(getCurrentGroupName() ==null){
+            return;
+        }
         postListView = (ListView) findViewById(R.id.post_list);
         Thread taskThread = new Thread(new Runnable() {
             public void run() {

@@ -129,7 +129,7 @@ public class TasksActivity extends AppCompatActivity
 //            }
 //            return AppHelper.getCurrgroupName();
 //        }
-        Log.d(TAG,AppHelper.groupName);
+//        Log.d(TAG,AppHelper.groupName);
         return AppHelper.getCurrgroupName();
     }
 
@@ -138,7 +138,6 @@ public class TasksActivity extends AppCompatActivity
      * @return
      */
     private void findCurrentGroupName() {
-
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 Handler handler = new postSubmitHanlder(getMainLooper());
@@ -156,11 +155,9 @@ public class TasksActivity extends AppCompatActivity
         });
         taskThread.start();
         try{
-
             taskThread.join();
         }
         catch (Exception e){
-
         }
     }
 
