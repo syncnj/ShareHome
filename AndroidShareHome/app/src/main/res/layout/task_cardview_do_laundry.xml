@@ -9,7 +9,6 @@
         android:layout_height="match_parent"
         tools:showIn="@layout/content_add_task_activity_nav">
 
-
         <ImageView
             android:id="@+id/taskPic"
             android:layout_width="120dp"

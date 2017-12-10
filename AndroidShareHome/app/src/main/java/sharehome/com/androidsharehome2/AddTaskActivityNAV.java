@@ -181,6 +181,13 @@ public class AddTaskActivityNAV extends AppCompatActivity
                 progressDialog.setMessage("Submitting tasks...");
                 progressDialog.show();
                 final String taskTitle = gettaskTitlefromCards();
+                if (taskTitle == "-1"){
+                    progressDialog.dismiss();
+                    showDialogMessage("Failed to submit the task:".toUpperCase(),
+                            "Please select a task"
+                            );
+                    return;
+                }
                 new Thread(new Runnable() {
                     Handler handler = new Handler(getMainLooper());
                     public void run() {
@@ -207,7 +214,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
                             default: {
                                 Calendar c = Calendar.getInstance();
                                 int monthMaxDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-                                duration= monthMaxDays * 24 * 60; //"Month"
+                                duration = monthMaxDays * 24 * 60; //"Month"
                             }
                                 break;
                         }
@@ -420,7 +427,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
 
     }
     private void showDialogMessage(String title, String body){
-        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getApplicationContext());
+        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddTaskActivityNAV.this);
         builder.setTitle(title).setMessage(body).setNeutralButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
