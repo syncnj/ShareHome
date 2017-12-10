@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.*;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
@@ -31,16 +32,20 @@ import sharehome.com.androidsharehome2.model.PostListItem;
 
 import com.amazonaws.mobileconnectors.pinpoint.*;
 import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.AWSMobileClient.*;
+import com.amazonaws.regions.Regions;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+
 
 
 public class UserActivity extends AppCompatActivity
@@ -100,12 +105,15 @@ public class UserActivity extends AppCompatActivity
         AWSMobileClient.getInstance().initialize(this).execute();
         initializeAWSPinpoint();
 
+        //for pinpoint endpoint
+
          /* get login info*/
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getCurrentGroupName();
+        registerEndpoint();
         posts = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, posts);
@@ -173,7 +181,19 @@ public class UserActivity extends AppCompatActivity
 
         }
     }
+    private void registerEndpoint(){
 
+//        CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(this,"IDENTITY_POOL_ID", Regions.US_EAST_1);
+//
+//        PinpointConfiguration config = new PinpointConfiguration(this, "APP_ID", Regions.US_EAST_1, cognitoCachingCredentialsProvider);
+//
+//        this.pinpointManager = new PinpointManager(config);
+        if(AppHelper.getCurrgroupName() == null){
+            return;
+        }
+       pinpointManager.getTargetingClient().addAttribute("GroupName",Arrays.asList(AppHelper.getCurrgroupName()));
+       pinpointManager.getTargetingClient().updateEndpointProfile();
+    }
     private void initializeAWSPinpoint() {
 
         if (pinpointManager == null) {
