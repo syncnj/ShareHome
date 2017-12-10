@@ -113,7 +113,7 @@ public class UserActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         getCurrentGroupName();
-        registerEndpoint();
+
         posts = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, posts);
@@ -168,6 +168,7 @@ public class UserActivity extends AppCompatActivity
                     @Override
                     public void run() {
                         AppHelper.groupName = (response.get(0));
+                        registerEndpoint();
                     }
                 });
             }
