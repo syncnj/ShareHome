@@ -83,10 +83,12 @@ public class UserActivity extends AppCompatActivity
             Log.d(TAG, "Received notification from local broadcast. Display it in a dialog.");
 
             Bundle data = intent.getBundleExtra(ShareHomePushListenerService.INTENT_SNS_NOTIFICATION_DATA);
+
+            String title = ShareHomePushListenerService.getTitle(data);
             String message = ShareHomePushListenerService.getMessage(data);
 
             new android.app.AlertDialog.Builder(UserActivity.this)
-                    .setTitle("Push notification")
+                    .setTitle(title)
                     .setMessage(message)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();

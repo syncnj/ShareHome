@@ -349,7 +349,6 @@ public class ProfileActivity extends AppCompatActivity
                     } catch (JSONException e1) {
                         e1.printStackTrace();
                     }
-
                 }
             }
         }).start();

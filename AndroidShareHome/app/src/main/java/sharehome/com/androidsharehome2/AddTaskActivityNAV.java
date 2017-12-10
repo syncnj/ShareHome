@@ -1,6 +1,7 @@
 package sharehome.com.androidsharehome2;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +30,13 @@ import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.Post;
@@ -63,6 +70,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
     boolean clicked5 = false;
     boolean clicked6 = false;
     int TimetoHour;
+    private android.app.AlertDialog userDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +178,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
                 final ProgressDialog progressDialog = new ProgressDialog(AddTaskActivityNAV.this,
                         R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Submitting tasks");
+                progressDialog.setMessage("Submitting tasks...");
                 progressDialog.show();
                 final String taskTitle = gettaskTitlefromCards();
                 new Thread(new Runnable() {
@@ -185,18 +193,47 @@ public class AddTaskActivityNAV extends AppCompatActivity
                         Task task = new Task();
                         task.setGroupName(AppHelper.groupName);
                         task.setTaskTitle(taskTitle);
-                        final PostResponse response = client.taskPost(task,"add"
-                                );
-
-                        // TODO: put results to UI here ( where roommates is a list of roommate names)
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressDialog.dismiss();
-                                Toast.makeText(getApplicationContext(), response.getTaskID().toString(),
-                                        Toast.LENGTH_LONG).show();
+                        String formattedDate =
+                                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Calendar.getInstance().getTime());
+                        Log.d(TAG, "generated formattedDate:\n" + formattedDate);
+                        task.setLastRotated(formattedDate);
+                        String duratingStr = DailyBaseSpinner.getSelectedItem().toString();
+                        Integer duration = 100;
+                        switch(duratingStr){
+                            case "Day": duration=  24*60;
+                                break;
+                            case "Week": duration= 7*24*60;
+                                break;
+                            default: {
+                                Calendar c = Calendar.getInstance();
+                                int monthMaxDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+                                duration= monthMaxDays * 24 * 60; //"Month"
                             }
-                        });
+                                break;
+                        }
+
+                        task.setTaskDuration(duration);
+//                        TODO
+                        String taskUser = "ttzztt";
+                        task.setTaskUser(taskUser);
+                        try {
+                            final PostResponse response = client.taskPost(task,"add"
+                                    );
+                            // TODO: put results to UI here ( where roommates is a list of roommate names)
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), "Successfully submitted the task: " + taskTitle,
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), "Failed to submit the task:" + taskTitle,
+                                    Toast.LENGTH_LONG).show();
+                            showDialogMessage("Failed to submit the task:", "task: " + taskTitle
+                            + " was not successfully added due to the server error");
+                        }
                     }
                 }).start();
             }
@@ -382,26 +419,40 @@ public class AddTaskActivityNAV extends AppCompatActivity
 
 
     }
-
+    private void showDialogMessage(String title, String body){
+        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getApplicationContext());
+        builder.setTitle(title).setMessage(body).setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    userDialog.dismiss();
+                } catch (Exception e) {
+                    // Log failure
+                    Log.e(TAG,"Dialog dismiss failed");
+                }
+            }
+        });
+        userDialog = builder.create();
+        userDialog.show();
+    }
     private String gettaskTitlefromCards() {
-        //TODO
         if(clicked1){
-            return "Sweep";
+            return  ((TextView) findViewById(R.id.sweep_floor_title)).getText().toString();
         }
         else if(clicked2){
-            return "Wash Dishes";
+            return ((TextView) findViewById(R.id.wash_dishes_title)).getText().toString();
         }
         else if(clicked3){
-            return "Throw Trash";
+            return  ((TextView) findViewById(R.id.throw_trash_title)).getText().toString();
         }
         else if(clicked4){
-            return "clean table";
+            return ((TextView) findViewById(R.id.clean_table_title)).getText().toString();
         }
         else if(clicked5){
-            return "wipe window";
+            return ((TextView) findViewById(R.id.wipe_window_title)).getText().toString();
         }
         else if(clicked6){
-            return "do landury";
+            return ((TextView) findViewById(R.id.do_laundry_title)).getText().toString();
         }
        // return "Do laundry";
         return "-1";
@@ -474,10 +525,10 @@ public class AddTaskActivityNAV extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             // TODO: This doesn't exit the app
-//            loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
+            signOut();
             startActivity(intent);
             finish();
         }
@@ -485,6 +536,10 @@ public class AddTaskActivityNAV extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void signOut() {
+        AppHelper.getPool().getUser(AppHelper.getCurrUser()).signOut();
     }
 
     public String findCheckedRoommates(String[] allRoommates, boolean[] checkedRoommates){
