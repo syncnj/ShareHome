@@ -76,15 +76,11 @@ public class AppHelper {
     private static Map<String, String> firstTimeLogInUpDatedAttributes;
     private static String firstTimeLoginNewPassword;
 
+    public static Bitmap profile_img_bitmap;
     public static final int PROFILE_IMAGE_WIDTH = 169;
     public static final int PROFILE_IMAGE_HEIGHT = 169;
-
-    public static Bitmap profile_img_bitmap;
-    public static String ProfileImgFN = "ProfileImg.txt";;
-
-    public static LinearLayout layoutHeader;
-    public static ImageView profileImage;
-
+    public static final String ProfileImgFN = "ProfileImg.txt";;
+    private static String PROFILE_IMG__KEY = "profile_images";
 
     // Change the next three lines of code to run this demo on your user pool
 

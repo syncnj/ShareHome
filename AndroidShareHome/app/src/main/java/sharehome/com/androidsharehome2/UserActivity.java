@@ -63,11 +63,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
-import static sharehome.com.androidsharehome2.AppHelper.PROFILE_IMAGE_HEIGHT;
-import static sharehome.com.androidsharehome2.AppHelper.PROFILE_IMAGE_WIDTH;
-import static sharehome.com.androidsharehome2.AppHelper.ProfileImgFN;
-import static sharehome.com.androidsharehome2.AppHelper.profile_img_bitmap;
-
+import static sharehome.com.androidsharehome2.AppHelper.*;
 
 public class UserActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -81,14 +77,12 @@ public class UserActivity extends AppCompatActivity
     private ArrayList<String> posts;
     private ListView postListView;
 //    private ImageView profileImage;
-    private Drawable defaultdraw;
     public static PinpointManager pinpointManager;
-    private int UPLOADIMAGE = 0;
 
-
-    private static String PROFILE_IMG__KEY = "profile_images";
-
+    public  LinearLayout layoutHeader;
+    public  ImageView profileImage;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+    private static int UPLOADIMAGE = 0;
     @Override
     protected void onPause() {
         super.onPause();
@@ -141,12 +135,12 @@ public class UserActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        AppHelper.layoutHeader = (LinearLayout) navigationView.getHeaderView(0);
-        TextView welcomeText = (TextView) AppHelper.layoutHeader.findViewById(R.id.WelcomeText);
+        layoutHeader = (LinearLayout) navigationView.getHeaderView(0);
+        TextView welcomeText = (TextView) layoutHeader.findViewById(R.id.WelcomeText);
         String text = welcomeText.getText().toString() + " " +
                 AppHelper.getCurrUser();
         welcomeText.setText(text);
-        AppHelper.profileImage = (ImageView) AppHelper.layoutHeader.findViewById(R.id.profileImage);
+        profileImage = (ImageView) layoutHeader.findViewById(R.id.profileImage);
 
         setImageView();
         findCurrentGroupName();
@@ -169,11 +163,10 @@ public class UserActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-
-        if(AppHelper.getUploadedProfileImgs()) {
-            loadProfileImage();
-        }
-
+//        if(AppHelper.getUploadedProfileImgs()) {
+//            loadProfileImage();
+//        }
+        loadProfileImage();
     }
 
 
@@ -202,15 +195,19 @@ public class UserActivity extends AppCompatActivity
                 Log.i("Data", ProfileImgFN);
                 fis.close();
                     if( !previouslyEncodedImage.equalsIgnoreCase("") ){
-            byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
-            profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                        Boolean test = AppHelper.getUploadedProfileImgs();
+                        if (!AppHelper.getUploadedProfileImgs()){
+                         byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+                         profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                            AppHelper.setUploadedProfileImgs(true);
+                        }
 //            scale it to proper dimension
-            final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
-                    PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                      final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                               PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-            AppHelper.profileImage.setImageDrawable(scaled);
+            profileImage.setImageDrawable(scaled);
                            }
                         });
                    }
@@ -224,7 +221,7 @@ public class UserActivity extends AppCompatActivity
     }
 
     private void setImageView() {
-        AppHelper.profileImage.setOnClickListener(new View.OnClickListener() {
+        profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 asktoUploadImage();
@@ -235,7 +232,7 @@ public class UserActivity extends AppCompatActivity
     private void asktoUploadImage() {
         AlertDialog alertDialog = new AlertDialog.Builder(UserActivity.this).create();
         alertDialog.setTitle("Change your profile image");
-        alertDialog.setMessage("Sure to change your profile image?");
+        alertDialog.setMessage("sure to change your profile image?");
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -260,7 +257,6 @@ public class UserActivity extends AppCompatActivity
     }
 
     private void uploadProfileImage() {
-        defaultdraw = getResources().getDrawable(android.R.drawable.sym_def_app_icon);
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, UPLOADIMAGE);
@@ -376,7 +372,7 @@ public class UserActivity extends AppCompatActivity
 
        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
            if (resultCode == RESULT_OK && requestCode == UPLOADIMAGE) {
-               AppHelper.profileImage.setImageDrawable(getPicture(data.getData()));
+               profileImage.setImageDrawable(getPicture(data.getData()));
                saveProfileImgs();
            }
     }
@@ -461,8 +457,6 @@ public class UserActivity extends AppCompatActivity
         }
         Drawable source = Drawable.createFromStream(inputStream, selectedImage.toString());
         source.setBounds(0,72,0,72);
-        int newHeight= source.getIntrinsicHeight();
-        int height = defaultdraw.getIntrinsicHeight();
         profile_img_bitmap = ((BitmapDrawable) source).getBitmap();
         Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
                 PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
@@ -551,7 +545,7 @@ public class UserActivity extends AppCompatActivity
                 user_aws.signOut();
                 exit();
             } catch (Exception e) {
-                System.out.println("Hello" + e);
+                Log.d(TAG , e.getMessage());
             }
         }
 
@@ -625,13 +619,14 @@ public class UserActivity extends AppCompatActivity
         }
     }
     private void exit() {
-        Intent intent = new Intent();
-        /*pass in username and password info to MainActivity*/
+        Intent intent = new Intent(this, LoginActivity.class);
+        /*pass in username info to Login*/
         if (username == null) {
             username = "";
         }
         intent.putExtra("username", username);
         setResult(RESULT_OK, intent);
+        startActivity(intent);
         finish();
     }
 

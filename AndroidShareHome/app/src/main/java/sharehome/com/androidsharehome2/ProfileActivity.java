@@ -1,12 +1,23 @@
 package sharehome.com.androidsharehome2;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -21,6 +32,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,10 +42,18 @@ import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import sharehome.com.androidsharehome2.model.*;
+
+import static sharehome.com.androidsharehome2.AppHelper.*;
 
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,6 +71,10 @@ public class ProfileActivity extends AppCompatActivity
     private ArrayList<String> groupMemberNames;
     private AlertDialog userDialog;
 
+    public LinearLayout layoutHeader;
+    public ImageView profileImage;
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+    private static int UPLOADIMAGE = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +111,139 @@ public class ProfileActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        layoutHeader = (LinearLayout) navigationView.getHeaderView(0);
+        TextView welcomeText = (TextView) layoutHeader.findViewById(R.id.WelcomeText);
+        String text = welcomeText.getText().toString() + " " +
+                AppHelper.getCurrUser();
+        welcomeText.setText(text);
+        profileImage = (ImageView) layoutHeader.findViewById(R.id.profileImage);
+//        if(AppHelper.getUploadedProfileImgs()) {
+//            loadProfileImage();
+//        }
+            setImageView();
+            loadProfileImage();
     }
+    private void setImageView() {
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                asktoUploadImage();
+            }
+        });
+    }
+    private void asktoUploadImage() {
+        android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(ProfileActivity.this).create();
+        alertDialog.setTitle("Change your profile image");
+        alertDialog.setMessage("sure to change your profile image?");
+        alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Please select your favorite profile" +
+                                        " image",
+                                Toast.LENGTH_LONG).show();
+                        uploadProfileImage();
+                    }
+                });
+        alertDialog.setButton(android.app.AlertDialog.BUTTON_NEGATIVE, "cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        alertDialog.show();
+        alertDialog.getButton(Dialog.BUTTON_NEGATIVE).
+                setTextColor(Color.parseColor("#3399ff"));
+        alertDialog.getButton(Dialog.BUTTON_POSITIVE).
+                setTextColor(Color.parseColor("#3399ff"));
+    }
+    private void uploadProfileImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, UPLOADIMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == UPLOADIMAGE) {
+            profileImage.setImageDrawable(getPicture(data.getData()));
+            saveProfileImgs();
+        }
+    }
+
+    private void saveProfileImgs() {
+        ActivityCompat.requestPermissions(ProfileActivity.this,
+                new String[]{"android.permission.WRITE_EXTERNAL_STORAGE",
+                        "android.permission.READ_EXTERNAL_STORAGE"
+                },
+                MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+    }
+
+    public Drawable getPicture(Uri selectedImage) {
+        InputStream inputStream = null;
+        try {
+            inputStream = getContentResolver().openInputStream(selectedImage);
+        } catch (FileNotFoundException e) {
+            return getResources().getDrawable(R.drawable.logo);
+        }
+        Drawable source = Drawable.createFromStream(inputStream, selectedImage.toString());
+        source.setBounds(0,72,0,72);
+        profile_img_bitmap = ((BitmapDrawable) source).getBitmap();
+        Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+        return scaled;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+//                    #####################################################
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    profile_img_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] b = baos.toByteArray();
+//
+                    final String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+                    // Open the file.
+                    try {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory()+ "//" + ProfileImgFN);
+                                    fos.write(encodedImage.getBytes());
+                                    fos.close();
+                                    AppHelper.setUploadedProfileImgs(true);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    //                    #####################################################
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+
 
 //    private void listGroupMembers() {
 //        final ListView groupMemberListView = (ListView) findViewById(R.id.group_member_names);
@@ -164,6 +321,7 @@ public class ProfileActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.action_logout) {
             //  loginManager.logOut();
+            getPool().getCurrentUser().signOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
@@ -184,13 +342,13 @@ public class ProfileActivity extends AppCompatActivity
 
         if (id == R.id.nav_logout) {
 //            loginManager.logOut();
+            getPool().getCurrentUser().signOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
             startActivity(intent);
             finish();
         }
-
 
         if (id == R.id.nav_profile) {
             // Handle the camera action
@@ -279,7 +437,8 @@ public class ProfileActivity extends AppCompatActivity
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                showDialogMessage(errormsg, response);
+                                if(response.contains("Group")&& response.contains("already exists!"))
+                                showDialogMessage(errormsg, String.format("Group \"%s\" already exists!", newGroupName));
                             }
                         });
                     } catch (JSONException e1) {
@@ -303,6 +462,12 @@ public class ProfileActivity extends AppCompatActivity
 //            Toast.makeText(getApplicationContext(),
 //                    "please have a valid username", Toast.LENGTH_LONG).show();
             showDialogMessage("invalid user name".toUpperCase(), "please have a valid user name");
+            return;
+        }
+        if(getCurrgroupName() == null){
+            progressDialog.dismiss();
+            showDialogMessage("Failed to add user: ".toUpperCase() + AddUserName,
+                    "you currently do not belong to a group");
             return;
         }
 
@@ -343,7 +508,8 @@ public class ProfileActivity extends AppCompatActivity
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                showDialogMessage(errormsg, response);
+                                if (response.contains("does not exist!") && response.contains("User"))
+                                showDialogMessage(errormsg, String.format("User \"%s\" does not exist!",AddUserName));
                             }
                         });
                     } catch (JSONException e1) {
@@ -369,5 +535,53 @@ public class ProfileActivity extends AppCompatActivity
         });
         userDialog = builder.create();
         userDialog.show();
+        userDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        userDialog.getButton(Dialog.BUTTON_NEUTRAL).
+                setTextColor(Color.parseColor("#3399ff"));
     }
+
+    private void loadProfileImage() {
+        final Handler handler = new Handler(getMainLooper());
+        Thread loadImgs = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(Environment.getExternalStorageDirectory()+ "//" +
+                            ProfileImgFN);
+                    byte[] reader = new byte[fis.available ()];
+                    while(fis.read(reader)!=-1){}
+                    String previouslyEncodedImage = (new String(reader));
+                    Log.i("Data", ProfileImgFN);
+                    fis.close();
+                    if( !previouslyEncodedImage.equalsIgnoreCase("") ){
+                        if (!AppHelper.getUploadedProfileImgs()){
+                            byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+                            profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                            AppHelper.setUploadedProfileImgs(true);
+                        }
+//            scale it to proper dimension
+                        final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                profileImage.setImageDrawable(scaled);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        loadImgs.start();
+    }
+
 }
