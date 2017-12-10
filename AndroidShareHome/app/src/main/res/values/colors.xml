@@ -13,7 +13,11 @@
     <color name="base">#AAAAAA</color>
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
-
+    <color name="popPrimary">#3F51B5</color>
+    <color name="popPrimaryDark">#2f333f</color>
+    <color name="bluelight">#49acd5</color>
+    <color name="green">#45bc62</color>
+    <color name="orange">#eaad43</color>
      <!--import from aws demo -->
     <color name="toolbar_background">#404142</color>
     <color name="toolbar_items">#CBCBCB</color>

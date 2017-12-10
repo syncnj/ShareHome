@@ -1,5 +1,6 @@
 package sharehome.com.androidsharehome2;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -63,7 +64,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
     boolean clicked5 = false;
     boolean clicked6 = false;
     int TimetoHour;
-
+    Dialog myDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,12 +122,10 @@ public class AddTaskActivityNAV extends AppCompatActivity
         openRoommateList = (Button)findViewById(R.id.openRoommateList);
         DailyBaseSpinner = (Spinner)findViewById(R.id.spinner_scheduling);
         custom = (TextView)findViewById(R.id.custom);
+        myDialog = new Dialog(this);
         openRoommateList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(ad != null) {
-//                    ad.show();
-//                }
                 final ProgressDialog progressDialog = new ProgressDialog(AddTaskActivityNAV.this,
                         R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(true);
@@ -156,6 +155,8 @@ public class AddTaskActivityNAV extends AppCompatActivity
                             @Override
                             public void run() {
                                   progressDialog.dismiss();
+                                  showPopup(null);
+
                                   Toast.makeText(getApplicationContext(), response.get(0),
                                         Toast.LENGTH_LONG).show();
                             }
@@ -345,6 +346,34 @@ public class AddTaskActivityNAV extends AppCompatActivity
 
         ad = builder.create();
 
+    }
+    public void showPopup(View v) {
+        TextView txtclose;
+        final Button roommate1;
+        final Button roommate2;
+        final Button roommate3;
+        final Button roommate4;
+        final Button roommate5;
+        myDialog.setContentView(R.layout.popup);
+        txtclose = (TextView) findViewById(R.id.txtclose);
+        roommate1 = (Button) findViewById(R.id.roommate1);
+        roommate2 = (Button) findViewById(R.id.roommate2);
+        roommate3 = (Button) findViewById(R.id.roommate3);
+        roommate4 = (Button) findViewById(R.id.roommate4);
+        roommate5 = (Button) findViewById(R.id.roommate5);
+        /*txtclose.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+            }
+        });
+        roommate1.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                roommate1.setBackgroundColor(Color.WHITE);
+            }
+        });*/
+        myDialog.show();
     }
 
     @Override
