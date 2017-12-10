@@ -384,8 +384,27 @@ public class AddTaskActivityNAV extends AppCompatActivity
     }
 
     private String gettaskTitlefromCards() {
-//        TODO
-        return "Do laundry";
+        //TODO
+        if(clicked1){
+            return "Sweep";
+        }
+        else if(clicked2){
+            return "Wash Dishes";
+        }
+        else if(clicked3){
+            return "Throw Trash";
+        }
+        else if(clicked4){
+            return "clean table";
+        }
+        else if(clicked5){
+            return "wipe window";
+        }
+        else if(clicked6){
+            return "do landury";
+        }
+       // return "Do laundry";
+        return "-1";
     }
 
     @Override
