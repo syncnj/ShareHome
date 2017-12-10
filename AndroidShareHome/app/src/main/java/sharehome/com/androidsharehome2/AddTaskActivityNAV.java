@@ -133,7 +133,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
                 progressDialog.setMessage("Getting your Roommates...");
                 progressDialog.show();
                 new Thread(new Runnable() {
-                    Handler handler = new Handler(AddTaskActivityNAV.this.getMainLooper());
+                    Handler handler = new Handler(getMainLooper());
                     public void run() {
                         if (AppHelper.getCurrgroupName() == null){
                             return;
@@ -156,8 +156,8 @@ public class AddTaskActivityNAV extends AppCompatActivity
                             @Override
                             public void run() {
                                   progressDialog.dismiss();
-                                  Toast.makeText(AddTaskActivityNAV.this, roommates.get(0),
-                                        Toast.LENGTH_LONG);
+                                  Toast.makeText(getApplicationContext(), response.get(0),
+                                        Toast.LENGTH_LONG).show();
                             }
                         });
                     }

@@ -18,8 +18,8 @@ package sharehome.com.androidsharehome2;
 import java.util.*;
 
 import sharehome.com.androidsharehome2.model.Task;
-import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.ResultStringResponse;
+import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.PostList;
 import sharehome.com.androidsharehome2.model.Post;
 import sharehome.com.androidsharehome2.model.TaskList;

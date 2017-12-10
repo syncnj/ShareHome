@@ -1,10 +1,13 @@
 package sharehome.com.androidsharehome2;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,13 +26,17 @@ import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import sharehome.com.androidsharehome2.model.*;
 
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    private static final String TAG = "ProfileActivity";
     //    private LoginManager loginManager;
     private EditText _findUserName;
     private EditText CreateGroup_Name;
@@ -41,6 +48,7 @@ public class ProfileActivity extends AppCompatActivity
     Button _createGroup;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> groupMemberNames;
+    private AlertDialog userDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,41 +239,58 @@ public class ProfileActivity extends AppCompatActivity
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Groups...");
         progressDialog.show();
+        if(newGroupName.equals("") || newGroupName == null){
+            progressDialog.dismiss();
+//            Toast.makeText(getApplicationContext(),
+//                    "please have a valid groupName", Toast.LENGTH_LONG).show();
+            showDialogMessage("Invalid group name".toUpperCase(), "please have a valid group name");
+            return;
+        }
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 Handler handler = new postSubmitHanlder(getMainLooper());
                 ApiClientFactory factory = new ApiClientFactory();
                 final AwscodestarsharehomelambdaClient client =
                         factory.build(AwscodestarsharehomelambdaClient.class);
-                ResultStringResponse response = client.groupPost
-                        (AppHelper.getCurrUser(), newGroupName, "create");
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                        // Notifies user
-                        String m = "Group " + newGroupName + " created!";
-                        Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
+                try {
+                    final ResultStringResponse response = client.groupPost
+                            (AppHelper.getCurrUser(), newGroupName, "create");
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            // Notifies user
+                            if (response.getResult().startsWith("succ")) {
+                                String m = "Group " + newGroupName + " created!";
+                                Toast.makeText(getApplicationContext(), m, Toast.LENGTH_LONG).show();
+                            } else {
+                                showDialogMessage("Failed to create the group: ".toUpperCase(), response.getResult());
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    progressDialog.dismiss();
+                    final String errormsg = "Failed to create group: ".toUpperCase() + newGroupName;
+                    final String backmsg= e.getMessage();
+                    JSONObject jObject;
+                    try {
+                        jObject = new JSONObject(backmsg);
+                        final String response = jObject.getString("result");
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                showDialogMessage(errormsg, response);
+                            }
+                        });
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
                     }
-                });
+                }
             }
         });
         taskThread.start();
     }
 
-    //        GroupService g = GroupService.getInstance();
-//        g.addMemberbyEmailAsync(AddMember_EmailString, Backendless.UserService.CurrentUser().getProperty("groupId").toString(), new AsyncCallback<Boolean>() {
-//            @Override
-//            public void handleResponse(Boolean response) {
-//                AddMeber_Email.setText("");
-//                Toast.makeText(ProfileActivity.this, "New member added to group", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void handleFault(BackendlessFault fault) {
-//                Toast.makeText(ProfileActivity.this, fault.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
     public void AddMember(View v) {
         final ProgressDialog progressDialog = new ProgressDialog(this,
                 R.style.AppTheme_Dark_Dialog);
@@ -273,15 +298,13 @@ public class ProfileActivity extends AppCompatActivity
         progressDialog.setMessage("Inviting user into the current group...");
         progressDialog.show();
         AddUserName = _findUserName.getText().toString();
-//    final Runnable UI_Update = new Runnable() {
-//        @Override
-//        public void run() {
-//            progressDialog.dismiss();
-//            // Notifies user
-//            String msg = "Add " + AddUserName + " Sccuessfully!";
-//            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-//        }
-//    };
+        if(AddUserName.equals("") || AddUserName == null){
+            progressDialog.dismiss();
+//            Toast.makeText(getApplicationContext(),
+//                    "please have a valid username", Toast.LENGTH_LONG).show();
+            showDialogMessage("invalid user name".toUpperCase(), "please have a valid user name");
+            return;
+        }
 
       new Thread(new Runnable() {
             public void run() {
@@ -291,19 +314,61 @@ public class ProfileActivity extends AppCompatActivity
                 ApiClientFactory factory = new ApiClientFactory();
                 final AwscodestarsharehomelambdaClient client =
                         factory.build(AwscodestarsharehomelambdaClient.class);
-                String userName = AppHelper.getCurrUser().toString();
-                ResultStringResponse response = client.groupPost
-                        (userName, GroupName, "add");
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-//                      // Notifies user
-                        String msg = "Add " + AddUserName + " Sccuessfully!";
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                try {
+                    final ResultStringResponse response = client.groupPost
+                            (AddUserName, GroupName, "add");
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+    //                      // Notifies user
+                            if (response.getResult().startsWith("succ")) {
+                                String msg = "Add " + AddUserName + " Sccuessfully!";
+                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                            } else {
+                                String errormsg = "Failed to add user: " + AddUserName;
+    //                            Toast.makeText(getApplicationContext(), errormsg, Toast.LENGTH_LONG).show();
+                                showDialogMessage(errormsg, response.getResult());
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    progressDialog.dismiss();
+                    final String errormsg = "Failed to add user: ".toUpperCase() + AddUserName;
+                    final String backmsg= e.getMessage();
+                    JSONObject jObject;
+                    try {
+                        jObject = new JSONObject(backmsg);
+                        final String response = jObject.getString("result");
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                showDialogMessage(errormsg, response);
+                            }
+                        });
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
                     }
-                });
+
+                }
             }
         }).start();
+    }
+
+    private void showDialogMessage(String title, String body){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+        builder.setTitle(title).setMessage(body).setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    userDialog.dismiss();
+                } catch (Exception e) {
+                    // Log failure
+                    Log.e(TAG,"Dialog dismiss failed");
+                }
+            }
+        });
+        userDialog = builder.create();
+        userDialog.show();
     }
 }

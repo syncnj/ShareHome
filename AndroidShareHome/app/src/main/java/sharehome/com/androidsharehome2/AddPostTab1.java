@@ -71,7 +71,7 @@ public class AddPostTab1 extends Fragment {
 
                         final ResultStringResponse response = client.postPost(newPost, "add");
                         String newPostID = response.getResult();
-                        Log.d(TAG, "new Post ID: " + newPostID.toString());
+                        Log.d(TAG, "Post ID: " + newPostID.toString());
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
