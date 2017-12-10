@@ -1,5 +1,6 @@
 package sharehome.com.androidsharehome2;
 
+import android.app.ExpandableListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +19,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,6 +42,9 @@ import com.google.android.gms.iid.InstanceID;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -59,7 +65,10 @@ public class UserActivity extends AppCompatActivity
     private ArrayList<String> posts;
     public static PinpointManager pinpointManager;
     private ListView postListView;
-
+    private ExpandableListView postExpandableListView;
+    private ExpandableListAdapter expandableListAdapter;
+    private List<String> title;
+    Map<String, List<String>> content;
     @Override
     protected void onPause() {
         super.onPause();
@@ -117,7 +126,13 @@ public class UserActivity extends AppCompatActivity
         posts = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, posts);
-        postListView = (ListView) findViewById(R.id.post_list);
+
+
+        postExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
+        fillData();
+        expandableListAdapter = new MyExpandableListAdapter(this, title, content);
+        postExpandableListView.setAdapter(expandableListAdapter);
+
         getPostResponseFromLambda();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -139,7 +154,27 @@ public class UserActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
     }
+    public void fillData(){
+        title = new ArrayList<>();
+        content = new HashMap<>();
 
+        title.add("post1");
+        title.add("post2");
+
+        List<String> post1 = new ArrayList<>();
+        List<String> post2 = new ArrayList<>();
+
+        post1.add("woshishabi");
+        post1.add("nishishabi");
+        post1.add("tashishabi");
+
+        post2.add("heheheheh");
+        post2.add("hehehehehh");
+        post2.add("hehehehheheh");
+
+        content.put(title.get(0), post1);
+        content.put(title.get(1), post2);
+    }
     private String getCurrentGroupName() {
 //        if (AppHelper.getCurrgroupName() == null){
             findCurrentGroupName();
