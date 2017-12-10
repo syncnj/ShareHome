@@ -33,7 +33,9 @@ import java.util.List;
 
 import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.Post;
+import sharehome.com.androidsharehome2.model.PostResponse;
 import sharehome.com.androidsharehome2.model.ResultStringResponse;
+import sharehome.com.androidsharehome2.model.Task;
 
 public class AddTaskActivityNAV extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,8 +48,6 @@ public class AddTaskActivityNAV extends AppCompatActivity
     Button submitTask;
     Spinner DailyBaseSpinner;
     String TimePeriod;
-    EditText TaskNameInput;
-    String TaskNameString;
     CardView card1;
     CardView card2;
     CardView card3;
@@ -117,6 +117,8 @@ public class AddTaskActivityNAV extends AppCompatActivity
         card4 = (CardView) findViewById(R.id.card4);
         card5 = (CardView) findViewById(R.id.card5);
         card6 = (CardView) findViewById(R.id.card6);
+
+//        TaskNameInput = (EditText) findViewById(R.id.input_task_name);
         submitTask = (Button) findViewById(R.id.submitTask);
         openRoommateList = (Button)findViewById(R.id.openRoommateList);
         DailyBaseSpinner = (Spinner)findViewById(R.id.spinner_scheduling);
@@ -124,9 +126,9 @@ public class AddTaskActivityNAV extends AppCompatActivity
         openRoommateList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if(ad != null) {
-//                    ad.show();
-//                }
+                if(ad != null) {
+                    ad.show();
+                }
                 final ProgressDialog progressDialog = new ProgressDialog(AddTaskActivityNAV.this,
                         R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(true);
@@ -144,8 +146,6 @@ public class AddTaskActivityNAV extends AppCompatActivity
 
                         final ListOfString response = client.groupGet(AppHelper.getCurrUser(),
                                 "listMembers");
-
-
                         final List<String> roommates = new ArrayList<>();
                         for (String roommate : response){
                             roommates.add(roommate);
@@ -164,7 +164,43 @@ public class AddTaskActivityNAV extends AppCompatActivity
                 }).start();
             }
         });
+        submitTask.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                final ProgressDialog progressDialog = new ProgressDialog(AddTaskActivityNAV.this,
+                        R.style.AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Submitting tasks");
+                progressDialog.show();
+                final String taskTitle = gettaskTitlefromCards();
+                new Thread(new Runnable() {
+                    Handler handler = new Handler(getMainLooper());
+                    public void run() {
+                        if (AppHelper.getCurrgroupName() == null){
+                            return;
+                        }
+                        ApiClientFactory factory = new ApiClientFactory();
+                        final AwscodestarsharehomelambdaClient client =
+                                factory.build(AwscodestarsharehomelambdaClient.class);
+                        Task task = new Task();
+                        task.setGroupName(AppHelper.groupName);
+                        task.setTaskTitle(taskTitle);
+                        final PostResponse response = client.taskPost(task,"add"
+                                );
 
+                        // TODO: put results to UI here ( where roommates is a list of roommate names)
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), response.getTaskID().toString(),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }).start();
+            }
+        });
         card1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -342,9 +378,14 @@ public class AddTaskActivityNAV extends AppCompatActivity
             }
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         ad = builder.create();
 
+
+    }
+
+    private String gettaskTitlefromCards() {
+//        TODO
+        return "Do laundry";
     }
 
     @Override

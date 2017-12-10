@@ -113,7 +113,6 @@ public class UserActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         getCurrentGroupName();
-
         posts = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, posts);
@@ -152,11 +151,9 @@ public class UserActivity extends AppCompatActivity
 //        }
 //        Log.d(TAG,AppHelper.groupName);
         return AppHelper.getCurrgroupName();
-
     }
 
     private void findCurrentGroupName() {
-
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 Handler handler = new postSubmitHanlder(getMainLooper());
@@ -174,13 +171,6 @@ public class UserActivity extends AppCompatActivity
             }
         });
         taskThread.start();
-        try{
-
-            taskThread.join();
-        }
-        catch (Exception e){
-
-        }
     }
     private void registerEndpoint(){
 
