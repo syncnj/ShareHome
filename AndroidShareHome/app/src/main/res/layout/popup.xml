@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="350dp"
-    android:layout_height="475dp"
+    android:layout_height="wrap_content"
     android:background="@color/popPrimaryDark"
     android:padding="15dp"
     android:layout_gravity="center">
@@ -40,35 +40,40 @@
         android:id="@+id/roommate1"
         android:layout_marginTop="25dp"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="@color/green"
         android:text="placeholder1"/>
     <Button
         android:id="@+id/roommate2"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="@color/orange"
         android:text="placeholder2"/>
     <Button
         android:id="@+id/roommate3"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="@color/bluelight"
         android:text="placeholder3"/>
     <Button
         android:id="@+id/roommate4"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="#fff380"
         android:text="placeholder4"/>
-    <Button
-        android:id="@+id/roommate5"
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#e77471"
-        android:text="placeholder5"/>
+
+ <Button
+     android:id="@+id/submit"
+     android:layout_marginTop="10dp"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:backgroundTint="#80CBC4"
+     android:textColor="#ffffff"
+     android:background="@drawable/round_button"
+     android:layout_gravity="center"
+     android:text="Submit!"/>
+
 </LinearLayout>

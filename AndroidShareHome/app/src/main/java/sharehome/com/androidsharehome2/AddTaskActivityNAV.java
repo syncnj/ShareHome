@@ -2,6 +2,7 @@ package sharehome.com.androidsharehome2;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,12 +31,19 @@ import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.Post;
+import sharehome.com.androidsharehome2.model.PostResponse;
 import sharehome.com.androidsharehome2.model.ResultStringResponse;
+import sharehome.com.androidsharehome2.model.Task;
 
 public class AddTaskActivityNAV extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,8 +56,6 @@ public class AddTaskActivityNAV extends AppCompatActivity
     Button submitTask;
     Spinner DailyBaseSpinner;
     String TimePeriod;
-    EditText TaskNameInput;
-    String TaskNameString;
     CardView card1;
     CardView card2;
     CardView card3;
@@ -65,6 +72,14 @@ public class AddTaskActivityNAV extends AppCompatActivity
     boolean clicked6 = false;
     int TimetoHour;
     Dialog myDialog;
+    TextView txtclose;
+    Button roommate1;
+    Button roommate2;
+    Button roommate3;
+    Button roommate4;
+    Button submit;
+    private android.app.AlertDialog userDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +133,8 @@ public class AddTaskActivityNAV extends AppCompatActivity
         card4 = (CardView) findViewById(R.id.card4);
         card5 = (CardView) findViewById(R.id.card5);
         card6 = (CardView) findViewById(R.id.card6);
+
+//        TaskNameInput = (EditText) findViewById(R.id.input_task_name);
         submitTask = (Button) findViewById(R.id.submitTask);
         openRoommateList = (Button)findViewById(R.id.openRoommateList);
         DailyBaseSpinner = (Spinner)findViewById(R.id.spinner_scheduling);
@@ -125,7 +142,10 @@ public class AddTaskActivityNAV extends AppCompatActivity
         myDialog = new Dialog(this);
         openRoommateList.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
+                if(ad != null) {
+                    ad.show();
+                }
                 final ProgressDialog progressDialog = new ProgressDialog(AddTaskActivityNAV.this,
                         R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(true);
@@ -143,8 +163,6 @@ public class AddTaskActivityNAV extends AppCompatActivity
 
                         final ListOfString response = client.groupGet(AppHelper.getCurrUser(),
                                 "listMembers");
-
-
                         final List<String> roommates = new ArrayList<>();
                         for (String roommate : response){
                             roommates.add(roommate);
@@ -165,7 +183,79 @@ public class AddTaskActivityNAV extends AppCompatActivity
                 }).start();
             }
         });
+        submitTask.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                final ProgressDialog progressDialog = new ProgressDialog(AddTaskActivityNAV.this,
+                        R.style.AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Submitting tasks...");
+                progressDialog.show();
+                final String taskTitle = gettaskTitlefromCards();
+                if (taskTitle == "-1"){
+                    progressDialog.dismiss();
+                    showDialogMessage("Failed to submit the task:".toUpperCase(),
+                            "Please select a task"
+                            );
+                    return;
+                }
+                new Thread(new Runnable() {
+                    Handler handler = new Handler(getMainLooper());
+                    public void run() {
+                        if (AppHelper.getCurrgroupName() == null){
+                            return;
+                        }
+                        ApiClientFactory factory = new ApiClientFactory();
+                        final AwscodestarsharehomelambdaClient client =
+                                factory.build(AwscodestarsharehomelambdaClient.class);
+                        Task task = new Task();
+                        task.setGroupName(AppHelper.groupName);
+                        task.setTaskTitle(taskTitle);
+                        String formattedDate =
+                                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Calendar.getInstance().getTime());
+                        Log.d(TAG, "generated formattedDate:\n" + formattedDate);
+                        task.setLastRotated(formattedDate);
+                        String duratingStr = DailyBaseSpinner.getSelectedItem().toString();
+                        Integer duration = 100;
+                        switch(duratingStr){
+                            case "Day": duration=  24*60;
+                                break;
+                            case "Week": duration= 7*24*60;
+                                break;
+                            default: {
+                                Calendar c = Calendar.getInstance();
+                                int monthMaxDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+                                duration = monthMaxDays * 24 * 60; //"Month"
+                            }
+                                break;
+                        }
 
+                        task.setTaskDuration(duration);
+//                        TODO
+                        String taskUser = "ttzztt";
+                        task.setTaskUser(taskUser);
+                        try {
+                            final PostResponse response = client.taskPost(task,"add"
+                                    );
+                            // TODO: put results to UI here ( where roommates is a list of roommate names)
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), "Successfully submitted the task: " + taskTitle,
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        } catch (Exception e) {
+                            Toast.makeText(getApplicationContext(), "Failed to submit the task:" + taskTitle,
+                                    Toast.LENGTH_LONG).show();
+                            showDialogMessage("Failed to submit the task:", "task: " + taskTitle
+                            + " was not successfully added due to the server error");
+                        }
+                    }
+                }).start();
+            }
+        });
         card1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -343,25 +433,57 @@ public class AddTaskActivityNAV extends AppCompatActivity
             }
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         ad = builder.create();
 
+
+    }
+    private void showDialogMessage(String title, String body){
+        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddTaskActivityNAV.this);
+        builder.setTitle(title).setMessage(body).setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    userDialog.dismiss();
+                } catch (Exception e) {
+                    // Log failure
+                    Log.e(TAG,"Dialog dismiss failed");
+                }
+            }
+        });
+        userDialog = builder.create();
+        userDialog.show();
+    }
+    private String gettaskTitlefromCards() {
+        if(clicked1){
+            return  ((TextView) findViewById(R.id.sweep_floor_title)).getText().toString();
+        }
+        else if(clicked2){
+            return ((TextView) findViewById(R.id.wash_dishes_title)).getText().toString();
+        }
+        else if(clicked3){
+            return  ((TextView) findViewById(R.id.throw_trash_title)).getText().toString();
+        }
+        else if(clicked4){
+            return ((TextView) findViewById(R.id.clean_table_title)).getText().toString();
+        }
+        else if(clicked5){
+            return ((TextView) findViewById(R.id.wipe_window_title)).getText().toString();
+        }
+        else if(clicked6){
+            return ((TextView) findViewById(R.id.do_laundry_title)).getText().toString();
+        }
+       // return "Do laundry";
+        return "-1";
     }
     public void showPopup(View v) {
-        TextView txtclose;
-        final Button roommate1;
-        final Button roommate2;
-        final Button roommate3;
-        final Button roommate4;
-        final Button roommate5;
         myDialog.setContentView(R.layout.popup);
         txtclose = (TextView) findViewById(R.id.txtclose);
         roommate1 = (Button) findViewById(R.id.roommate1);
         roommate2 = (Button) findViewById(R.id.roommate2);
         roommate3 = (Button) findViewById(R.id.roommate3);
         roommate4 = (Button) findViewById(R.id.roommate4);
-        roommate5 = (Button) findViewById(R.id.roommate5);
-        /*txtclose.setOnClickListener(new View.OnClickListener(){
+        submit = (Button) findViewById(R.id.submit);
+        txtclose.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 myDialog.dismiss();
@@ -372,7 +494,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
             public void onClick(View v) {
                 roommate1.setBackgroundColor(Color.WHITE);
             }
-        });*/
+        });
         myDialog.show();
     }
 
@@ -446,10 +568,10 @@ public class AddTaskActivityNAV extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             // TODO: This doesn't exit the app
-//            loginManager.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("EXIT", true);
+            signOut();
             startActivity(intent);
             finish();
         }
@@ -457,6 +579,10 @@ public class AddTaskActivityNAV extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void signOut() {
+        AppHelper.getPool().getUser(AppHelper.getCurrUser()).signOut();
     }
 
     public String findCheckedRoommates(String[] allRoommates, boolean[] checkedRoommates){

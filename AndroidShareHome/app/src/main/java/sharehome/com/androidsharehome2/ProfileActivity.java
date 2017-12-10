@@ -488,7 +488,7 @@ public class ProfileActivity extends AppCompatActivity
                         public void run() {
                             progressDialog.dismiss();
     //                      // Notifies user
-                            if (response.getResult().startsWith("succ")) {
+                            if (response.getResult().startsWith("succ") || response.getResult().startsWith("Up")) {
                                 String msg = "Add " + AddUserName + " Sccuessfully!";
 //                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
                                 showDialogMessage(msg, response.getResult());
@@ -519,7 +519,6 @@ public class ProfileActivity extends AppCompatActivity
                     } catch (JSONException e1) {
                         e1.printStackTrace();
                     }
-
                 }
             }
         }).start();

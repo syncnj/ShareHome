@@ -75,10 +75,8 @@ public class UserActivity extends AppCompatActivity
     private AlertDialog userDialog;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> posts;
-
     private ListView postListView;
 //    private ImageView profileImage;
-
     public static PinpointManager pinpointManager;
 
     public  LinearLayout layoutHeader;
@@ -107,10 +105,12 @@ public class UserActivity extends AppCompatActivity
             Log.d(TAG, "Received notification from local broadcast. Display it in a dialog.");
 
             Bundle data = intent.getBundleExtra(ShareHomePushListenerService.INTENT_SNS_NOTIFICATION_DATA);
+
+            String title = ShareHomePushListenerService.getTitle(data);
             String message = ShareHomePushListenerService.getMessage(data);
 
             new android.app.AlertDialog.Builder(UserActivity.this)
-                    .setTitle("Push notification")
+                    .setTitle(title)
                     .setMessage(message)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
@@ -132,6 +132,7 @@ public class UserActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         layoutHeader = (LinearLayout) navigationView.getHeaderView(0);
@@ -142,8 +143,7 @@ public class UserActivity extends AppCompatActivity
         profileImage = (ImageView) layoutHeader.findViewById(R.id.profileImage);
 
         setImageView();
-        //getCurrentGroupName();
-
+        findCurrentGroupName();
         posts = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, posts);
@@ -260,29 +260,16 @@ public class UserActivity extends AppCompatActivity
         intent.setType("image/*");
         startActivityForResult(intent, UPLOADIMAGE);
     }
-/*
+
     private String getCurrentGroupName() {
-        if (AppHelper.getCurrgroupName() != null) {
-            return AppHelper.getCurrgroupName();
-        }
-        findCurrentGroupName();
-        return null;
-    }*/
-    private String getCurrentGroupName() {
-//        if (AppHelper.getCurrgroupName() == null){
-            findCurrentGroupName();
-            // blocking here to enforce we get the groupName before doing something else
-//            while(AppHelper.groupName == null){
-////                hard coded here ...
-////                return "HelloKitty";
-//            }
-//            return AppHelper.getCurrgroupName();
-//        }
-//        Log.d(TAG,AppHelper.groupName);
-        return AppHelper.getCurrgroupName();
+          if (AppHelper.getCurrgroupName()!=null){
+              return AppHelper.getCurrgroupName();
+          }
+          findCurrentGroupName();
+          return null;
+    }
 
     private void findCurrentGroupName() {
-
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 Handler handler = new postSubmitHanlder(getMainLooper());
@@ -307,13 +294,6 @@ public class UserActivity extends AppCompatActivity
             }
         });
         taskThread.start();
-        try{
-
-            taskThread.join();
-        }
-        catch (Exception e){
-
-        }
     }
     private void registerEndpoint(){
 
@@ -326,6 +306,7 @@ public class UserActivity extends AppCompatActivity
             return;
         }
        pinpointManager.getTargetingClient().addAttribute("GroupName",Arrays.asList(AppHelper.getCurrgroupName()));
+        pinpointManager.getTargetingClient().addAttribute("UserName",Arrays.asList(AppHelper.getCurrUser()));
        pinpointManager.getTargetingClient().updateEndpointProfile();
     }
     private void initializeAWSPinpoint() {
