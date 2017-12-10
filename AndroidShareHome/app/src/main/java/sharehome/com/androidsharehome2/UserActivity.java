@@ -1,11 +1,22 @@
 package sharehome.com.androidsharehome2;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.Layout;
@@ -24,6 +35,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -42,6 +54,8 @@ import com.amazonaws.regions.Regions;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -64,7 +78,13 @@ public class UserActivity extends AppCompatActivity
     private ArrayList<String> posts;
     private ListView postListView;
     private ImageView profileImage;
+    private Drawable defaultdraw;
     public static PinpointManager pinpointManager;
+    private int UPLOADIMAGE = 0;
+    private LinearLayout l;
+
+    private static int PROFILE_IMAGE_WIDTH = 144;
+    private static int PROFILE_IMAGE_HEIGHT = 144;
 
     @Override
     protected void onPause() {
@@ -77,7 +97,6 @@ public class UserActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
         // register notification receiver
         LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver,
                 new IntentFilter(ShareHomePushListenerService.ACTION_PUSH_NOTIFICATION));
@@ -112,26 +131,26 @@ public class UserActivity extends AppCompatActivity
         init();
         AWSMobileClient.getInstance().initialize(this).execute();
         initializeAWSPinpoint();
-
-        //for pinpoint endpoint
-
          /* get login info*/
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        NavigationView f0 = (NavigationView)findViewById(R.id.nav_view);
-//
-//        LinearLayout f1  = (LinearLayout)findViewById(R.id.nav_header_main_layout);
-//        profileImage = (ImageView)f1.findViewById(R.id.profileImage);
-//        setImageView();
-//
-        getCurrentGroupName();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        l = (LinearLayout) navigationView.getHeaderView(0);
+        TextView welcomeText = (TextView) l.findViewById(R.id.WelcomeText);
+        String text = welcomeText.getText().toString() + " " +
+                AppHelper.getCurrUser();
+        welcomeText.setText(text);
+        profileImage = (ImageView) l.findViewById(R.id.profileImage);
+
+        setImageView();
+        findCurrentGroupName();
         posts = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, posts);
         postListView = (ListView) findViewById(R.id.post_list);
-        getPostResponseFromLambda();
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,34 +166,56 @@ public class UserActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     private void setImageView() {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(UserActivity.this,
-                        "The favorite list would appear on clicking this icon",
-                        Toast.LENGTH_LONG).show();
+                asktoUploadImage();
             }
         });
     }
 
+    private void asktoUploadImage() {
+        AlertDialog alertDialog = new AlertDialog.Builder(UserActivity.this).create();
+        alertDialog.setTitle("Change your profile image");
+        alertDialog.setMessage("Sure to change your profile image?");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                       Toast.makeText(getApplicationContext(), "Something you would like to see",
+                               Toast.LENGTH_LONG).show();
+                       uploadProfileImage();
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        alertDialog.show();
+        alertDialog.getButton(Dialog.BUTTON_NEGATIVE).
+                setTextColor(Color.parseColor("#3399ff"));
+        alertDialog.getButton(Dialog.BUTTON_POSITIVE).
+                setTextColor(Color.parseColor("#3399ff"));
+    }
+
+    private void uploadProfileImage() {
+        defaultdraw = getResources().getDrawable(android.R.drawable.sym_def_app_icon);
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, UPLOADIMAGE);
+    }
+
     private String getCurrentGroupName() {
-//        if (AppHelper.getCurrgroupName() == null){
-            findCurrentGroupName();
-            // blocking here to enforce we get the groupName before doing something else
-//            while(AppHelper.groupName == null){
-////                hard coded here ...
-////                return "HelloKitty";
-//            }
-//            return AppHelper.getCurrgroupName();
-//        }
-//        Log.d(TAG,AppHelper.groupName);
-        return AppHelper.getCurrgroupName();
+          if (AppHelper.getCurrgroupName()!=null){
+              return AppHelper.getCurrgroupName();
+          }
+          findCurrentGroupName();
+          return null;
     }
 
     private void findCurrentGroupName() {
@@ -190,11 +231,25 @@ public class UserActivity extends AppCompatActivity
                     public void run() {
                         AppHelper.groupName = (response.get(0));
                         registerEndpoint();
+                        getPostResponseFromLambda();
+
+//            TextView Menu = (TextView) l.findViewById(R.id.Menu);
+//            if (Menu == null){
+//                showDialogMessage("WIERD", "MENU IS NULL", false);
+//            }
+//            else Menu.setText(AppHelper.getCurrgroupName());
                     }
                 });
             }
         });
         taskThread.start();
+
+//        enforce synchronization
+//        try {
+//            taskThread.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
     private void registerEndpoint(){
 
@@ -267,11 +322,30 @@ public class UserActivity extends AppCompatActivity
             }
         });
         taskThread.start();
+
     }
 
        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+           if (resultCode == RESULT_OK && requestCode == UPLOADIMAGE) {
+               profileImage.setImageDrawable(getPicture(data.getData()));
+           }
+    }
 
-        super.onActivityResult( requestCode, resultCode, data );
+    public Drawable getPicture(Uri selectedImage) {
+        InputStream inputStream = null;
+        try {
+            inputStream = getContentResolver().openInputStream(selectedImage);
+        } catch (FileNotFoundException e) {
+           return getResources().getDrawable(R.drawable.logo);
+        }
+        Drawable source = Drawable.createFromStream(inputStream, selectedImage.toString());
+        source.setBounds(0,72,0,72);
+        int newHeight= source.getIntrinsicHeight();
+        int height = defaultdraw.getIntrinsicHeight();
+        Bitmap bitmap = ((BitmapDrawable) source).getBitmap();
+        Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap,
+                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+        return scaled;
     }
 
     @Override

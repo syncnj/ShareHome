@@ -19,7 +19,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.apigateway.*;
@@ -87,6 +89,12 @@ public class TasksActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        LinearLayout l = (LinearLayout) navigationView.getHeaderView(0);
+        TextView welcomeText = (TextView) l.findViewById(R.id.WelcomeText);
+        String text = welcomeText.getText().toString() + " " +
+                AppHelper.getCurrUser();
+        welcomeText.setText(text);
 
     }
 
