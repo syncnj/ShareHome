@@ -1,13 +1,24 @@
 package sharehome.com.androidsharehome2;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -21,7 +32,10 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobileconnectors.apigateway.*;
@@ -32,14 +46,21 @@ import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.TaskList;
 import sharehome.com.androidsharehome2.model.TaskListItem;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static sharehome.com.androidsharehome2.AppHelper.*;
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "UserActivity";
+    private static final String TAG = "TaskActivity";
     private CognitoUser user_aws;
     private String username;
     private ProgressDialog waitDialog;
@@ -52,6 +73,11 @@ public class TasksActivity extends AppCompatActivity
     private ExpandableListAdapter expandableListAdapter;
     private List<String> title;
     Map<String, List<String>> content;
+
+    public  LinearLayout layoutHeader;
+    public  ImageView profileImage;
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+    private static int UPLOADIMAGE = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,14 +87,6 @@ public class TasksActivity extends AppCompatActivity
             return;
         }
         init();
-
-        //initialize amazon pinpoint
-//       CognitoCachingCredentialsProvider cognitoCachingCredentialsProvider = new CognitoCachingCredentialsProvider(context,"IDENTITY_POOL_ID",Regions.US_EAST_1);
-//
-//        PinpointConfiguration config = new PinpointConfiguration(context, "APP_ID", Regions.US_EAST_1, cognitoCachingCredentialsProvider);
-//
-//        this.pinpointManager = new PinpointManager(config);
-
          /* get login info*/
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -76,9 +94,9 @@ public class TasksActivity extends AppCompatActivity
         tasks = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, tasks);
-        //getTaskResponseFromLambda();
+
         taskExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
-        fillData();
+        getTaskResponseFromLambda();
         expandableListAdapter = new MyExpandableListAdapter(this, title, content);
         taskExpandableListView.setAdapter(expandableListAdapter);
 
@@ -100,31 +118,160 @@ public class TasksActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        layoutHeader = (LinearLayout) navigationView.getHeaderView(0);
+        TextView welcomeText = (TextView) layoutHeader.findViewById(R.id.WelcomeText);
+        String text = welcomeText.getText().toString() + " " +
+                AppHelper.getCurrUser();
+        welcomeText.setText(text);
+        profileImage = (ImageView) layoutHeader.findViewById(R.id.profileImage);
+        setImageView();
+        loadProfileImage();
+    }
+
+    private void setImageView() {
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                asktoUploadImage();
+            }
+        });
     }
 
     public void fillData(){
         title = new ArrayList<>();
         content = new HashMap<>();
+        title.add("task1");
+        title.add("task2");
 
-        title.add("post1");
-        title.add("post2");
+        List<String> task1 = new ArrayList<>();
+        List<String> task2 = new ArrayList<>();
 
-        List<String> post1 = new ArrayList<>();
-        List<String> post2 = new ArrayList<>();
+        task1.add("woshishabi");
+        task1.add("nishishabi");
+        task1.add("tashishabi");
 
-        post1.add("woshishabi");
-        post1.add("nishishabi");
-        post1.add("tashishabi");
+        task2.add("heheheheh");
+        task2.add("hehehehehh");
+        task2.add("hehehehheheh");
 
-        post2.add("heheheheh");
-        post2.add("hehehehehh");
-        post2.add("hehehehheheh");
-
-        content.put(title.get(0), post1);
-        content.put(title.get(1), post2);
+        content.put(title.get(0), task1);
+        content.put(title.get(1), task2);
     }
-/*
+    private void asktoUploadImage() {
+        android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(TasksActivity.this).create();
+        alertDialog.setTitle("Change your profile image");
+        alertDialog.setMessage("sure to change your profile image?");
+        alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Please select your favorite profile" +
+                                        " image",
+                                Toast.LENGTH_LONG).show();
+                        uploadProfileImage();
+                    }
+                });
+        alertDialog.setButton(android.app.AlertDialog.BUTTON_NEGATIVE, "cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        alertDialog.show();
+        alertDialog.getButton(Dialog.BUTTON_NEGATIVE).
+                setTextColor(Color.parseColor("#3399ff"));
+        alertDialog.getButton(Dialog.BUTTON_POSITIVE).
+                setTextColor(Color.parseColor("#3399ff"));
+    }
+    private void uploadProfileImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, UPLOADIMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == UPLOADIMAGE) {
+            profileImage.setImageDrawable(getPicture(data.getData()));
+            saveProfileImgs();
+        }
+    }
+
+    private void saveProfileImgs() {
+        ActivityCompat.requestPermissions(TasksActivity.this,
+                new String[]{"android.permission.WRITE_EXTERNAL_STORAGE",
+                        "android.permission.READ_EXTERNAL_STORAGE"
+                },
+                MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+    }
+
+    public Drawable getPicture(Uri selectedImage) {
+        InputStream inputStream = null;
+        try {
+            inputStream = getContentResolver().openInputStream(selectedImage);
+        } catch (FileNotFoundException e) {
+            return getResources().getDrawable(R.drawable.logo);
+        }
+        Drawable source = Drawable.createFromStream(inputStream, selectedImage.toString());
+        source.setBounds(0,72,0,72);
+        profile_img_bitmap = ((BitmapDrawable) source).getBitmap();
+        Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+        return scaled;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+//                    #####################################################
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    profile_img_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] b = baos.toByteArray();
+//
+                    final String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+                    // Open the file.
+                    try {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory()+ "//" + ProfileImgFN);
+                                    fos.write(encodedImage.getBytes());
+                                    fos.close();
+                                    AppHelper.setUploadedProfileImgs(true);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    //                    #####################################################
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
     private void getTaskResponseFromLambda() {
+        if(getCurrentGroupName() ==null){
+            return;
+        }
         tasklistView = (ListView) findViewById(R.id.post_list);
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
@@ -148,22 +295,13 @@ public class TasksActivity extends AppCompatActivity
         taskThread.start();
 
     }
-*/
+
     /**
      * copy method from UserActivity
      * @return
      */
     private String getCurrentGroupName() {
-//        if (AppHelper.getCurrgroupName() == null){
             findCurrentGroupName();
-//            // blocking here to enforce we get the groupName before doing something else
-//            while(AppHelper.groupName == null){
-////                //                hard coded here ...
-////               // return "HelloKitty";
-//            }
-//            return AppHelper.getCurrgroupName();
-//        }
-//        Log.d(TAG,AppHelper.groupName);
         return AppHelper.getCurrgroupName();
     }
 
@@ -188,17 +326,17 @@ public class TasksActivity extends AppCompatActivity
             }
         });
         taskThread.start();
-        try{
-            taskThread.join();
-        }
-        catch (Exception e){
-        }
+//        try{
+//            taskThread.join();
+//        }
+//        catch (Exception e){
+//        }
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        super.onActivityResult( requestCode, resultCode, data );
-    }
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//        super.onActivityResult( requestCode, resultCode, data );
+//    }
 
     @Override
     public void onBackPressed() {
@@ -227,7 +365,7 @@ public class TasksActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh ) {// Create Display of everything!
             try {
-                //getTaskResponseFromLambda();
+                getTaskResponseFromLambda();
                 Toast.makeText(this, "refresh successful", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 System.out.println("cannot found a group");
@@ -304,10 +442,10 @@ public class TasksActivity extends AppCompatActivity
         Intent intent = new Intent(getApplicationContext(), AddTaskActivityNAV.class);
         startActivity(intent);
     }
-    public void LogoutFromFacebook(View v){
-        Snackbar.make(v, "Replace with your own action ", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-    }
+//    public void LogoutFromFacebook(View v){
+//        Snackbar.make(v, "Replace with your own action ", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show();
+//    }
     // Initialize this activity
     private void init() {
         // Get the user name
@@ -356,14 +494,52 @@ public class TasksActivity extends AppCompatActivity
         }
     }
     private void exit() {
-        Intent intent = new Intent();
+        Intent intent = new Intent(this, LoginActivity.class);
         /*pass in username and password info to MainActivity*/
         if (username == null) {
             username = "";
         }
         intent.putExtra("username", username);
         setResult(RESULT_OK, intent);
+        startActivity(intent);
         finish();
     }
+    private void loadProfileImage() {
+        final Handler handler = new Handler(getMainLooper());
+        Thread loadImgs = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(Environment.getExternalStorageDirectory()+ "//" +
+                            ProfileImgFN);
+                    byte[] reader = new byte[fis.available ()];
+                    while(fis.read(reader)!=-1){}
+                    String previouslyEncodedImage = (new String(reader));
+                    Log.i("Data", ProfileImgFN);
+                    fis.close();
+                    if( !previouslyEncodedImage.equalsIgnoreCase("") ){
+                        if (!AppHelper.getUploadedProfileImgs()){
+                            byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+                            profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                            AppHelper.setUploadedProfileImgs(true);
+                        }
+//            scale it to proper dimension
+                        final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                profileImage.setImageDrawable(scaled);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
+            }
+        });
+        loadImgs.start();
+    }
 }

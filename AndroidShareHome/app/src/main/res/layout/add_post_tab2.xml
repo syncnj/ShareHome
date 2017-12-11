@@ -128,7 +128,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/submitPost"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:text="Cancel"
         android:gravity="center"
         android:textSize="16dp"/>

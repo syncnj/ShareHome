@@ -18,8 +18,11 @@
 package sharehome.com.androidsharehome2;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AnonymousAWSCredentials;
@@ -53,6 +56,7 @@ public class AppHelper {
     private static String user;
     public volatile static String groupName;
     private static CognitoDevice newDevice;
+    private static boolean hasCustomizedProrileImg;
 
     private static CognitoUserAttributes attributesChanged;
     private static List<AttributeType> attributesToDelete;
@@ -72,6 +76,12 @@ public class AppHelper {
     private static int firstTimeLogInItemsCount;
     private static Map<String, String> firstTimeLogInUpDatedAttributes;
     private static String firstTimeLoginNewPassword;
+
+    public static Bitmap profile_img_bitmap;
+    public static final int PROFILE_IMAGE_WIDTH = 100;
+    public static final int PROFILE_IMAGE_HEIGHT = 100;
+    public static final String ProfileImgFN = "ProfileImg.txt";;
+    private static String PROFILE_IMG__KEY = "profile_images";
 
     // Change the next three lines of code to run this demo on your user pool
 
@@ -190,14 +200,12 @@ public class AppHelper {
         return user;
     }
     public static String getCurrgroupName() {return groupName;}
+    public static boolean getUploadedProfileImgs() {return hasCustomizedProrileImg;}
 
 
-    public static void setUser(String newUser) {
-        user = newUser;
-    }
-    public static void setGroupName(String newGroupName) {
-        groupName = newGroupName;
-    }
+    public static void setUser(String newUser) {user = newUser;}
+    public static void setGroupName(String newGroupName) {groupName = newGroupName;}
+    public static void setUploadedProfileImgs(boolean setVal) {hasCustomizedProrileImg = setVal;}
 
     public static boolean isPhoneVerified() {
         return phoneVerified;

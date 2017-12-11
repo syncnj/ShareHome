@@ -1,13 +1,23 @@
 package sharehome.com.androidsharehome2;
 
-import android.app.ExpandableListActivity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -21,7 +31,10 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -30,6 +43,7 @@ import com.amazonaws.mobileconnectors.apigateway.*;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 
 import sharehome.com.androidsharehome2.model.ListOfString;
+import sharehome.com.androidsharehome2.model.Post;
 import sharehome.com.androidsharehome2.model.PostList;
 import sharehome.com.androidsharehome2.model.PostListItem;
 
@@ -40,6 +54,12 @@ import com.amazonaws.regions.Regions;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,7 +72,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
-
+import static sharehome.com.androidsharehome2.AppHelper.*;
 
 public class UserActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -69,6 +89,11 @@ public class UserActivity extends AppCompatActivity
     private ExpandableListAdapter expandableListAdapter;
     private List<String> title;
     Map<String, List<String>> content;
+    private String currentTitle;
+    public  LinearLayout layoutHeader;
+    public  ImageView profileImage;
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+    private static int UPLOADIMAGE = 0;
     @Override
     protected void onPause() {
         super.onPause();
@@ -92,10 +117,12 @@ public class UserActivity extends AppCompatActivity
             Log.d(TAG, "Received notification from local broadcast. Display it in a dialog.");
 
             Bundle data = intent.getBundleExtra(ShareHomePushListenerService.INTENT_SNS_NOTIFICATION_DATA);
+
+            String title = ShareHomePushListenerService.getTitle(data);
             String message = ShareHomePushListenerService.getMessage(data);
 
             new android.app.AlertDialog.Builder(UserActivity.this)
-                    .setTitle("Push notification")
+                    .setTitle(title)
                     .setMessage(message)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
@@ -121,19 +148,28 @@ public class UserActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getCurrentGroupName();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        layoutHeader = (LinearLayout) navigationView.getHeaderView(0);
+        TextView welcomeText = (TextView) layoutHeader.findViewById(R.id.WelcomeText);
+        String text = welcomeText.getText().toString() + " " +
+                AppHelper.getCurrUser();
+        welcomeText.setText(text);
+        profileImage = (ImageView) layoutHeader.findViewById(R.id.profileImage);
 
+        setImageView();
+        findCurrentGroupName();
         posts = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, posts);
 
 
         postExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
+        //getPostResponseFromLambda();
         fillData();
         expandableListAdapter = new MyExpandableListAdapter(this, title, content);
         postExpandableListView.setAdapter(expandableListAdapter);
 
-        getPostResponseFromLambda();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -150,44 +186,142 @@ public class UserActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
+//        if(AppHelper.getUploadedProfileImgs()) {
+//            loadProfileImage();
+//        }
+        loadProfileImage();
     }
+
+
     public void fillData(){
+        /*title = new ArrayList<>();
+        content = new HashMap<>();
+        //currentTitle = post.getPostTitle();
+        .add(currentTitle);
+
+        List<String> currentTitle = new ArrayList<>();
+
+        currentTitle.add("woshishabi");
+        currentTitle.add("nishishabi");
+        currentTitle.add("tashishabi");
+
+        content.put(title.get(0), currentTitle);*/
         title = new ArrayList<>();
         content = new HashMap<>();
+        title.add("task1");
+        title.add("task2");
 
-        title.add("post1");
-        title.add("post2");
+        List<String> task1 = new ArrayList<>();
+        List<String> task2 = new ArrayList<>();
 
-        List<String> post1 = new ArrayList<>();
-        List<String> post2 = new ArrayList<>();
+        task1.add("woshishabi");
+        task1.add("nishishabi");
+        task1.add("tashishabi");
 
-        post1.add("woshishabi");
-        post1.add("nishishabi");
-        post1.add("tashishabi");
+        task2.add("heheheheh");
+        task2.add("hehehehehh");
+        task2.add("hehehehheheh");
 
-        post2.add("heheheheh");
-        post2.add("hehehehehh");
-        post2.add("hehehehheheh");
-
-        content.put(title.get(0), post1);
-        content.put(title.get(1), post2);
+        content.put(title.get(0), task1);
+        content.put(title.get(1), task2);
     }
-    private String getCurrentGroupName() {
-//        if (AppHelper.getCurrgroupName() == null){
-            findCurrentGroupName();
-            // blocking here to enforce we get the groupName before doing something else
-//            while(AppHelper.groupName == null){
-////                hard coded here ...
-////                return "HelloKitty";
-//            }
-//            return AppHelper.getCurrgroupName();
+    private void loadProfileImage() {
+//        SharedPreferences shre = PreferenceManager.getDefaultSharedPreferences(this);
+//        String previouslyEncodedImage = shre.getString("image_data", "");
+//        if( !previouslyEncodedImage.equalsIgnoreCase("") ){
+//            byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+//            profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+////            scale it to proper dimension
+//            Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+//                    PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+//            profileImage.setImageDrawable(scaled);
 //        }
-//        Log.d(TAG,AppHelper.groupName);
-        return AppHelper.getCurrgroupName();
+        final Handler handler = new Handler(getMainLooper());
+        Thread loadImgs = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(Environment.getExternalStorageDirectory()+ "//" +
+                            ProfileImgFN);
+                    byte[] reader = new byte[fis.available ()];
+                    while(fis.read(reader)!=-1){}
+                    String previouslyEncodedImage = (new String(reader));
+                    Log.i("Data", ProfileImgFN);
+                    fis.close();
+                    if( !previouslyEncodedImage.equalsIgnoreCase("") ){
+                        if (!AppHelper.getUploadedProfileImgs()){
+                            byte[] b = Base64.decode(previouslyEncodedImage, Base64.DEFAULT);
+                            profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                            AppHelper.setUploadedProfileImgs(true);
+                        }
+//            scale it to proper dimension
+                        final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                profileImage.setImageDrawable(scaled);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
+            }
+        });
+        loadImgs.start();
+    }
+
+    private void setImageView() {
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                asktoUploadImage();
+            }
+        });
+    }
+
+    private void asktoUploadImage() {
+        AlertDialog alertDialog = new AlertDialog.Builder(UserActivity.this).create();
+        alertDialog.setTitle("Change your profile image");
+        alertDialog.setMessage("sure to change your profile image?");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "Please select your favorite profile" +
+                                        " image",
+                                Toast.LENGTH_LONG).show();
+                        uploadProfileImage();
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        alertDialog.show();
+        alertDialog.getButton(Dialog.BUTTON_NEGATIVE).
+                setTextColor(Color.parseColor("#3399ff"));
+        alertDialog.getButton(Dialog.BUTTON_POSITIVE).
+                setTextColor(Color.parseColor("#3399ff"));
+    }
+
+    private void uploadProfileImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, UPLOADIMAGE);
+    }
+
+    private String getCurrentGroupName() {
+          if (AppHelper.getCurrgroupName()!=null){
+              return AppHelper.getCurrgroupName();
+          }
+          findCurrentGroupName();
+          return null;
     }
 
     private void findCurrentGroupName() {
@@ -204,18 +338,25 @@ public class UserActivity extends AppCompatActivity
                     public void run() {
                         AppHelper.groupName = (response.get(0));
                         registerEndpoint();
+                        getPostResponseFromLambda();
+
+//            TextView Menu = (TextView) layoutHeader.findViewById(R.id.Menu);
+//            if (Menu == null){
+//                showDialogMessage("WIERD", "MENU IS NULL", false);
+//            }
+//            else Menu.setText(AppHelper.getCurrgroupName());
                     }
                 });
             }
         });
         taskThread.start();
-        try{
+        /*try{
 
             taskThread.join();
         }
         catch (Exception e){
 
-        }
+        }*/
     }
     private void registerEndpoint(){
 
@@ -228,6 +369,7 @@ public class UserActivity extends AppCompatActivity
             return;
         }
        pinpointManager.getTargetingClient().addAttribute("GroupName",Arrays.asList(AppHelper.getCurrgroupName()));
+        pinpointManager.getTargetingClient().addAttribute("UserName",Arrays.asList(AppHelper.getCurrUser()));
        pinpointManager.getTargetingClient().updateEndpointProfile();
     }
     private void initializeAWSPinpoint() {
@@ -264,7 +406,6 @@ public class UserActivity extends AppCompatActivity
         if(getCurrentGroupName() ==null){
             return;
         }
-        postListView = (ListView) findViewById(R.id.post_list);
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 if(AppHelper.getCurrgroupName() == null){
@@ -277,11 +418,12 @@ public class UserActivity extends AppCompatActivity
                 posts.clear();
                 for (PostListItem post : postList){
                     posts.add(post.getPostTitle());
+                    fillData();
                 }
                  UserActivity.this.runOnUiThread(new Runnable() {
                      @Override
                      public void run() {
-                         postListView.setAdapter(adapter);
+                         //postListView.setAdapter(adapter);
                      }
                  });
             }
@@ -290,8 +432,94 @@ public class UserActivity extends AppCompatActivity
     }
 
        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+           if (resultCode == RESULT_OK && requestCode == UPLOADIMAGE) {
+               profileImage.setImageDrawable(getPicture(data.getData()));
+               saveProfileImgs();
+           }
+    }
 
-        super.onActivityResult( requestCode, resultCode, data );
+    private void saveProfileImgs() {
+        //             save images to sharePreference
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        profile_img_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//        byte[] b = baos.toByteArray();
+//
+//        String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+//
+//        SharedPreferences shre = PreferenceManager.getDefaultSharedPreferences(this);
+//        SharedPreferences.Editor edit=shre.edit();
+//        edit.putString("image_data",encodedImage);
+//        edit.commit();
+//        AppHelper.setUploadedProfileImgs(true);
+
+        ActivityCompat.requestPermissions(UserActivity.this,
+                new String[]{"android.permission.WRITE_EXTERNAL_STORAGE",
+                        "android.permission.READ_EXTERNAL_STORAGE"
+                },
+                MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+//                    #####################################################
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    profile_img_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] b = baos.toByteArray();
+//
+                    final String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+                    // Open the file.
+                    try {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory()+ "//" + ProfileImgFN);
+                                    fos.write(encodedImage.getBytes());
+                                    fos.close();
+                                    AppHelper.setUploadedProfileImgs(true);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    //                    #####################################################
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+    public Drawable getPicture(Uri selectedImage) {
+        InputStream inputStream = null;
+        try {
+            inputStream = getContentResolver().openInputStream(selectedImage);
+        } catch (FileNotFoundException e) {
+           return getResources().getDrawable(R.drawable.logo);
+        }
+        Drawable source = Drawable.createFromStream(inputStream, selectedImage.toString());
+        source.setBounds(0,72,0,72);
+        profile_img_bitmap = ((BitmapDrawable) source).getBitmap();
+        Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+        return scaled;
     }
 
     @Override
@@ -376,7 +604,7 @@ public class UserActivity extends AppCompatActivity
                 user_aws.signOut();
                 exit();
             } catch (Exception e) {
-                System.out.println("Hello" + e);
+                Log.d(TAG , e.getMessage());
             }
         }
 
@@ -450,13 +678,14 @@ public class UserActivity extends AppCompatActivity
         }
     }
     private void exit() {
-        Intent intent = new Intent();
-        /*pass in username and password info to MainActivity*/
+        Intent intent = new Intent(this, LoginActivity.class);
+        /*pass in username info to Login*/
         if (username == null) {
             username = "";
         }
         intent.putExtra("username", username);
         setResult(RESULT_OK, intent);
+        startActivity(intent);
         finish();
     }
 

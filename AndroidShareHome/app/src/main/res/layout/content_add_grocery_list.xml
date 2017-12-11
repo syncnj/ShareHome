@@ -67,4 +67,13 @@
             android:textColor="#FFFFFF"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
+
+        <TextView android:id="@+id/goback"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dailyGroceryButton"
+            android:layout_marginTop="10dp"
+            android:text="Cancel"
+            android:gravity="center"
+            android:textSize="16dp"/>
     </RelativeLayout>
