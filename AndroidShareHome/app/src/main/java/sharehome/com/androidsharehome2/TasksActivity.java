@@ -19,6 +19,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,6 +33,9 @@ import sharehome.com.androidsharehome2.model.TaskList;
 import sharehome.com.androidsharehome2.model.TaskListItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,6 +48,10 @@ public class TasksActivity extends AppCompatActivity
     private ArrayList<String> tasks;
     taskHandler taskHandler;
     private ListView tasklistView;
+    private ExpandableListView taskExpandableListView;
+    private ExpandableListAdapter expandableListAdapter;
+    private List<String> title;
+    Map<String, List<String>> content;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +76,11 @@ public class TasksActivity extends AppCompatActivity
         tasks = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, tasks);
-        tasklistView = (ListView) findViewById(R.id.post_list);
-        getTaskResponseFromLambda();
+        //getTaskResponseFromLambda();
+        taskExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
+        fillData();
+        expandableListAdapter = new MyExpandableListAdapter(this, title, content);
+        taskExpandableListView.setAdapter(expandableListAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +102,28 @@ public class TasksActivity extends AppCompatActivity
 
     }
 
+    public void fillData(){
+        title = new ArrayList<>();
+        content = new HashMap<>();
+
+        title.add("post1");
+        title.add("post2");
+
+        List<String> post1 = new ArrayList<>();
+        List<String> post2 = new ArrayList<>();
+
+        post1.add("woshishabi");
+        post1.add("nishishabi");
+        post1.add("tashishabi");
+
+        post2.add("heheheheh");
+        post2.add("hehehehehh");
+        post2.add("hehehehheheh");
+
+        content.put(title.get(0), post1);
+        content.put(title.get(1), post2);
+    }
+/*
     private void getTaskResponseFromLambda() {
         tasklistView = (ListView) findViewById(R.id.post_list);
         Thread taskThread = new Thread(new Runnable() {
@@ -114,7 +148,7 @@ public class TasksActivity extends AppCompatActivity
         taskThread.start();
 
     }
-
+*/
     /**
      * copy method from UserActivity
      * @return
@@ -193,7 +227,7 @@ public class TasksActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh ) {// Create Display of everything!
             try {
-                getTaskResponseFromLambda();
+                //getTaskResponseFromLambda();
                 Toast.makeText(this, "refresh successful", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 System.out.println("cannot found a group");
