@@ -84,7 +84,7 @@ to filter for the notification intent-->
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".TransactionActivity"
-            android:label="@string/title_activity_transaction"
+            android:label="Punishments"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".GroceryListActivity"
