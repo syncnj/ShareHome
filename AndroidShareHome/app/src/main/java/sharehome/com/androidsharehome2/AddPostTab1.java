@@ -53,10 +53,16 @@ public class AddPostTab1 extends Fragment {
         btnTEST.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (_titleEditText.getText().toString().equals(""))
+                {
+                    Toast.makeText(getActivity(), "Post should have a title",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
                 final ProgressDialog  progressDialog = new ProgressDialog(getContext(),
                             R.style.AppTheme_Dark_Dialog);
                     progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Posting tasks...");
+                progressDialog.setMessage("Posting...");
                 progressDialog.show();
                 new Thread(new Runnable() {
                     postSubmitHanlder handler = new postSubmitHanlder(getActivity().getMainLooper());
@@ -85,11 +91,12 @@ public class AddPostTab1 extends Fragment {
                             @Override
                             public void run() {
                         progressDialog.dismiss();
-                        Toast.makeText(getActivity(), "post tasks successful",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Post successful!",Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
                 }).start();
+                }
             }
         });
         goBack.setOnClickListener(new View.OnClickListener() {
