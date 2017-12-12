@@ -50,8 +50,6 @@ public class AddPostTab1 extends Fragment {
             }
         });
 
-
-
         btnTEST.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

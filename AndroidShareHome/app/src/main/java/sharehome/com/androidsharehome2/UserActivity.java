@@ -17,8 +17,10 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -37,21 +39,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.apigateway.*;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 
 import sharehome.com.androidsharehome2.model.ListOfString;
-import sharehome.com.androidsharehome2.model.Post;
 import sharehome.com.androidsharehome2.model.PostList;
 import sharehome.com.androidsharehome2.model.PostListItem;
 import sharehome.com.androidsharehome2.model.ResultStringResponse;
 
 import com.amazonaws.mobileconnectors.pinpoint.*;
 import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobile.client.AWSMobileClient.*;
-import com.amazonaws.regions.Regions;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
@@ -76,7 +74,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import static sharehome.com.androidsharehome2.AppHelper.*;
 
 public class UserActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener  {
     private static final String TAG = "UserActivity";
     private CognitoUser user_aws;
     private String username;
@@ -98,6 +96,7 @@ public class UserActivity extends AppCompatActivity
     private static final ApiClientFactory factory = new ApiClientFactory();;
     public static final AwscodestarsharehomelambdaClient client =
             factory.build(AwscodestarsharehomelambdaClient.class);
+    private SwipeRefreshLayout mySwipeRefreshLayout;
 
     @Override
     protected void onPause() {
@@ -153,6 +152,25 @@ public class UserActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /*
+    * Sets up a SwipeRefreshLayout.OnRefreshListener that is invoked when the user
+    * performs a swipe-to-refresh gesture.
+     */
+        mySwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+                        getPostResponseFromLambda();
+                    }
+
+                }
+        );
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         layoutHeader = (LinearLayout) navigationView.getHeaderView(0);
@@ -174,7 +192,17 @@ public class UserActivity extends AppCompatActivity
         postExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
         getPostResponseFromLambda();
         expandableListAdapter = new MyExpandableListAdapter(this, title, content);
-
+//        postExpandableListView.performClick();
+//        postExpandableListView.setOnTouchListener(new OnSwipeTouchListener(getApplicationContext()){
+//            @Override
+//            public boolean  onSwipeDown() {
+//                // Refresh Results
+//                getPostResponseFromLambda();
+//                showDialogMessage("Swiping Down", "Swiping Down", false);
+//                return true;
+//                }
+//            }
+//        );
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -447,6 +475,7 @@ public class UserActivity extends AppCompatActivity
                      @Override
                      public void run() {
                          postExpandableListView.setAdapter(expandableListAdapter);
+                         mySwipeRefreshLayout.setRefreshing(false);
                      }
                  });
             }
@@ -718,4 +747,21 @@ public class UserActivity extends AppCompatActivity
         finish();
     }
 
+//    @Override
+//    public boolean onTouch(View v, MotionEvent event) {
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                //some code....
+//                Toast.makeText(this, " on ACTION_DOWN", Toast.LENGTH_SHORT).show();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                Log.i(TAG,"onTouch event");
+//                Toast.makeText(this, " on ACTION_UP", Toast.LENGTH_SHORT).show();
+//                v.performClick();
+//                break;
+//            default:
+//                break;
+//        }
+//        return true;
+//    }
 }

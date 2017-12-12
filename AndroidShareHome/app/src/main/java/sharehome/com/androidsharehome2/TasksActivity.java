@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
@@ -58,6 +59,8 @@ import java.util.List;
 import java.util.Map;
 
 import static sharehome.com.androidsharehome2.AppHelper.*;
+import static sharehome.com.androidsharehome2.UserActivity.client;
+
 public class TasksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "TaskActivity";
@@ -81,8 +84,7 @@ public class TasksActivity extends AppCompatActivity
     private static int UPLOADIMAGE = 0;
 
     public static final ApiClientFactory factory = new ApiClientFactory();
-    public static final AwscodestarsharehomelambdaClient client =
-            factory.build(AwscodestarsharehomelambdaClient.class);
+    private SwipeRefreshLayout mySwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +125,22 @@ public class TasksActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+
+        mySwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+                        getTaskResponseFromLambda();
+                    }
+
+                }
+        );
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -274,12 +292,15 @@ public class TasksActivity extends AppCompatActivity
 
                 TaskList tasklist = client.taskGet(getCurrentGroupName());
                 tasks.clear();
+                title.clear();
                 temporary.clear();
+                content.clear();
                 fillData(tasklist);
                 TasksActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         taskExpandableListView.setAdapter(expandableListAdapter);
+                        mySwipeRefreshLayout.setRefreshing(false);
                     }
                 });
             }
