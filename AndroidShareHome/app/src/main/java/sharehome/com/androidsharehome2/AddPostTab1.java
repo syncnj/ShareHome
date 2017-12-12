@@ -6,12 +6,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +28,7 @@ public class AddPostTab1 extends Fragment {
     private Button btnTEST;
     private TextView goBack;
     private SwitchCompat urgentSwitch;
+    private boolean isUrgent = false;
     EditText _titleEditText;
     EditText _contextEditText;
     Integer newTaskID;
@@ -38,6 +41,16 @@ public class AddPostTab1 extends Fragment {
         urgentSwitch = (SwitchCompat) view.findViewById(R.id.switchUrgent);
         _titleEditText = (EditText) view.findViewById(R.id.PostTitleInput);
         _contextEditText = (EditText) view.findViewById(R.id.PostContentInput);
+
+       // urgentSwitch.setChecked(false);
+        urgentSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                     isUrgent =! isUrgent;
+            }
+        });
+
+
 
         btnTEST.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +79,7 @@ public class AddPostTab1 extends Fragment {
                         String content = _contextEditText.getText().toString();
                         Log.d(TAG, "content: " + content);
                         newPost.setPostContent(content);
-                        boolean isUrgent = urgentSwitch.getShowText();
+                      //  boolean isUrgent = urgentSwitch.getShowText();
                         newPost.setPostUrgent(isUrgent);
 
                         final ResultStringResponse response = client.postPost(newPost, "add");
