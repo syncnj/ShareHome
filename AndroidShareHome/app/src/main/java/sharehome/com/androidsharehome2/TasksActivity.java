@@ -108,7 +108,7 @@ public class TasksActivity extends AppCompatActivity
 
         taskExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
         getTaskResponseFromLambda();
-        expandableListAdapter = new MyExpandableListAdapter(this, title, content);
+        expandableListAdapter = new TaskAdapter(this, title, content);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

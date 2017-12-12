@@ -54,9 +54,9 @@ public class AddPostTab1 extends Fragment {
             @Override
             public void onClick(View view) {
                 //blank title check
-                if (_titleEditText.getText().toString().equals(""))
+                if (_titleEditText.getText().toString().equals("") || _contextEditText.getText().toString().equals(""))
                 {
-                    Toast.makeText(getActivity(), "Post should have a title",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Post should not have blank title or content",Toast.LENGTH_SHORT).show();
                 }
 
                 else
