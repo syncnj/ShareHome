@@ -232,6 +232,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
 //                        TODO
                         String taskUser = "ttzztt";
                         task.setTaskUser(taskUser);
+                        task.setTaskSolved(false);
                         try {
                             final ResultStringResponse response = client.taskPost(task,"add"
                                     );
