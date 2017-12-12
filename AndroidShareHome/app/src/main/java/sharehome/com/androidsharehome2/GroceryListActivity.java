@@ -338,7 +338,7 @@ public class GroceryListActivity extends AppCompatActivity
         if(button1.getText().equals("Full"))
         {
             button1.setText("Running low");
-            button1.setBackgroundColor(Color.RED);
+            button1.setBackgroundColor(Color.parseColor("#FFFF00"));
         }
         else if(button1.getText().equals("Running low"))
         {
