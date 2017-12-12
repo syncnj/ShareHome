@@ -23,7 +23,6 @@ import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.PostList;
 import sharehome.com.androidsharehome2.model.Post;
 import sharehome.com.androidsharehome2.model.TaskList;
-import sharehome.com.androidsharehome2.model.PostResponse;
 
 
 @com.amazonaws.mobileconnectors.apigateway.annotation.Service(endpoint = "https://5wyfvovh46.execute-api.us-east-1.amazonaws.com/Prod")
@@ -117,6 +116,38 @@ public interface AwscodestarsharehomelambdaClient {
     /**
      * 
      * 
+     * @param userName 
+     * @return ResultStringResponse
+     */
+    @com.amazonaws.mobileconnectors.apigateway.annotation.Operation(path = "/profile", method = "GET")
+    ResultStringResponse profileGet(
+            @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "userName", location = "query")
+            String userName);
+    
+    /**
+     * 
+     * 
+     * @param userName 
+     * @param body 
+     * @return ResultStringResponse
+     */
+    @com.amazonaws.mobileconnectors.apigateway.annotation.Operation(path = "/profile", method = "POST")
+    ResultStringResponse profilePost(
+            @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "userName", location = "query")
+            String userName,
+            ResultStringResponse body);
+    
+    /**
+     * 
+     * 
+     * @return void
+     */
+    @com.amazonaws.mobileconnectors.apigateway.annotation.Operation(path = "/profile", method = "OPTIONS")
+    void profileOptions();
+    
+    /**
+     * 
+     * 
      * @param groupName 
      * @return TaskList
      */
@@ -130,10 +161,10 @@ public interface AwscodestarsharehomelambdaClient {
      * 
      * @param body 
      * @param operation 
-     * @return PostResponse
+     * @return ResultStringResponse
      */
     @com.amazonaws.mobileconnectors.apigateway.annotation.Operation(path = "/task", method = "POST")
-    PostResponse taskPost(
+    ResultStringResponse taskPost(
             Task body,
             @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "operation", location = "query")
             String operation);

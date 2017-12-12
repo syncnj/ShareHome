@@ -88,8 +88,8 @@ public class UserActivity extends AppCompatActivity
     private ExpandableListView postExpandableListView;
     private ExpandableListAdapter expandableListAdapter;
     private List<String> title;
+    private List<String> temporary;
     Map<String, List<String>> content;
-    private String currentTitle;
     public  LinearLayout layoutHeader;
     public  ImageView profileImage;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
@@ -159,16 +159,17 @@ public class UserActivity extends AppCompatActivity
 
         setImageView();
         findCurrentGroupName();
-        posts = new ArrayList<String>();
+        title = new ArrayList<String>();
+        content = new HashMap<>();
+        temporary = new ArrayList<>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, posts);
 
 
         postExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
-        //getPostResponseFromLambda();
-        fillData();
+        getPostResponseFromLambda();
         expandableListAdapter = new MyExpandableListAdapter(this, title, content);
-        postExpandableListView.setAdapter(expandableListAdapter);
+
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -193,38 +194,14 @@ public class UserActivity extends AppCompatActivity
     }
 
 
-    public void fillData(){
-        /*title = new ArrayList<>();
-        content = new HashMap<>();
-        //currentTitle = post.getPostTitle();
-        .add(currentTitle);
-
-        List<String> currentTitle = new ArrayList<>();
-
-        currentTitle.add("woshishabi");
-        currentTitle.add("nishishabi");
-        currentTitle.add("tashishabi");
-
-        content.put(title.get(0), currentTitle);*/
-        title = new ArrayList<>();
-        content = new HashMap<>();
-        title.add("task1");
-        title.add("task2");
-
-        List<String> task1 = new ArrayList<>();
-        List<String> task2 = new ArrayList<>();
-
-        task1.add("woshishabi");
-        task1.add("nishishabi");
-        task1.add("tashishabi");
-
-        task2.add("heheheheh");
-        task2.add("hehehehehh");
-        task2.add("hehehehheheh");
-
-        content.put(title.get(0), task1);
-        content.put(title.get(1), task2);
+    public void fillData(PostList postList) {
+        for (PostListItem post : postList) {
+            title.add(post.getPostTitle());
+            temporary.add(post.getPostContent());
+            content.put(post.getPostTitle(), temporary);
+        }
     }
+
     private void loadProfileImage() {
 //        SharedPreferences shre = PreferenceManager.getDefaultSharedPreferences(this);
 //        String previouslyEncodedImage = shre.getString("image_data", "");
@@ -415,15 +392,14 @@ public class UserActivity extends AppCompatActivity
                 final AwscodestarsharehomelambdaClient client =
                         factory.build(AwscodestarsharehomelambdaClient.class);
                 PostList postList = client.postGet(getCurrentGroupName());
-                posts.clear();
-                for (PostListItem post : postList){
-                    posts.add(post.getPostTitle());
-                    fillData();
-                }
+                title.clear();
+                temporary.clear();
+                fillData(postList);
+
                  UserActivity.this.runOnUiThread(new Runnable() {
                      @Override
                      public void run() {
-                         //postListView.setAdapter(adapter);
+                         postExpandableListView.setAdapter(expandableListAdapter);
                      }
                  });
             }

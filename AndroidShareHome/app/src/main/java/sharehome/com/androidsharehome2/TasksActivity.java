@@ -72,6 +72,7 @@ public class TasksActivity extends AppCompatActivity
     private ExpandableListView taskExpandableListView;
     private ExpandableListAdapter expandableListAdapter;
     private List<String> title;
+    private List<String> temporary;
     Map<String, List<String>> content;
 
     public  LinearLayout layoutHeader;
@@ -92,13 +93,16 @@ public class TasksActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         tasks = new ArrayList<String>();
+        title = new ArrayList<String>();
+        content = new HashMap<>();
+        temporary = new ArrayList<>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, tasks);
 
         taskExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
         getTaskResponseFromLambda();
         expandableListAdapter = new MyExpandableListAdapter(this, title, content);
-        taskExpandableListView.setAdapter(expandableListAdapter);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -137,26 +141,14 @@ public class TasksActivity extends AppCompatActivity
         });
     }
 
-    public void fillData(){
-        title = new ArrayList<>();
-        content = new HashMap<>();
-        title.add("task1");
-        title.add("task2");
-
-        List<String> task1 = new ArrayList<>();
-        List<String> task2 = new ArrayList<>();
-
-        task1.add("woshishabi");
-        task1.add("nishishabi");
-        task1.add("tashishabi");
-
-        task2.add("heheheheh");
-        task2.add("hehehehehh");
-        task2.add("hehehehheheh");
-
-        content.put(title.get(0), task1);
-        content.put(title.get(1), task2);
+    public void fillData(TaskList taskList) {
+        for (TaskListItem task : taskList) {
+            title.add(task.getTaskTitle());
+            temporary.add(task.getTaskContent());
+            content.put(task.getTaskTitle(), temporary);
+        }
     }
+
     private void asktoUploadImage() {
         android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(TasksActivity.this).create();
         alertDialog.setTitle("Change your profile image");
@@ -272,7 +264,6 @@ public class TasksActivity extends AppCompatActivity
         if(getCurrentGroupName() ==null){
             return;
         }
-        tasklistView = (ListView) findViewById(R.id.post_list);
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 ApiClientFactory factory = new ApiClientFactory();
@@ -280,13 +271,12 @@ public class TasksActivity extends AppCompatActivity
                         factory.build(AwscodestarsharehomelambdaClient.class);
                 TaskList tasklist = client.taskGet(getCurrentGroupName());
                 tasks.clear();
-                for (TaskListItem task : tasklist){
-                    tasks.add(task.getTaskTitle());
-                }
+                temporary.clear();
+                fillData(tasklist);
                 TasksActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        tasklistView.setAdapter(adapter);
+                        taskExpandableListView.setAdapter(expandableListAdapter);
                     }
                 });
             }
