@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -56,6 +57,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
     Button openRoommateList;
     Button submitTask;
     Spinner DailyBaseSpinner;
+    Spinner RoommateSpinner;
     String TimePeriod;
     EditText TaskNameInput;
     String TaskNameString;
@@ -132,10 +134,12 @@ public class AddTaskActivityNAV extends AppCompatActivity
 
 //        TaskNameInput = (EditText) findViewById(R.id.input_task_name);
         submitTask = (Button) findViewById(R.id.submitTask);
-        openRoommateList = (Button)findViewById(R.id.openRoommateList);
         DailyBaseSpinner = (Spinner)findViewById(R.id.spinner_scheduling);
+        RoommateSpinner = (Spinner)findViewById(R.id.openRoommateList);
         custom = (TextView)findViewById(R.id.custom);
-        myDialog = new Dialog(this);
+        addItemsOnRoommateSpinner();
+        //myDialog = new Dialog(this);
+        /*
         openRoommateList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,7 +184,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
                     }
                 }).start();
             }
-        });
+        });*/
         submitTask.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -436,6 +440,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
         ad = builder.create();
 
     }
+    /*
     public void showPopup(View v) {
         TextView txtclose;
         final Button roommate1;
@@ -464,6 +469,19 @@ public class AddTaskActivityNAV extends AppCompatActivity
             }
         });
         myDialog.show();
+    }*/
+    public void addItemsOnRoommateSpinner()
+    {
+        RoommateSpinner = (Spinner)findViewById(R.id.openRoommateList);
+        List<String> list = new ArrayList<String>();
+        //here add members to the spinner
+        list.add("list1");
+        list.add("list2");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        RoommateSpinner.setAdapter(dataAdapter);
     }
 
     private void showDialogMessage(String title, String body){
