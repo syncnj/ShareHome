@@ -153,11 +153,11 @@ public class AddTaskActivityNAV extends AppCompatActivity
                         if (AppHelper.getCurrgroupName() == null){
                             return;
                         }
-                        ApiClientFactory factory = new ApiClientFactory();
-                        final AwscodestarsharehomelambdaClient client =
-                                factory.build(AwscodestarsharehomelambdaClient.class);
+//                        ApiClientFactory factory = new ApiClientFactory();
+//                        final AwscodestarsharehomelambdaClient client =
+//                                factory.build(AwscodestarsharehomelambdaClient.class);
 
-                        final ListOfString response = client.groupGet(AppHelper.getCurrUser(),
+                        final ListOfString response = UserActivity.client.groupGet(AppHelper.getCurrUser(),
                                 "listMembers");
 
 

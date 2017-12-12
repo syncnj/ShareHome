@@ -46,6 +46,7 @@ import sharehome.com.androidsharehome2.model.ListOfString;
 import sharehome.com.androidsharehome2.model.Post;
 import sharehome.com.androidsharehome2.model.PostList;
 import sharehome.com.androidsharehome2.model.PostListItem;
+import sharehome.com.androidsharehome2.model.ResultStringResponse;
 
 import com.amazonaws.mobileconnectors.pinpoint.*;
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -94,6 +95,10 @@ public class UserActivity extends AppCompatActivity
     public  ImageView profileImage;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     private static int UPLOADIMAGE = 0;
+    private static final ApiClientFactory factory = new ApiClientFactory();;
+    public static final AwscodestarsharehomelambdaClient client =
+            factory.build(AwscodestarsharehomelambdaClient.class);
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -242,7 +247,51 @@ public class UserActivity extends AppCompatActivity
                             }
                         });
                     }
-                } catch (Exception e) {
+                    else{
+                        // look for server information
+                        try {
+                            String imgData = client.profileGet(getCurrUser()).getResult();
+                            if (!AppHelper.getUploadedProfileImgs()){
+                                byte[] b = Base64.decode(imgData, Base64.DEFAULT);
+                                profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                                AppHelper.setUploadedProfileImgs(true);
+                            }
+                            final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                    PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    profileImage.setImageDrawable(scaled);
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }catch (FileNotFoundException filenotfound){
+                    // look for server information
+                    try {
+                        String imgData = client.profileGet(getCurrUser()).getResult();
+                        if (!AppHelper.getUploadedProfileImgs()){
+                            byte[] b = Base64.decode(imgData, Base64.DEFAULT);
+                            profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                            AppHelper.setUploadedProfileImgs(true);
+                        }
+                        final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                profileImage.setImageDrawable(scaled);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -306,9 +355,7 @@ public class UserActivity extends AppCompatActivity
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 Handler handler = new postSubmitHanlder(getMainLooper());
-                ApiClientFactory factory = new ApiClientFactory();
-                final AwscodestarsharehomelambdaClient client =
-                        factory.build(AwscodestarsharehomelambdaClient.class);
+
                 final ListOfString response = client.groupGet(AppHelper.getCurrUser(), "getGroupName");
                 handler.post(new Runnable() {
                     @Override
@@ -388,9 +435,9 @@ public class UserActivity extends AppCompatActivity
                 if(AppHelper.getCurrgroupName() == null){
                     return;
                 }
-                ApiClientFactory factory = new ApiClientFactory();
-                final AwscodestarsharehomelambdaClient client =
-                        factory.build(AwscodestarsharehomelambdaClient.class);
+//                ApiClientFactory factory = new ApiClientFactory();
+//                final AwscodestarsharehomelambdaClient client =
+//                        factory.build(AwscodestarsharehomelambdaClient.class);
                 PostList postList = client.postGet(getCurrentGroupName());
                 title.clear();
                 temporary.clear();
@@ -447,7 +494,7 @@ public class UserActivity extends AppCompatActivity
                     // contacts-related task you need to do.
 //                    #####################################################
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    profile_img_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    profile_img_bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos);
                     byte[] b = baos.toByteArray();
 //
                     final String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
@@ -461,6 +508,11 @@ public class UserActivity extends AppCompatActivity
                                     fos.write(encodedImage.getBytes());
                                     fos.close();
                                     AppHelper.setUploadedProfileImgs(true);
+                                    // also upload string to server
+                                    ResultStringResponse profileImg = new ResultStringResponse();
+                                    profileImg.setResult(encodedImage);
+                                    client.profilePost(getCurrUser(),profileImg);
+                                    Log.d(TAG, "Uploaded ProfileImage");
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -612,7 +664,8 @@ public class UserActivity extends AppCompatActivity
         Bundle extras = getIntent().getExtras();
         username = AppHelper.getCurrUser();
         user_aws = AppHelper.getPool().getUser(username);
-
+//        factory = new ApiClientFactory();
+//        client = factory.build(AwscodestarsharehomelambdaClient.class);
     }
 
     private void showWaitDialog(String message) {

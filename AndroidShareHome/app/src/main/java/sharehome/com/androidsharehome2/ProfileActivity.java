@@ -75,6 +75,10 @@ public class ProfileActivity extends AppCompatActivity
     public ImageView profileImage;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     private static int UPLOADIMAGE = 0;
+
+    public static final ApiClientFactory factory = new ApiClientFactory();
+    public static final AwscodestarsharehomelambdaClient client =
+            factory.build(AwscodestarsharehomelambdaClient.class);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -276,9 +280,7 @@ public class ProfileActivity extends AppCompatActivity
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 Handler handler = new postSubmitHanlder(getMainLooper());
-                ApiClientFactory factory = new ApiClientFactory();
-                final AwscodestarsharehomelambdaClient client =
-                        factory.build(AwscodestarsharehomelambdaClient.class);
+
                 final ListOfString response = client.groupGet(AppHelper.getCurrUser(), "getGroupName");
                 handler.post(new Runnable() {
                     @Override
@@ -407,9 +409,7 @@ public class ProfileActivity extends AppCompatActivity
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 Handler handler = new postSubmitHanlder(getMainLooper());
-                ApiClientFactory factory = new ApiClientFactory();
-                final AwscodestarsharehomelambdaClient client =
-                        factory.build(AwscodestarsharehomelambdaClient.class);
+
                 try {
                     final ResultStringResponse response = client.groupPost
                             (AppHelper.getCurrUser(), newGroupName, "create");
@@ -477,9 +477,7 @@ public class ProfileActivity extends AppCompatActivity
                 TextView groupName = ((TextView) findViewById(R.id.currentGroupName));
                 final String GroupName = groupName.getText().toString();
                 Handler handler = new Handler(getMainLooper());
-                ApiClientFactory factory = new ApiClientFactory();
-                final AwscodestarsharehomelambdaClient client =
-                        factory.build(AwscodestarsharehomelambdaClient.class);
+
                 try {
                     final ResultStringResponse response = client.groupPost
                             (AddUserName, GroupName, "add");

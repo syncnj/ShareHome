@@ -66,9 +66,7 @@ public class AddPostTab1 extends Fragment {
                         if (AppHelper.getCurrgroupName() == null){
                             return;
                         }
-                        ApiClientFactory factory = new ApiClientFactory();
-                        final AwscodestarsharehomelambdaClient client =
-                                factory.build(AwscodestarsharehomelambdaClient.class);
+
                         Post newPost = new Post();
                         newPost.setGroupName(AppHelper.getCurrgroupName());
                         String title = _titleEditText.getText().toString();
@@ -82,7 +80,7 @@ public class AddPostTab1 extends Fragment {
                       //  boolean isUrgent = urgentSwitch.getShowText();
                         newPost.setPostUrgent(isUrgent);
 
-                        final ResultStringResponse response = client.postPost(newPost, "add");
+                        final ResultStringResponse response = UserActivity.client.postPost(newPost, "add");
                         String newPostID = response.getResult();
                         Log.d(TAG, "Post ID: " + newPostID.toString());
                         handler.post(new Runnable() {
