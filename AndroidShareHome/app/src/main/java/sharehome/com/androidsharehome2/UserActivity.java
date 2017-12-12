@@ -185,9 +185,6 @@ public class UserActivity extends AppCompatActivity
         title = new ArrayList<String>();
         content = new HashMap<>();
         temporary = new ArrayList<>();
-        adapter = new ArrayAdapter<String>(this,
-                R.layout.task_item, posts);
-
 
         postExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
         getPostResponseFromLambda();

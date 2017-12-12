@@ -25,7 +25,7 @@ import sharehome.com.androidsharehome2.model.ResultStringResponse;
 
 public class AddPostTab1 extends Fragment {
     private static final String TAG = "AddPostTab1";
-    private Button btnTEST;
+    private Button submitPost;
     private TextView goBack;
     private SwitchCompat urgentSwitch;
     private boolean isUrgent = false;
@@ -36,7 +36,7 @@ public class AddPostTab1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_post_tab1,container,false);
-        btnTEST = (Button) view.findViewById(R.id.submitPost);
+        submitPost = (Button) view.findViewById(R.id.submitPost);
         goBack = (TextView) view.findViewById(R.id.goback);
         urgentSwitch = (SwitchCompat) view.findViewById(R.id.switchUrgent);
         _titleEditText = (EditText) view.findViewById(R.id.PostTitleInput);
@@ -50,13 +50,15 @@ public class AddPostTab1 extends Fragment {
             }
         });
 
-        btnTEST.setOnClickListener(new View.OnClickListener() {
+        submitPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //blank title check
                 if (_titleEditText.getText().toString().equals(""))
                 {
                     Toast.makeText(getActivity(), "Post should have a title",Toast.LENGTH_SHORT).show();
                 }
+
                 else
                 {
                 final ProgressDialog  progressDialog = new ProgressDialog(getContext(),

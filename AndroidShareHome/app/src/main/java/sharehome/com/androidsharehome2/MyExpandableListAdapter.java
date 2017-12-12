@@ -5,10 +5,14 @@ import android.view.LayoutInflater;
 import android.widget.BaseExpandableListAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Map;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by Jeremy on 12/10/17.
@@ -67,6 +71,15 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter
         {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_parent,null);
+            Button delete = (Button)convertView.findViewById(R.id.delete);
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //add delete method
+                    Toast.makeText(getApplicationContext(), "Delete works",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
         }
         TextView txtParent = (TextView) convertView.findViewById(R.id.title);
         txtParent.setText(title);
