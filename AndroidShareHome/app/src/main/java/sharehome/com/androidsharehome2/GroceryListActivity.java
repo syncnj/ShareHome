@@ -26,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -48,13 +49,30 @@ public class GroceryListActivity extends AppCompatActivity
     public ImageView profileImage;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     private static int UPLOADIMAGE = 0;
+    private Button button1;
+    private Button button2;
+    private Button button3;
+    private Button button4;
+    private Button button5;
+    private Button button6;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocery_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        button1 = (Button) findViewById(R.id.status1);
+        button2 = (Button) findViewById(R.id.status2);
+        button3 = (Button) findViewById(R.id.status3);
+        button4 = (Button) findViewById(R.id.status4);
+        button5 = (Button) findViewById(R.id.status5);
+        button6 = (Button) findViewById(R.id.status6);
+        button1.setText("Full");
+        button2.setText("Full");
+        button3.setText("Full");
+        button4.setText("Full");
+        button5.setText("Full");
+        button6.setText("Full");
        // loginManager = LoginManager.getInstance();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -314,6 +332,110 @@ public class GroceryListActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onStatusChange1(View view){
+        if(button1.getText().equals("Full"))
+        {
+            button1.setText("Running low");
+            button1.setBackgroundColor(Color.RED);
+        }
+        else if(button1.getText().equals("Running low"))
+        {
+            button1.setText("Restock needed");
+            button1.setBackgroundColor(Color.parseColor("#E94700"));
+        }
+        else
+        {
+            button1.setText("Full");
+            button1.setBackgroundColor(Color.parseColor("#80CBC4"));
+        }
+    }
+    public void onStatusChange2(View view){
+        if(button2.getText().equals("Full"))
+        {
+            button2.setText("Running low");
+            button2.setBackgroundColor(Color.parseColor("#FFFF00"));
+        }
+        else if(button2.getText().equals("Running low"))
+        {
+            button2.setText("Restock needed");
+            button2.setBackgroundColor(Color.parseColor("#E94700"));
+        }
+        else
+        {
+            button2.setText("Full");
+            button2.setBackgroundColor(Color.parseColor("#80CBC4"));
+        }
+    }
+    public void onStatusChange3(View view){
+        if(button3.getText().equals("Full"))
+        {
+            button3.setText("Running low");
+            button3.setBackgroundColor(Color.parseColor("#FFFF00"));
+        }
+        else if(button3.getText().equals("Running low"))
+        {
+            button3.setText("Restock needed");
+            button3.setBackgroundColor(Color.parseColor("#E94700"));
+
+        }
+        else
+        {
+            button3.setText("Full");
+            button3.setBackgroundColor(Color.parseColor("#80CBC4"));
+        }
+    }
+    public void onStatusChange4(View view){
+        if(button4.getText().equals("Full"))
+        {
+            button4.setText("Running low");
+            button4.setBackgroundColor(Color.parseColor("#FFFF00"));
+        }
+        else if(button4.getText().equals("Running low"))
+        {
+            button4.setText("Restock needed");
+            button4.setBackgroundColor(Color.parseColor("#E94700"));
+        }
+        else
+        {
+            button4.setText("Full");
+            button4.setBackgroundColor(Color.parseColor("#80CBC4"));
+        }
+    }
+    public void onStatusChange5(View view){
+        if(button5.getText().equals("Full"))
+        {
+            button5.setText("Running low");
+            button5.setBackgroundColor(Color.parseColor("#FFFF00"));
+        }
+        else if(button5.getText().equals("Running low"))
+        {
+            button5.setText("Restock needed");
+            button5.setBackgroundColor(Color.parseColor("#E94700"));
+        }
+        else
+        {
+            button5.setText("Full");
+            button5.setBackgroundColor(Color.parseColor("#80CBC4"));
+        }
+    }
+    public void onStatusChange6(View view){
+        if(button6.getText().equals("Full"))
+        {
+            button6.setText("Running low");
+            button6.setBackgroundColor(Color.parseColor("#FFFF00"));
+        }
+        else if(button6.getText().equals("Running low"))
+        {
+            button6.setText("Restock needed");
+            button6.setBackgroundColor(Color.parseColor("#E94700"));
+        }
+        else
+        {
+            button6.setText("Full");
+            button6.setBackgroundColor(Color.parseColor("#80CBC4"));
+        }
     }
 //    public void launchAddGroceryListActivity(View view) {
 //        Intent intent = new Intent(GroceryListActivity.this, AddGroceryListActivity.class);
