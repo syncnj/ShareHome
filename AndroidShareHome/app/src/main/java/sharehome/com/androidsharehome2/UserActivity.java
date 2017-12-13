@@ -239,7 +239,7 @@ public class UserActivity extends AppCompatActivity
             String titleName = getUniqueTitle(post);
             title.add(titleName);
             String urgent = post.getPostUrgent()? "Urgent": "Normal";
-            List<String> contents = Arrays.asList( "PostID: " + post.getPostID().toString(),
+            List<String> contents = Arrays.asList( /*"PostID: " + post.getPostID().toString(),*/
                     urgent + ": " + post.getPostContent());
             content.put(titleName, contents);
         }
@@ -248,7 +248,7 @@ public class UserActivity extends AppCompatActivity
             String titleName = getUniqueTitle(post);
             title.add(titleName);
             String urgent = post.getPostUrgent()? "Urgent": "Normal";
-            List<String> contents = Arrays.asList( "PostID: " + post.getPostID().toString(), urgent
+            List<String> contents = Arrays.asList( /*"PostID: " + post.getPostID().toString(), */urgent
                     + ": " + post.getPostContent());
             content.put(titleName, contents);
         }
