@@ -216,7 +216,7 @@ public class TasksActivity extends AppCompatActivity
             for (TaskListItem task : taskList) {
                 title.add(task.getTaskTitle());
                 Date StartDate = simpleDateFormat.parse(task.getLastRotated());
-                List<String> contents = Arrays.asList( "TaskID: "+ task.getTaskID().toString(),
+                List<String> contents = Arrays.asList( /*"TaskID: "+ task.getTaskID().toString(),*/
                         "Assigned to: "+ task.getTaskUser(),
                         "Assigned date: " + task.getLastRotated(),
                         "Rotation period: "+ DateTimeUtils.getFormattedDateRecurrence(task.getTaskDuration().longValue()),
