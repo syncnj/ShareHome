@@ -84,6 +84,8 @@ public class AddPostTab1 extends Fragment {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
+                                _titleEditText.setText("");
+                                _contextEditText.setText("");
                         progressDialog.dismiss();
                         Toast.makeText(getActivity(), "post tasks successful",Toast.LENGTH_SHORT).show();
                             }

@@ -234,7 +234,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
                         task.setTaskUser(taskUser);
                         task.setTaskSolved(false);
                         try {
-                            final ResultStringResponse response = client.taskPost(task,"add"
+                            final ResultStringResponse response = client.taskPost(task, AppHelper.getCurrUser(),"add"
                                     );
                             // TODO: put results to UI here ( where roommates is a list of roommate names)
                             handler.post(new Runnable() {

@@ -44,6 +44,10 @@ import com.amazonaws.mobileconnectors.apigateway.*;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 
 import sharehome.com.androidsharehome2.model.ListOfString;
+import sharehome.com.androidsharehome2.model.PostList;
+import sharehome.com.androidsharehome2.model.PostListItem;
+import sharehome.com.androidsharehome2.model.ResultStringResponse;
+import sharehome.com.androidsharehome2.model.Task;
 import sharehome.com.androidsharehome2.model.TaskList;
 import sharehome.com.androidsharehome2.model.TaskListItem;
 
@@ -54,6 +58,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,6 +112,41 @@ public class TasksActivity extends AppCompatActivity
                 R.layout.task_item, tasks);
 
         taskExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
+        taskExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                Integer TaskID = Integer.parseInt(expandableListAdapter.getChild(groupPosition,0).toString());
+                final Task task = new Task();
+                task.setTaskID(TaskID);
+                task.setTaskSolved(true);
+                task.setGroupName(getCurrentGroupName());
+//                String title = ((TextView) v).getText().toString();
+//                task.setTaskTitle(title);
+                Thread taskSolved = new Thread(new Runnable() {
+                    Handler handler = new Handler(getApplicationContext().getMainLooper());
+                    @Override
+                    public void run() {
+                        try{
+                            final ResultStringResponse response = client.taskPost(task, AppHelper.getCurrUser(),"add");
+                        }
+                        catch (Exception e){
+                            Toast.makeText(getApplicationContext(), "Failed to submit the task:",
+                                    Toast.LENGTH_LONG).show();
+                            showDialogMessage("Failed to submit the task:", "task: ", false);
+                        }
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "Successfully submitted the task" ,
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                });
+                taskSolved.start();
+                return true;
+            }
+        });
         getTaskResponseFromLambda();
         expandableListAdapter = new MyExpandableListAdapter(this, title, content);
 
@@ -165,11 +205,15 @@ public class TasksActivity extends AppCompatActivity
     }
 
     public void fillData(TaskList taskList) {
+//        split posts into two groups : urgent and normal
+
         for (TaskListItem task : taskList) {
             title.add(task.getTaskTitle());
-            temporary.add(task.getTaskContent());
-            content.put(task.getTaskTitle(), temporary);
+            List<String> contents = Arrays.asList( task.getTaskID().toString(), task.getTaskContent());
+
+            content.put(task.getTaskTitle(), contents);
         }
+
     }
 
     private void asktoUploadImage() {
@@ -261,6 +305,11 @@ public class TasksActivity extends AppCompatActivity
                                     fos.write(encodedImage.getBytes());
                                     fos.close();
                                     AppHelper.setUploadedProfileImgs(true);
+                                    // also upload string to server
+                                    ResultStringResponse profileImg = new ResultStringResponse();
+                                    profileImg.setResult(encodedImage);
+                                    client.profilePost(getCurrUser(),profileImg);
+                                    Log.d(TAG, "Uploaded ProfileImage");
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -287,20 +336,23 @@ public class TasksActivity extends AppCompatActivity
         if(getCurrentGroupName() ==null){
             return;
         }
+
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
-
+                final Handler handler = new Handler(getMainLooper());
                 TaskList tasklist = client.taskGet(getCurrentGroupName());
                 tasks.clear();
                 title.clear();
                 temporary.clear();
                 content.clear();
                 fillData(tasklist);
-                TasksActivity.this.runOnUiThread(new Runnable() {
+
+                handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        taskExpandableListView.setAdapter(expandableListAdapter);
                         mySwipeRefreshLayout.setRefreshing(false);
+                        taskExpandableListView.setAdapter(expandableListAdapter);
+
                     }
                 });
             }
@@ -546,7 +598,49 @@ public class TasksActivity extends AppCompatActivity
                             }
                         });
                     }
-                } catch (Exception e) {
+                    else{
+                        // look for server information
+                        try {
+                            String imgData = client.profileGet(getCurrUser()).getResult();
+                            if (!AppHelper.getUploadedProfileImgs()){
+                                byte[] b = Base64.decode(imgData, Base64.DEFAULT);
+                                profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                                AppHelper.setUploadedProfileImgs(true);
+                            }
+                            final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                    PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    profileImage.setImageDrawable(scaled);
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }catch (FileNotFoundException fileNotFound){
+                    // look for server information
+                    try {
+                        String imgData = client.profileGet(getCurrUser()).getResult();
+                        if (!AppHelper.getUploadedProfileImgs()){
+                            byte[] b = Base64.decode(imgData, Base64.DEFAULT);
+                            profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                            AppHelper.setUploadedProfileImgs(true);
+                        }
+                        final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                profileImage.setImageDrawable(scaled);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                 }
 

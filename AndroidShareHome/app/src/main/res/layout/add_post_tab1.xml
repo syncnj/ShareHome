@@ -15,7 +15,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Task Title"
+        android:text="Post Title"
         android:layout_marginLeft="16dp" />
 
     <EditText
@@ -33,7 +33,7 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Task Content"
+        android:text="Post Content"
         android:layout_marginLeft="16dp"
         android:layout_below="@+id/PostTitleInput"
         android:layout_alignParentLeft="true"

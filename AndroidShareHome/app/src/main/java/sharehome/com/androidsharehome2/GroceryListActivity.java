@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static sharehome.com.androidsharehome2.AppHelper.*;
+import static sharehome.com.androidsharehome2.UserActivity.client;
 
 public class GroceryListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -200,6 +201,7 @@ public class GroceryListActivity extends AppCompatActivity
             // permissions this app might request
         }
     }
+
     private void loadProfileImage() {
         final Handler handler = new Handler(getMainLooper());
         Thread loadImgs = new Thread(new Runnable() {
@@ -230,7 +232,49 @@ public class GroceryListActivity extends AppCompatActivity
                             }
                         });
                     }
-                } catch (Exception e) {
+                    else{
+                        // look for server information
+                        try {
+                            String imgData = client.profileGet(getCurrUser()).getResult();
+                            if (!AppHelper.getUploadedProfileImgs()){
+                                byte[] b = Base64.decode(imgData, Base64.DEFAULT);
+                                profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                                AppHelper.setUploadedProfileImgs(true);
+                            }
+                            final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                    PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    profileImage.setImageDrawable(scaled);
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }catch (FileNotFoundException fileNotFound){
+                    // look for server information
+                    try {
+                        String imgData = client.profileGet(getCurrUser()).getResult();
+                        if (!AppHelper.getUploadedProfileImgs()){
+                            byte[] b = Base64.decode(imgData, Base64.DEFAULT);
+                            profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                            AppHelper.setUploadedProfileImgs(true);
+                        }
+                        final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                profileImage.setImageDrawable(scaled);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                 }
 

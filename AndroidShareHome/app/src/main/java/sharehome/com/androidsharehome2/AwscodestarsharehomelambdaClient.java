@@ -160,12 +160,15 @@ public interface AwscodestarsharehomelambdaClient {
      * 
      * 
      * @param body 
+     * @param userName 
      * @param operation 
      * @return ResultStringResponse
      */
     @com.amazonaws.mobileconnectors.apigateway.annotation.Operation(path = "/task", method = "POST")
     ResultStringResponse taskPost(
             Task body,
+            @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "userName", location = "query")
+            String userName,
             @com.amazonaws.mobileconnectors.apigateway.annotation.Parameter(name = "operation", location = "query")
             String operation);
     

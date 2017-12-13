@@ -54,6 +54,7 @@ import java.util.List;
 import sharehome.com.androidsharehome2.model.*;
 
 import static sharehome.com.androidsharehome2.AppHelper.*;
+import static sharehome.com.androidsharehome2.UserActivity.client;
 
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -477,7 +478,6 @@ public class ProfileActivity extends AppCompatActivity
                 TextView groupName = ((TextView) findViewById(R.id.currentGroupName));
                 final String GroupName = groupName.getText().toString();
                 Handler handler = new Handler(getMainLooper());
-
                 try {
                     final ResultStringResponse response = client.groupPost
                             (AddUserName, GroupName, "add");
@@ -505,7 +505,7 @@ public class ProfileActivity extends AppCompatActivity
                     try {
                         jObject = new JSONObject(backmsg);
                         final String response = jObject.getString("result");
-                        handler.post(new Runnable() {
+                        handler.post(new Runnable(){
                             @Override
                             public void run() {
                                 if (response.contains("does not exist!") && response.contains("User"))
@@ -577,7 +577,49 @@ public class ProfileActivity extends AppCompatActivity
                             }
                         });
                     }
-                } catch (Exception e) {
+                    else {
+                        try {
+                            String imgData = client.profileGet(getCurrUser()).getResult();
+                            if (!AppHelper.getUploadedProfileImgs()){
+                                byte[] b = Base64.decode(imgData, Base64.DEFAULT);
+                                profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                                AppHelper.setUploadedProfileImgs(true);
+                            }
+                            final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                    PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    profileImage.setImageDrawable(scaled);
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+                catch (FileNotFoundException f) {
+                    try {
+                        String imgData = client.profileGet(getCurrUser()).getResult();
+                        if (!AppHelper.getUploadedProfileImgs()){
+                            byte[] b = Base64.decode(imgData, Base64.DEFAULT);
+                            profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                            AppHelper.setUploadedProfileImgs(true);
+                        }
+                        final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                profileImage.setImageDrawable(scaled);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                 }
 

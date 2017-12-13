@@ -162,7 +162,6 @@ public class UserActivity extends AppCompatActivity
                     @Override
                     public void onRefresh() {
                         Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
-
                         // This method performs the actual data-refresh operation.
                         // The method calls setRefreshing(false) when it's finished.
                         getPostResponseFromLambda();
@@ -187,7 +186,6 @@ public class UserActivity extends AppCompatActivity
         temporary = new ArrayList<>();
         adapter = new ArrayAdapter<String>(this,
                 R.layout.task_item, posts);
-
 
         postExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
         getPostResponseFromLambda();
@@ -228,11 +226,35 @@ public class UserActivity extends AppCompatActivity
 
 
     public void fillData(PostList postList) {
-        for (PostListItem post : postList) {
-            title.add(post.getPostTitle());
-            temporary.add(post.getPostContent());
-            content.put(post.getPostTitle(), temporary);
+//        split posts into two groups : urgent and normal
+        PostList urgentPosts = new PostList();
+        PostList normalPosts = new PostList();
+
+        for (PostListItem p : postList) {
+            if(p.getPostUrgent()){
+                urgentPosts.add(p);
+            }
+            else{
+                normalPosts.add(p);
+            }
         }
+
+        for (PostListItem post : urgentPosts) {
+            title.add(post.getPostTitle());
+            String urgent = post.getPostUrgent()? "Urgent": "Normal";
+            List<String> contents = Arrays.asList( post.getPostID().toString(), urgent
+                    + ": " + post.getPostContent());
+            content.put(post.getPostTitle(), contents);
+        }
+
+        for (PostListItem post : normalPosts) {
+            title.add(post.getPostTitle());
+            String urgent = post.getPostUrgent()? "Urgent": "Normal";
+            List<String> contents = Arrays.asList( post.getPostID().toString(), urgent
+                    + ": " + post.getPostContent());
+            content.put(post.getPostTitle(), contents);
+        }
+
     }
 
     private void loadProfileImage() {
@@ -317,7 +339,6 @@ public class UserActivity extends AppCompatActivity
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -470,7 +491,6 @@ public class UserActivity extends AppCompatActivity
                 title.clear();
                 temporary.clear();
                 fillData(postList);
-
                  UserActivity.this.runOnUiThread(new Runnable() {
                      @Override
                      public void run() {
