@@ -236,21 +236,37 @@ public class UserActivity extends AppCompatActivity
         }
 
         for (PostListItem post : urgentPosts) {
-            title.add(post.getPostTitle());
+            String titleName = getUniqueTitle(post);
+            title.add(titleName);
             String urgent = post.getPostUrgent()? "Urgent": "Normal";
-            List<String> contents = Arrays.asList( post.getPostID().toString(), urgent
-                    + ": " + post.getPostContent());
-            content.put(post.getPostTitle(), contents);
+            List<String> contents = Arrays.asList( "PostID: " + post.getPostID().toString(),
+                    urgent + ": " + post.getPostContent());
+            content.put(titleName, contents);
         }
 
         for (PostListItem post : normalPosts) {
-            title.add(post.getPostTitle());
+            String titleName = getUniqueTitle(post);
+            title.add(titleName);
             String urgent = post.getPostUrgent()? "Urgent": "Normal";
-            List<String> contents = Arrays.asList( post.getPostID().toString(), urgent
+            List<String> contents = Arrays.asList( "PostID: " + post.getPostID().toString(), urgent
                     + ": " + post.getPostContent());
-            content.put(post.getPostTitle(), contents);
+            content.put(titleName, contents);
         }
 
+    }
+
+    private String getUniqueTitle(PostListItem post) {
+        String titleName = post.getPostTitle();
+        String start = titleName;
+        int version = 0;
+        while (title.contains(titleName)){
+            version++;
+            titleName += "(" + Integer.valueOf(version).toString() + ")";
+        }
+        if(version >0){
+            titleName = start + "(" + Integer.valueOf(version).toString() + ")";
+        }
+        return titleName;
     }
 
     private void loadProfileImage() {
@@ -461,6 +477,7 @@ public class UserActivity extends AppCompatActivity
 //                        factory.build(AwscodestarsharehomelambdaClient.class);
                 PostList postList = client.postGet(getCurrentGroupName());
                 title.clear();
+                content.clear();
                 fillData(postList);
                  UserActivity.this.runOnUiThread(new Runnable() {
                      @Override

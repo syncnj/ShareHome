@@ -95,7 +95,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter
             convertView = inflater.inflate(R.layout.list_child,null);
         }
         TextView txtChild = (TextView) convertView.findViewById(R.id.content);
-        txtChild.setText("Content: " + content);
+        txtChild.setText(content);
         return convertView;
     }
     @Override
