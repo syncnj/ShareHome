@@ -465,6 +465,7 @@ public class UserActivity extends AppCompatActivity
 
     private void getPostResponseFromLambda() {
         if(getCurrentGroupName() ==null){
+            mySwipeRefreshLayout.setRefreshing(false);
             return;
         }
         Thread taskThread = new Thread(new Runnable() {

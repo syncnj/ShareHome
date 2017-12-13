@@ -150,7 +150,7 @@ public class TasksActivity extends AppCompatActivity
         expandableListAdapter = new TaskAdapter(this, title, content);
 
 
-        getTaskResponseFromLambda();
+
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -183,6 +183,8 @@ public class TasksActivity extends AppCompatActivity
 
                 }
         );
+
+        getTaskResponseFromLambda();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -352,6 +354,7 @@ public class TasksActivity extends AppCompatActivity
 
     private void getTaskResponseFromLambda() {
         if(getCurrentGroupName() ==null){
+            mySwipeRefreshLayout.setRefreshing(false);
             return;
         }
 
