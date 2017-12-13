@@ -80,9 +80,10 @@ public class AppHelper {
     public static Bitmap profile_img_bitmap;
     public static final int PROFILE_IMAGE_WIDTH = 100;
     public static final int PROFILE_IMAGE_HEIGHT = 100;
-    public static final String ProfileImgFN = "ProfileImg.txt";;
+    public static final String ProfileImgFN = "ProfileImg"+ "_" + user + ".txt";;
     private static String PROFILE_IMG__KEY = "profile_images";
-
+    public static boolean ASK_PROFILE_IMG_FROM_SERVER = true;
+    public static List<String> Roommates;
     // Change the next three lines of code to run this demo on your user pool
 
     /**
@@ -201,7 +202,7 @@ public class AppHelper {
     }
     public static String getCurrgroupName() {return groupName;}
     public static boolean getUploadedProfileImgs() {return hasCustomizedProrileImg;}
-
+    public static String getProfileImgFN(){return "mpi"+ "_" + getCurrUser() + ".txt";}
 
     public static void setUser(String newUser) {user = newUser;}
     public static void setGroupName(String newGroupName) {groupName = newGroupName;}

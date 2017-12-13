@@ -78,6 +78,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
     int TimetoHour;
     Dialog myDialog;
     private android.app.AlertDialog userDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,17 +87,28 @@ public class AddTaskActivityNAV extends AppCompatActivity
         setSupportActionBar(toolbar);
         byte[] b = {};
         String members = "";
-        try {
-            // This code gets the user objectIds of the members of the CurrentUser's group, this is written to the file in TasksActivity
-            BufferedReader reader = new BufferedReader(new InputStreamReader(openFileInput("members")));
-            members = reader.readLine();
-        }catch(Exception e){
-            System.out.println("AddTaskActivityNAV EXCEPTION when reading members");
+//        try {
+//            // This code gets the user objectIds of the members of the CurrentUser's group, this is written to the file in TasksActivity
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(openFileInput("members")));
+//            members = reader.readLine();
+//        }catch(Exception e){
+//            System.out.println("AddTaskActivityNAV EXCEPTION when reading members");
+//        }
+//        System.out.println("\n Members: " + members.toString());
+//        Roommates = members.split(",");
+//        //Todo: create a list with all groupmembers name from its groupId.
+//        RoommatesName = new String[Roommates.length];
+        if (AppHelper.Roommates == null){
+
+        fetchRoomatesFromServer();
         }
-        System.out.println("\n Members: " + members.toString());
-        Roommates = members.split(",");
-        //Todo: create a list with all groupmembers name from its groupId.
-        RoommatesName = new String[Roommates.length];
+        else {
+            RoommateSpinner = (Spinner)findViewById(R.id.openRoommateList);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                    android.R.layout.simple_spinner_item, AppHelper.Roommates);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            RoommateSpinner.setAdapter(dataAdapter);
+        }
         /*for(int j =0; j<Roommates.length;j++) {
             final int a = j;
             Backendless.UserService.findById(Roommates[j], new AsyncCallback<BackendlessUser>() {
@@ -115,7 +127,6 @@ public class AddTaskActivityNAV extends AppCompatActivity
         }*/
 
         Log.i("roommateId List", Roommates.toString());
-        System.out.println(Roommates.length);
         checkedItems = new boolean[Roommates.length];
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -137,8 +148,9 @@ public class AddTaskActivityNAV extends AppCompatActivity
         DailyBaseSpinner = (Spinner)findViewById(R.id.spinner_scheduling);
         RoommateSpinner = (Spinner)findViewById(R.id.openRoommateList);
         custom = (TextView)findViewById(R.id.custom);
-        addItemsOnRoommateSpinner();
+
         //myDialog = new Dialog(this);
+//        getRoomates();
         /*
         openRoommateList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -440,6 +452,28 @@ public class AddTaskActivityNAV extends AppCompatActivity
         ad = builder.create();
 
     }
+
+    private void getRoomates() {
+        new Thread(new Runnable() {
+            Handler handler = new Handler(getMainLooper());
+            public void run() {
+                if (AppHelper.getCurrgroupName() == null){
+                    return;
+                }
+                final ListOfString response = UserActivity.client.groupGet(AppHelper.getCurrUser(),
+                        "listMembers");
+
+                // TODO: put results to UI here ( where roommates is a list of roommate names)
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        addItemsOnRoommateSpinner(response);
+                    }
+                });
+            }
+        }).start();
+    }
+
     /*
     public void showPopup(View v) {
         TextView txtclose;
@@ -470,19 +504,64 @@ public class AddTaskActivityNAV extends AppCompatActivity
         });
         myDialog.show();
     }*/
-    public void addItemsOnRoommateSpinner()
+    public void addItemsOnRoommateSpinner(ListOfString Roommates)
     {
         RoommateSpinner = (Spinner)findViewById(R.id.openRoommateList);
-        List<String> list = new ArrayList<String>();
+        List<String> RoommateNames = new ArrayList<>();
+//        RoommateNames.clear();
         //here add members to the spinner
-        list.add("list1");
-        list.add("list2");
-
+        for (String Roommate: Roommates){
+            RoommateNames.add(Roommate);
+        }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, list);
+                android.R.layout.simple_spinner_item, RoommateNames);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         RoommateSpinner.setAdapter(dataAdapter);
     }
+    public void addItemsOnRoommateSpinner()
+    {
+        RoommateSpinner = (Spinner)findViewById(R.id.openRoommateList);
+        List<String> RoommateNames = new ArrayList<>();
+//        RoommateNames.clear();
+        //here add members to the spinner
+        for (String Roommate: AppHelper.Roommates){
+            RoommateNames.add(Roommate);
+        }
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, RoommateNames);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        RoommateSpinner.setAdapter(dataAdapter);
+    }
+    public void fetchRoomatesFromServer(){
+        new Thread(new Runnable() {
+            Handler handler = new Handler(getMainLooper());
+            @Override
+            public void run() {
+                final ListOfString Roommates = UserActivity.client.groupGet(AppHelper.getCurrUser(),
+                        "listMembers");
+                RoommateSpinner = (Spinner)findViewById(R.id.openRoommateList);
+                AppHelper.Roommates = new ArrayList<>();
+//        RoommateNames.clear();
+                //here add members to the spinner
+                for (String Roommate: Roommates){
+                    AppHelper.Roommates.add(Roommate);
+                }
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                                android.R.layout.simple_spinner_item, AppHelper.Roommates);
+                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        RoommateSpinner.setAdapter(dataAdapter);
+                    }
+                });
+            }
+        }).start();
+
+        // TODO save UserInfo into SharedPreference:
+
+    }
+
 
     private void showDialogMessage(String title, String body){
         final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddTaskActivityNAV.this);

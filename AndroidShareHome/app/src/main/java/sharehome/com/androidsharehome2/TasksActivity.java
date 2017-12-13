@@ -21,6 +21,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -64,6 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static sharehome.com.androidsharehome2.AppHelper.*;
 import static sharehome.com.androidsharehome2.UserActivity.client;
 
@@ -74,14 +76,12 @@ public class TasksActivity extends AppCompatActivity
     private String username;
     private ProgressDialog waitDialog;
     private AlertDialog userDialog;
-    private ArrayAdapter<String> adapter;
     private ArrayList<String> tasks;
     taskHandler taskHandler;
     private ListView tasklistView;
     private ExpandableListView taskExpandableListView;
     private ExpandableListAdapter expandableListAdapter;
     private List<String> title;
-    private List<String> temporary;
     Map<String, List<String>> content;
     public  LinearLayout layoutHeader;
     public  ImageView profileImage;
@@ -107,48 +107,45 @@ public class TasksActivity extends AppCompatActivity
         tasks = new ArrayList<String>();
         title = new ArrayList<String>();
         content = new HashMap<>();
-        temporary = new ArrayList<>();
-        adapter = new ArrayAdapter<String>(this,
-                R.layout.task_item, tasks);
 
         taskExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
-        taskExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Integer TaskID = Integer.parseInt(expandableListAdapter.getChild(groupPosition,0).toString());
-                final Task task = new Task();
-                task.setTaskID(TaskID);
-                task.setTaskSolved(true);
-                task.setGroupName(getCurrentGroupName());
-//                String title = ((TextView) v).getText().toString();
-//                task.setTaskTitle(title);
-                Thread taskSolved = new Thread(new Runnable() {
-                    Handler handler = new Handler(getApplicationContext().getMainLooper());
-                    @Override
-                    public void run() {
-                        try{
-                            final ResultStringResponse response = client.taskPost(task, AppHelper.getCurrUser(),"add");
-                        }
-                        catch (Exception e){
-                            Toast.makeText(getApplicationContext(), "Failed to submit the task:",
-                                    Toast.LENGTH_LONG).show();
-                            showDialogMessage("Failed to submit the task:", "task: ", false);
-                        }
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), "Successfully submitted the task" ,
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                });
-                taskSolved.start();
-                return true;
-            }
-        });
-        getTaskResponseFromLambda();
+//        taskExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+//            @Override
+//            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+//                Integer TaskID = Integer.parseInt(expandableListAdapter.getChild(groupPosition,0).toString());
+//                final Task task = new Task();
+//                task.setTaskID(TaskID);
+//                task.setTaskSolved(true);
+//                task.setGroupName(getCurrentGroupName());
+//                Thread taskSolved = new Thread(new Runnable() {
+//                    Handler handler = new Handler(getApplicationContext().getMainLooper());
+//                    @Override
+//                    public void run() {
+//                        try{
+//                            final ResultStringResponse response = client.taskPost(task, AppHelper.getCurrUser(),"add");
+//                        }
+//                        catch (Exception e){
+//                            Toast.makeText(getApplicationContext(), "Failed to submit the task:",
+//                                    Toast.LENGTH_LONG).show();
+//                            showDialogMessage("Failed to submit the task:", "task: ", false);
+//                        }
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Toast.makeText(getApplicationContext(), "Successfully submitted the task" ,
+//                                        Toast.LENGTH_LONG).show();
+//                            }
+//                        });
+//                    }
+//                });
+//                taskSolved.start();
+//                return true;
+//            }
+//        });
         expandableListAdapter = new TaskAdapter(this, title, content);
+
+
+        getTaskResponseFromLambda();
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -209,8 +206,11 @@ public class TasksActivity extends AppCompatActivity
 
         for (TaskListItem task : taskList) {
             title.add(task.getTaskTitle());
-            List<String> contents = Arrays.asList( task.getTaskID().toString(), task.getTaskContent());
-
+            List<String> contents = Arrays.asList( "TaskID: "+ task.getTaskID().toString(),
+                    "Executor: "+ task.getTaskUser(),
+                    "Recurrence: "+ task.getTaskDuration(),
+                    "From: " + task.getLastRotated()
+                    );
             content.put(task.getTaskTitle(), contents);
         }
 
@@ -343,7 +343,6 @@ public class TasksActivity extends AppCompatActivity
                 TaskList tasklist = client.taskGet(getCurrentGroupName());
                 tasks.clear();
                 title.clear();
-                temporary.clear();
                 content.clear();
                 fillData(tasklist);
 

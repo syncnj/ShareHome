@@ -71,6 +71,9 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import static sharehome.com.androidsharehome2.AppHelper.*;
 
 public class UserActivity extends AppCompatActivity
@@ -91,6 +94,7 @@ public class UserActivity extends AppCompatActivity
     public  LinearLayout layoutHeader;
     public  ImageView profileImage;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+    private static final int MY_PERMISSIONS_REQUEST_SAVE_IMAGES = 2;
     private static int UPLOADIMAGE = 0;
     private static final ApiClientFactory factory = new ApiClientFactory();;
     public static final AwscodestarsharehomelambdaClient client =
@@ -118,9 +122,7 @@ public class UserActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "Received notification from local broadcast. Display it in a dialog.");
-
             Bundle data = intent.getBundleExtra(ShareHomePushListenerService.INTENT_SNS_NOTIFICATION_DATA);
-
             String title = ShareHomePushListenerService.getTitle(data);
             String message = ShareHomePushListenerService.getMessage(data);
 
@@ -198,7 +200,6 @@ public class UserActivity extends AppCompatActivity
 //            }
 //        );
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,9 +218,8 @@ public class UserActivity extends AppCompatActivity
 //        if(AppHelper.getUploadedProfileImgs()) {
 //            loadProfileImage();
 //        }
-        loadProfileImage();
+            loadProfileImage();
     }
-
 
     public void fillData(PostList postList) {
 //        split posts into two groups : urgent and normal
@@ -270,12 +270,13 @@ public class UserActivity extends AppCompatActivity
             public void run() {
                 FileInputStream fis = null;
                 try {
+                    String newFN = getProfileImgFN();
                     fis = new FileInputStream(Environment.getExternalStorageDirectory()+ "//" +
-                            ProfileImgFN);
+                            getProfileImgFN());
                     byte[] reader = new byte[fis.available ()];
                     while(fis.read(reader)!=-1){}
                     String previouslyEncodedImage = (new String(reader));
-                    Log.i("Data", ProfileImgFN);
+                    Log.i("Data", "get profile image from local saved files ");
                     fis.close();
                     if( !previouslyEncodedImage.equalsIgnoreCase("") ){
                         if (!AppHelper.getUploadedProfileImgs()){
@@ -295,46 +296,14 @@ public class UserActivity extends AppCompatActivity
                     }
                     else{
                         // look for server information
-                        try {
-                            String imgData = client.profileGet(getCurrUser()).getResult();
-                            if (!AppHelper.getUploadedProfileImgs()){
-                                byte[] b = Base64.decode(imgData, Base64.DEFAULT);
-                                profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-                                AppHelper.setUploadedProfileImgs(true);
-                            }
-                            final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
-                                    PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    profileImage.setImageDrawable(scaled);
-                                }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        if (ASK_PROFILE_IMG_FROM_SERVER)
+                        getProfileImageFromServer();
 
                     }
                 }catch (FileNotFoundException filenotfound){
                     // look for server information
-                    try {
-                        String imgData = client.profileGet(getCurrUser()).getResult();
-                        if (!AppHelper.getUploadedProfileImgs()){
-                            byte[] b = Base64.decode(imgData, Base64.DEFAULT);
-                            profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-                            AppHelper.setUploadedProfileImgs(true);
-                        }
-                        final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
-                                PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                profileImage.setImageDrawable(scaled);
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    if (ASK_PROFILE_IMG_FROM_SERVER)
+                    getProfileImageFromServer();
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -343,6 +312,14 @@ public class UserActivity extends AppCompatActivity
             }
         });
         loadImgs.start();
+    }
+
+    private void getProfileImageFromServer(){
+        ActivityCompat.requestPermissions(UserActivity.this,
+                new String[]{"android.permission.WRITE_EXTERNAL_STORAGE",
+                        "android.permission.READ_EXTERNAL_STORAGE"
+                },
+                MY_PERMISSIONS_REQUEST_SAVE_IMAGES);
     }
 
     private void setImageView() {
@@ -400,7 +377,6 @@ public class UserActivity extends AppCompatActivity
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
                 Handler handler = new postSubmitHanlder(getMainLooper());
-
                 final ListOfString response = client.groupGet(AppHelper.getCurrUser(), "getGroupName");
                 handler.post(new Runnable() {
                     @Override
@@ -485,7 +461,6 @@ public class UserActivity extends AppCompatActivity
 //                        factory.build(AwscodestarsharehomelambdaClient.class);
                 PostList postList = client.postGet(getCurrentGroupName());
                 title.clear();
-                temporary.clear();
                 fillData(postList);
                  UserActivity.this.runOnUiThread(new Runnable() {
                      @Override
@@ -549,7 +524,8 @@ public class UserActivity extends AppCompatActivity
                             @Override
                             public void run() {
                                 try {
-                                    FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory()+ "//" + ProfileImgFN);
+
+                                    FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory()+ "//" + getProfileImgFN());
                                     fos.write(encodedImage.getBytes());
                                     fos.close();
                                     AppHelper.setUploadedProfileImgs(true);
@@ -557,7 +533,7 @@ public class UserActivity extends AppCompatActivity
                                     ResultStringResponse profileImg = new ResultStringResponse();
                                     profileImg.setResult(encodedImage);
                                     client.profilePost(getCurrUser(),profileImg);
-                                    Log.d(TAG, "Uploaded ProfileImage");
+                                    Log.d(TAG, "saved ProfileImage to server");
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -575,7 +551,87 @@ public class UserActivity extends AppCompatActivity
                 }
                 return;
             }
+            case MY_PERMISSIONS_REQUEST_SAVE_IMAGES:{
 
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final Handler handler = new Handler(getApplicationContext().getMainLooper());
+                        try {
+                            final String imgData = client.profileGet(getCurrUser()).getResult();
+                            if (!AppHelper.getUploadedProfileImgs()){
+                                byte[] b = Base64.decode(imgData, Base64.DEFAULT);
+                                profile_img_bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                                AppHelper.setUploadedProfileImgs(true);
+                            }
+                            final Drawable scaled = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(profile_img_bitmap,
+                                    PROFILE_IMAGE_WIDTH, PROFILE_IMAGE_HEIGHT, true));
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    profileImage.setImageDrawable(scaled);
+                                }
+                            });
+                            try {
+
+                                FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory()+ "//" + getProfileImgFN());
+                                fos.write(imgData.getBytes());
+                                fos.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            AppHelper.setUploadedProfileImgs(true);
+                            // also upload string to server
+                            ResultStringResponse profileImg = new ResultStringResponse();
+                            profileImg.setResult(imgData);
+                            client.profilePost(getCurrUser(),profileImg);
+                            Log.d(TAG, "saved ProfileImage");
+                            ASK_PROFILE_IMG_FROM_SERVER = false;
+                        } catch (final Exception e) {
+                            JSONObject jObject;
+                            final String backmsg= e.getMessage();
+                            try {
+                                jObject = new JSONObject(backmsg);
+                                final String response = jObject.getString("result");
+                                ASK_PROFILE_IMG_FROM_SERVER = false;
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        showDialogMessage(e.getMessage(),e.getMessage(),false);
+                                    }
+                                });
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                                ASK_PROFILE_IMG_FROM_SERVER = false;
+                            }
+                        }
+                    }
+                }).start();
+
+
+
+//                catch (final Exception e) {
+//                    JSONObject jObject;
+//                    final String backmsg= e.getMessage();
+//                    try {
+//                        jObject = new JSONObject(backmsg);
+//                        final String response = jObject.getString("result");
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                showDialogMessage(e.getMessage(),e.getMessage(),false);
+//                                ASK_PROFILE_IMG_FROM_SERVER = false;
+//                            }
+//                        });
+//                    } catch (JSONException e1) {
+//                        e1.printStackTrace();
+//                        ASK_PROFILE_IMG_FROM_SERVER = false;
+//                    }
+//                }
+
+
+
+            }
             // other 'case' lines to check for other
             // permissions this app might request
         }
