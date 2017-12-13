@@ -59,10 +59,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -203,16 +208,26 @@ public class TasksActivity extends AppCompatActivity
 
     public void fillData(TaskList taskList) {
 //        split posts into two groups : urgent and normal
-
-        for (TaskListItem task : taskList) {
-            title.add(task.getTaskTitle());
-            List<String> contents = Arrays.asList( "TaskID: "+ task.getTaskID().toString(),
-                    "Executor: "+ task.getTaskUser(),
-                    "Recurrence: "+ task.getTaskDuration(),
-                    "From: " + task.getLastRotated()
-                    );
-            content.put(task.getTaskTitle(), contents);
+        SimpleDateFormat simpleDateFormat =
+                new SimpleDateFormat("yyyy-M-dd hh:mm:ss", Locale.US);
+        String CurrentTimeFormatted = simpleDateFormat.format(Calendar.getInstance().getTime());
+        try {
+            Date CurrDate = simpleDateFormat.parse(CurrentTimeFormatted);
+            for (TaskListItem task : taskList) {
+                title.add(task.getTaskTitle());
+                Date StartDate = simpleDateFormat.parse(task.getLastRotated());
+                List<String> contents = Arrays.asList( "TaskID: "+ task.getTaskID().toString(),
+                        "Executor: "+ task.getTaskUser(),
+                        "Rotation period: "+ DateTimeUtils.getFormattedDateRecurrence(task.getTaskDuration().longValue()),
+                        "From: " + task.getLastRotated(),
+                        "Until deadline: " + DateTimeUtils.getDateDifference(StartDate,CurrDate));
+                content.put(task.getTaskTitle(), contents);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.i(TAG, "convert format failed");
         }
+
 
     }
 
