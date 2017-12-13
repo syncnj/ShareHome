@@ -20,8 +20,8 @@
             android:title="Grocery List" />
         <item
             android:id="@+id/nav_transactions"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Transactions" />
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Punishments" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_menu_logout"

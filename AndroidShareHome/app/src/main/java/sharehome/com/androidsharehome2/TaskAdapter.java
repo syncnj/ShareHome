@@ -18,13 +18,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by Jeremy on 12/10/17.
  */
 
-public class MyExpandableListAdapter extends BaseExpandableListAdapter
+public class TaskAdapter extends BaseExpandableListAdapter
 {
     Context context;
     List<String> title;
     Map<String, List<String>> content;
 
-    public MyExpandableListAdapter(Context context, List<String> title, Map<String, List<String>> content) {
+    public TaskAdapter(Context context, List<String> title, Map<String, List<String>> content) {
         this.context = context;
         this.title = title;
         this.content = content;
@@ -70,13 +70,13 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter
         if(convertView == null)
         {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_parent,null);
+            convertView = inflater.inflate(R.layout.list_parent_task,null);
             Button delete = (Button)convertView.findViewById(R.id.delete);
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //add delete method
-                    Toast.makeText(getApplicationContext(), "Post deleted",
+                    Toast.makeText(getApplicationContext(), "Task deleted",
                             Toast.LENGTH_LONG).show();
                 }
             });
@@ -92,10 +92,10 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter
         if(convertView == null)
         {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_child,null);
+            convertView = inflater.inflate(R.layout.list_child_task,null);
         }
         TextView txtChild = (TextView) convertView.findViewById(R.id.content);
-        txtChild.setText("Content: " + content);
+        txtChild.setText("Assigned to: " + content);
         return convertView;
     }
     @Override

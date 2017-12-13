@@ -27,10 +27,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -38,6 +42,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Random;
 
 import static sharehome.com.androidsharehome2.AppHelper.*;
 import static sharehome.com.androidsharehome2.UserActivity.client;
@@ -50,13 +55,18 @@ public class TransactionActivity extends AppCompatActivity
     public ImageView profileImage;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     private static int UPLOADIMAGE = 0;
+    private Button generate;
+    private TextView intro;
+    private TextView punishment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        generate = (Button) findViewById(R.id.generate);
+        intro = (TextView) findViewById(R.id.intro);
+        punishment = (TextView) findViewById(R.id.punishment);
 //        loginManager = LoginManager.getInstance();
 
 
@@ -77,7 +87,43 @@ public class TransactionActivity extends AppCompatActivity
         profileImage = (ImageView) layoutHeader.findViewById(R.id.profileImage);
         setImageView();
         loadProfileImage();
+        generate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                generatePunishment();
+            }
+        });
     }
+
+    public void generatePunishment(){
+        Random r = new Random();
+        int number = r.nextInt(7 - 1) + 1;
+        switch(number) {
+            case 1:
+                punishment.setText("$30");
+                break;
+            case 2:
+                punishment.setText("Clean the table for one week.");
+                break;
+            case 3:
+                punishment.setText("Pay for the next dinner.");
+                break;
+            case 4:
+                punishment.setText("Buy food");
+                break;
+            case 5:
+                punishment.setText("100 sit-ups");
+                break;
+            case 6:
+                punishment.setText("Go to the balcony wearing vest for 1 minute");
+                break;
+            default:
+                punishment.setText("");
+        }
+        Toast.makeText(getApplicationContext(), "Punishment generated!",
+                Toast.LENGTH_LONG).show();
+    }
+
     private void setImageView() {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override

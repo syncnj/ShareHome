@@ -31,6 +31,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -82,7 +83,6 @@ public class TasksActivity extends AppCompatActivity
     private List<String> title;
     private List<String> temporary;
     Map<String, List<String>> content;
-
     public  LinearLayout layoutHeader;
     public  ImageView profileImage;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
@@ -148,7 +148,7 @@ public class TasksActivity extends AppCompatActivity
             }
         });
         getTaskResponseFromLambda();
-        expandableListAdapter = new MyExpandableListAdapter(this, title, content);
+        expandableListAdapter = new TaskAdapter(this, title, content);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

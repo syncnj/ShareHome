@@ -80,7 +80,6 @@ public class UserActivity extends AppCompatActivity
     private String username;
     private ProgressDialog waitDialog;
     private AlertDialog userDialog;
-    private ArrayAdapter<String> adapter;
     private ArrayList<String> posts;
     public static PinpointManager pinpointManager;
     private ListView postListView;
@@ -183,9 +182,6 @@ public class UserActivity extends AppCompatActivity
         findCurrentGroupName();
         title = new ArrayList<String>();
         content = new HashMap<>();
-        temporary = new ArrayList<>();
-        adapter = new ArrayAdapter<String>(this,
-                R.layout.task_item, posts);
 
         postExpandableListView = (ExpandableListView) findViewById(R.id.post_list);
         getPostResponseFromLambda();
