@@ -219,10 +219,10 @@ public class TasksActivity extends AppCompatActivity
                 Log.d(TAG, StartDate.toString());
                 int days = Integer.valueOf(DateTimeUtils.getFormattedDateRecurrence(task.getTaskDuration().longValue()));
 
-                List<String> contents = Arrays.asList( "TaskID: "+ task.getTaskID().toString(),
-                        "Executor: "+ task.getTaskUser(),
+                List<String> contents = Arrays.asList( /*"TaskID: "+ task.getTaskID().toString(),*/
+                        "Assigned to: "+ task.getTaskUser(),
+                        "Assigned date: " + task.getLastRotated(),
                         "Rotation period: "+ DateTimeUtils.getFormattedDateRecurrence(task.getTaskDuration().longValue()) + " days",
-                        "From: " + task.getLastRotated(),
                         "Until deadline: " + DateTimeUtils.getRemainingTime(CurrDate, DateTimeUtils.addDays(StartDate, days)));
                 content.put(task.getTaskTitle(), contents);
             }

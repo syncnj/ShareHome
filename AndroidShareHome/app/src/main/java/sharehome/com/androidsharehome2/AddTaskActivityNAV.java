@@ -293,6 +293,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
                                     progressDialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "successfully submitted the task: " + taskTitle,
                                             Toast.LENGTH_LONG).show();
+                                    finish();
                                 }
                             });
                         } catch (Exception e) {

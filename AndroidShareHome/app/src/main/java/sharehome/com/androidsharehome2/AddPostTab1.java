@@ -96,6 +96,7 @@ public class AddPostTab1 extends Fragment {
                                 _contextEditText.setText("");
                         progressDialog.dismiss();
                         Toast.makeText(getActivity(), "Post successful!",Toast.LENGTH_SHORT).show();
+                                getActivity().finish();
                             }
                         });
                     }

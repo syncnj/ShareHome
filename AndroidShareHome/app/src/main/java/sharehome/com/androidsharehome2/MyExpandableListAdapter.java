@@ -76,6 +76,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter
                 @Override
                 public void onClick(View view) {
                     //add delete method
+
                     Toast.makeText(getApplicationContext(), "Post deleted",
                             Toast.LENGTH_LONG).show();
                 }
