@@ -105,6 +105,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
 
     public LinearLayout layoutHeader;
     public ImageView profileImage;
+    ArrayAdapter<String> dataAdapter;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     private static int UPLOADIMAGE = 0;
     @Override
@@ -274,8 +275,13 @@ public class AddTaskActivityNAV extends AppCompatActivity
 
                         task.setTaskDuration(duration);
 //                        TODO
-                        String taskUser = "ttzztt";
+//                        String taskUser = "ttzztt";
+                        String taskUser = RoommateSpinner.getSelectedItem().toString();
                         task.setTaskUser(taskUser);
+                        SimpleDateFormat simpleDateFormat =
+                                new SimpleDateFormat("yyyy-M-dd hh:mm:ss", Locale.US);
+                        String CurrentTimeFormatted = simpleDateFormat.format(Calendar.getInstance().getTime());
+                        task.setLastRotated(CurrentTimeFormatted);
                         task.setTaskSolved(false);
                         try {
                             final ResultStringResponse response = client.taskPost(task, AppHelper.getCurrUser(),"add"
@@ -484,6 +490,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
                 AppHelper.getCurrUser();
         welcomeText.setText(text);
         profileImage = (ImageView) layoutHeader.findViewById(R.id.profileImage);
+        RoommateSpinner = (Spinner)findViewById(R.id.openRoommateList);
         setImageView();
         loadProfileImage();
     }
@@ -541,7 +548,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
     }*/
     public void addItemsOnRoommateSpinner(ListOfString Roommates)
     {
-        RoommateSpinner = (Spinner)findViewById(R.id.openRoommateList);
+
         List<String> RoommateNames = new ArrayList<>();
 //        RoommateNames.clear();
         //here add members to the spinner
@@ -584,7 +591,7 @@ public class AddTaskActivityNAV extends AppCompatActivity
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(),
+                        dataAdapter = new ArrayAdapter<String>(getApplicationContext(),
                                 android.R.layout.simple_spinner_item, AppHelper.Roommates);
                         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         RoommateSpinner.setAdapter(dataAdapter);

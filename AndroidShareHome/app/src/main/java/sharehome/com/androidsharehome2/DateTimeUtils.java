@@ -3,7 +3,10 @@ import android.widget.Switch;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 
 /**
@@ -14,7 +17,14 @@ public class DateTimeUtils {
     //1 minute = 60 seconds
     //1 hour = 60 x 60 = 3600
     //1 day = 3600 x 24 = 86400
-    public static String getDateDifference(Date startDate, Date endDate){
+    public static Date addDays(Date date, int days) {
+        GregorianCalendar cal = new GregorianCalendar(Locale.US);
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days);
+
+        return cal.getTime();
+    }
+    public static String getRemainingTime(Date startDate, Date endDate){
 
         //milliseconds
         long different = endDate.getTime() - startDate.getTime();
@@ -43,23 +53,24 @@ public class DateTimeUtils {
         long hoursInMins =  60;
         long daysInMins = hoursInMins * 24;
         long weekInMins = daysInMins * 7;
-        long elapsedWeeks = minutes / weekInMins;
-        minutes = minutes % weekInMins;
+//        long elapsedWeeks = minutes / weekInMins;
+//        minutes = minutes % weekInMins;
         long elapsedDays= minutes/daysInMins;
-        minutes = minutes % hoursInMins;
-        String result = "";
-        switch (Long.valueOf(elapsedWeeks).intValue()){
-            case 1:{
-                result = "1 week";
-                break;
-            }
-            case 0:{
-                result = "1 day";
-                break;
-            }
-            default: result = "1 month";
-                break;
-        }
+//        minutes = minutes % hoursInMins;
+        String result = Long.valueOf(elapsedDays).toString();
+
+//        switch (Long.valueOf(elapsedWeeks).intValue()){
+//            case 1:{
+//                result = "1 week";
+//                break;
+//            }
+//            case 0:{
+//                result = "1 day";
+//                break;
+//            }
+//            default: result = "1 month";
+//                break;
+//        }
 
         return result;
 

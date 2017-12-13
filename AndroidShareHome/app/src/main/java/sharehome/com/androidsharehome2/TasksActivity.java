@@ -216,11 +216,14 @@ public class TasksActivity extends AppCompatActivity
             for (TaskListItem task : taskList) {
                 title.add(task.getTaskTitle());
                 Date StartDate = simpleDateFormat.parse(task.getLastRotated());
+                Log.d(TAG, StartDate.toString());
+                int days = Integer.valueOf(DateTimeUtils.getFormattedDateRecurrence(task.getTaskDuration().longValue()));
+
                 List<String> contents = Arrays.asList( "TaskID: "+ task.getTaskID().toString(),
                         "Executor: "+ task.getTaskUser(),
-                        "Rotation period: "+ DateTimeUtils.getFormattedDateRecurrence(task.getTaskDuration().longValue()),
+                        "Rotation period: "+ DateTimeUtils.getFormattedDateRecurrence(task.getTaskDuration().longValue()) + " days",
                         "From: " + task.getLastRotated(),
-                        "Until deadline: " + DateTimeUtils.getDateDifference(StartDate,CurrDate));
+                        "Until deadline: " + DateTimeUtils.getRemainingTime(CurrDate, DateTimeUtils.addDays(StartDate, days)));
                 content.put(task.getTaskTitle(), contents);
             }
         } catch (ParseException e) {

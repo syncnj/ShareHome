@@ -87,7 +87,9 @@ public class TaskAdapter extends BaseExpandableListAdapter
                 @Override
                 public void onClick(View view) {
                     //add delete method
-                    Integer TaskID = Integer.parseInt(getChild(groupPosition,0).toString());
+                    String TaskIDFieldText = getChild(groupPosition,0).toString();
+                    String numberOnly= TaskIDFieldText.replaceAll("[^0-9]", "");
+                    Integer TaskID = Integer.parseInt(numberOnly);
                     final Task task = new Task();
                     task.setTaskID(TaskID);
                     task.setTaskSolved(true);
